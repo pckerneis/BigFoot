@@ -80,6 +80,18 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	values.master			= parameters.getRawParameterValue("master");
 
 	synthAudioSource.reset(new SynthAudioSource(adsr, keyboardState, values));
+	
+	parameters.getParameter("drive")->addListener(this);
+	parameters.getParameter("driveType")->addListener(this);
+	parameters.getParameter("bendAmount")->addListener(this);
+	parameters.getParameter("bendDuration")->addListener(this);
+	parameters.getParameter("brightness")->addListener(this);
+	parameters.getParameter("attack")->addListener(this);
+	parameters.getParameter("decay")->addListener(this);
+	parameters.getParameter("sustain")->addListener(this);
+	parameters.getParameter("release")->addListener(this);
+	parameters.getParameter("glide")->addListener(this);
+	parameters.getParameter("master")->addListener(this);
 }
 
 BassGeneratorAudioProcessor::~BassGeneratorAudioProcessor()

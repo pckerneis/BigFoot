@@ -21,7 +21,7 @@
 
 /**
 */
-class BassGeneratorAudioProcessor  : public AudioProcessor
+class BassGeneratorAudioProcessor  : public AudioProcessor, public AudioProcessorParameter::Listener
 {
 public:
     //==============================================================================
@@ -68,9 +68,6 @@ public:
 	//==============================================================================
 	void setDrive (float newValue) 
 	{
-		if (*values.drive != newValue) // This is not triggered because the value was already set with the Attachement object
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.drive = newValue;
 
 		auto& distortion = fxChain.template get<distortionIndex>();
@@ -79,9 +76,6 @@ public:
 
 	void setDriveType(Distortion<float>::TransferFunction func)
 	{
-		if (*values.driveType != func)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.driveType = func;
 
 		auto& distortion = fxChain.template get<distortionIndex>();
@@ -91,26 +85,17 @@ public:
 	//==============================================================================
 	void setBendAmount(float newValue)
 	{
-		if (*values.bendAmount != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.bendAmount = newValue;
 	}
 
 	void setBendDuration(float newValue)
 	{
-		if (*values.bendDuration != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.bendDuration = newValue;
 	}
 
 	//==============================================================================
 	void setBrightness(float newValue)
 	{
-		if (*values.brightness != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.brightness = newValue;
 
 		if (getSampleRate() <= 0)	// If prepareToPlay() wasn't called yet, the filter state will be set there
@@ -123,9 +108,6 @@ public:
 	//==============================================================================
 	void setAttack(float newValue)
 	{
-		if (*values.attack != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.attack = newValue;
 
 		adsr.setAttack(newValue);
@@ -133,9 +115,6 @@ public:
 
 	void setDecay(float newValue)
 	{
-		if (*values.decay != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.decay = newValue;
 
 		adsr.setDecay(newValue);
@@ -143,9 +122,6 @@ public:
 
 	void setSustain(float newValue)
 	{
-		if (*values.sustain != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.sustain = newValue;
 
 		adsr.setSustain(newValue);
@@ -153,9 +129,6 @@ public:
 
 	void setRelease(float newValue)
 	{
-		if (*values.release != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.release = newValue;
 
 		adsr.setRelease(newValue);
@@ -164,18 +137,12 @@ public:
 	//==============================================================================
 	void setGlide(float newValue)
 	{
-		if (*values.glide != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.glide = newValue;
 	}
 
 	//==============================================================================
 	void setOutputGain(float newValue)
 	{
-		if (*values.master != newValue)
-			parameters.state.setProperty("presetChanged", true, nullptr);
-
 		*values.master = newValue;
 
 		auto& gain = fxChain.template get<masterGainIndex>();
@@ -193,6 +160,13 @@ public:
 		return parameters;
 	}
 
+	//==============================================================================
+	/* Implementation of AudioProcessorParameter::Listener. */
+	virtual void parameterValueChanged(int parameterIndex, float newValue) override {}
+	virtual void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override 
+	{
+		parameters.state.setProperty("presetChanged", true, nullptr);
+	}
 private:
     //==============================================================================
 	enum
