@@ -24,9 +24,11 @@ struct SineWaveSound : public SynthesiserSound
 //==============================================================================
 #include "ADSR.h"
 
+struct ParameterValues;
+
 struct SineWaveVoice : public SynthesiserVoice
 {
-	SineWaveVoice(ADSREnvelope& envelope, float* bendAmt, float* bendDur, float* glid);
+	SineWaveVoice(ADSREnvelope& envelope, ParameterValues& paramValues);
 
 	void prepare(double sr);
 
@@ -53,9 +55,8 @@ private:
 	LinearSmoothedValue<float> level;
 	LinearSmoothedValue<float> noteRamp;
 	LinearSmoothedValue<float> bendRamp;
-	float* bendAmount;
-	float* bendDuration;
-	float* glide;
+
+	ParameterValues& values;
 
 	ADSREnvelope& adsr;
 	LinearSmoothedValue<float> gainValue;
@@ -64,7 +65,6 @@ private:
 };
 
 //==============================================================================
-struct ParameterValues;
 
 class SynthAudioSource : public AudioSource
 {

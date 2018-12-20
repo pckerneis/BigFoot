@@ -10,11 +10,10 @@
 
 #include "Generator.h"
 
-SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, float* bendAmt, float* bendDur, float *glid) :
+#include "Parameters.h"
+SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, ParameterValues& v) :
 	currentAngle(0.0f),
-	bendAmount(bendAmt),
-	bendDuration(bendDur),
-	glide(glid),
+	values(v),
 	adsr(envelope),
 	sampleRate(-1)
 {
@@ -39,13 +38,13 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 	level.setValue(velocity * 0.35f);
 
 	// If there's already a note playing and glide param is non 0
-	if (adsr.isCurrentlyOn() && *glide >= 0.01f)
+	if (adsr.isCurrentlyOn() && *values.glide >= 0.01f)
 	{
 		// Stop the current note to avoid legato mode
 		adsr.noteOff();
 
 		// Glide to the target note without bending
-		noteRamp.reset(sampleRate, *glide);
+		noteRamp.reset(sampleRate, *values.glide);
 		noteRamp.setValue(midiNoteNumber);
 		bendRamp.setValue(0.0f);
 	}
@@ -55,8 +54,8 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		noteRamp.setValue(midiNoteNumber, true);
 
 		// ...and prepare bend ramp
-		bendRamp.reset(sampleRate, *bendDuration);
-		bendRamp.setValue(*bendAmount, true);
+		bendRamp.reset(sampleRate, *values.bendDuration);
+		bendRamp.setValue(*values.bendAmount, true);
 		bendRamp.setValue(0.0f);
 	}
 
@@ -128,7 +127,6 @@ void SineWaveVoice::updateAngleDelta()
 	angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
 }
 //==============================================================================
-#include "Parameters.h"
 
 SynthAudioSource::SynthAudioSource(ADSREnvelope& env, MidiKeyboardState& keyState, ParameterValues& values) : keyboardState(keyState), adsr(env)
 {
@@ -136,7 +134,7 @@ SynthAudioSource::SynthAudioSource(ADSREnvelope& env, MidiKeyboardState& keyStat
 
 	for (auto i = 0; i < numVoices; ++i)
 	{
-		auto v = new SineWaveVoice(adsr, values.bendAmount, values.bendDuration, values.glide);
+		auto v = new SineWaveVoice(adsr, values);
 		synth.addVoice(v);
 		voices.add(v);
 	}
