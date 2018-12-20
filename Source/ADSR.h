@@ -63,10 +63,10 @@ public:
 
 	void setParameters(float a, float d, float s, float r)
 	{
-		attack = a;
-		decay = d;
-		sustain = s;
-		release = r;
+		attack =	a;
+		decay =		d;
+		sustain =	s;
+		release =	r;
 	}
 
 	void setAttack(float newValue)
@@ -165,7 +165,7 @@ public:
 
 		if (isCurrentlyOn() && skipAttackForLegato)
 		{
-			ramp.reset(sampleRate, attack);
+			ramp.reset(sampleRate, decay);
 			ramp.setValue(0.0f, true);
 			ramp.setValue(1.0f, false);
 

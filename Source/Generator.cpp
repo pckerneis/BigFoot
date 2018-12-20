@@ -39,8 +39,11 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 	level.setValue(velocity * 0.35f);
 
 	// If there's already a note playing and glide param is non 0
-	if (adsr.isCurrentlyOn() && *glide > 0)
+	if (adsr.isCurrentlyOn() && *glide >= 0.01f)
 	{
+		// Stop the current note to avoid legato mode
+		adsr.noteOff();
+
 		// Glide to the target note without bending
 		noteRamp.reset(sampleRate, *glide);
 		noteRamp.setValue(midiNoteNumber);

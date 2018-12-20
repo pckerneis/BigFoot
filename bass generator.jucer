@@ -2,15 +2,15 @@
 
 <JUCERPROJECT id="RdFFRY" name="PAWG" projectType="audioplug" jucerVersion="5.4.1"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              pluginName="PAWG" pluginFormats="buildAU,buildVST" pluginManufacturer="pckerneis"
-              pluginManufacturerCode="pcK" reportAppUsage="1" displaySplashScreen="1"
-              splashScreenColour="Dark" version="1.0.0" buildVST="1" buildVST3="0"
-              buildAU="1" buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="0"
-              enableIAA="0" pluginDesc="PAWG" pluginCode="Rdff" pluginChannelConfigs=""
-              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
-              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="PAWGAU"
-              pluginRTASCategory="" bundleIdentifier="com.pckerneis.PAWG" aaxIdentifier="com.yourcompany.PAWG"
-              pluginAAXCategory="2" includeBinaryInAppConfig="1">
+              pluginName="PAWG" pluginFormats="buildAU,buildStandalone,buildVST"
+              pluginManufacturer="pckerneis" pluginManufacturerCode="pcK" reportAppUsage="1"
+              displaySplashScreen="1" splashScreenColour="Dark" version="1.0.0"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" buildStandalone="1" enableIAA="0" pluginDesc="PAWG"
+              pluginCode="Rdff" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="PAWGAU" pluginRTASCategory="" bundleIdentifier="com.pckerneis.PAWG"
+              aaxIdentifier="com.yourcompany.PAWG" pluginAAXCategory="2" includeBinaryInAppConfig="1">
   <MAINGROUP id="VGAmmy" name="PAWG">
     <GROUP id="{31722F44-49F6-53E6-FE33-01E19B0C985E}" name="Audio">
       <FILE id="R3VcXr" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
@@ -43,7 +43,7 @@
         <CONFIGURATION isDebug="1" name="Debug" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\DebugVST"
                        winWarningLevel="4" generateManifest="1" winArchitecture="x64"/>
         <CONFIGURATION isDebug="0" name="Release" winWarningLevel="4" generateManifest="1"
-                       winArchitecture="x64"/>
+                       winArchitecture="x64" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
