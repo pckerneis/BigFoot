@@ -182,7 +182,7 @@ public:
 
 		// Prepare attack phase
 		ramp.reset(sampleRate, attack);
-		ramp.setValue(0.0f, true);
+		ramp.setValue(lastOutput, true);
 		ramp.setValue(1.0f, false);
 
 		numSamplesBeforeDecay = attack * sampleRate;
