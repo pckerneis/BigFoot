@@ -34,7 +34,7 @@ public:
 
 	//==============================================================================
 	/** ValueTree::Listener implementation */
-	virtual void valueTreePropertyChanged(ValueTree&, const Identifier&)
+	virtual void valueTreePropertyChanged(ValueTree&, const Identifier&) override
 	{
 		processorParametersMayHaveChanged();
 	}

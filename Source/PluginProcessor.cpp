@@ -23,7 +23,6 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
                      #endif
                        ),
 #endif
-	adsr(adsrParams),
 	parameters (*this, nullptr, "BassGenParameters",
 		{
 			std::make_unique<AudioParameterFloat>("drive", "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
@@ -65,7 +64,8 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, 2.0f),
 												  defaultParameterValues.master)
 
-		})
+		}),
+    adsr(adsrParams)
 {
 	values.drive			= parameters.getRawParameterValue("drive");
 	values.driveType		= parameters.getRawParameterValue("driveType");
@@ -163,7 +163,7 @@ void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 	adsr.prepare(sampleRate);
 	adsr.setParameters(*values.attack, *values.decay, *values.sustain, *values.release);
 
-	dsp::ProcessSpec spec { sampleRate, samplesPerBlock, 2 };
+	dsp::ProcessSpec spec { sampleRate, (uint32)samplesPerBlock, 2 };
 	fxChain.prepare (spec);
 }
 

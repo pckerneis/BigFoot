@@ -17,9 +17,9 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 	currentPreset(nullptr),
 	aboutButton(""),
 	previousButton("<"), 
-	nextButton(">"), 
-	loadButton("Load"), 
-	saveButton("Save"), 
+	nextButton(">"),
+    saveButton("Save"), 
+	loadButton("Load"),
 	processorState(ps)
 {
 	addAndMakeVisible(aboutButton);
@@ -123,7 +123,7 @@ void PresetBar::setCurrentPreset(int presetIndex)
 
 	const String presetName = currentPreset->file.getFileNameWithoutExtension();
 
-	comboBox.setText(presetName, false);
+	comboBox.setText(presetName, dontSendNotification);
 
 	processorState.state.setProperty("presetChanged", false, nullptr);
 	processorState.state.setProperty("presetName", presetName, nullptr);

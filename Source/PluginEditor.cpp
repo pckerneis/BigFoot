@@ -239,7 +239,7 @@ void BassGeneratorAudioProcessorEditor::paint (Graphics& g)
 	const float lineThickness = 0.8f;
 	const float margin = 2.0f;
 
-	auto header = r.removeFromTop(headerHeight);
+	r.removeFromTop(headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
 
 	g.setColour(Colours::white);

@@ -21,7 +21,6 @@ struct ADSRParameters
 	float release = 0;
 };
 
-
 class ADSREnvelope
 {
 public:
@@ -37,36 +36,29 @@ public:
 	ADSREnvelope(const ADSRParameters& p) : attack(p.attack), decay(p.decay), sustain(p.sustain), release(p.release),
 		sampleRate(0.0),
 		numSamplesBeforeDecay(-1), numSamplesBeforeReleaseEnd(-1),
-		state(offState),
-		envelopeLUT([](float x)
-	{
-		return pow(x, 2);
-	}, 0.0f, 1.0f, 128),
-		rampStart(0.0f),
-		rampEnd(1.0f),
-		lastOutput(0.0f),
-		exponentialAttack(false),
-		exponentialDecay(true),
-		exponentialRelease(true)
+        rampStart(0.0f),
+        rampEnd(1.0f),
+        lastOutput(0.0f),
+        exponentialAttack(false),
+        exponentialDecay(true),
+        exponentialRelease(true),
+        state(offState),
+		envelopeLUT([](float x) { return pow(x, 2); }, 0.0f, 1.0f, 128)
 	{
 	}
 
 	ADSREnvelope(float a, float d, float s, float r) : attack(a), decay(d), sustain(s), release(r),
 		sampleRate(0.0),
 		numSamplesBeforeDecay(-1), numSamplesBeforeReleaseEnd(-1),
-		state(offState),
-		envelopeLUT([](float x)
+        rampStart(0.0f),
+        rampEnd(1.0f),
+        lastOutput(0.0f),
+        exponentialAttack(false),
+        exponentialDecay(true),
+        exponentialRelease(true),
+        state(offState),
+		envelopeLUT([](float x) { return pow(x, 2); }, 0.0f, 1.0f, 128)
 	{
-		return pow(x, 2);
-	}, 0.0f, 1.0f, 128),
-		rampStart(0.0f),
-		rampEnd(1.0f),
-		lastOutput(0.0f),
-		exponentialAttack(false),
-		exponentialDecay(true),
-		exponentialRelease(true)
-	{
-
 	}
 
 	void setParameters(float a, float d, float s, float r)
