@@ -64,8 +64,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, 2.0f),
 												  defaultParameterValues.master)
 
-		}),
-    adsr(adsrParams)
+		})
 {
 	values.drive			= parameters.getRawParameterValue("drive");
 	values.driveType		= parameters.getRawParameterValue("driveType");
@@ -79,7 +78,8 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	values.glide			= parameters.getRawParameterValue("glide");
 	values.master			= parameters.getRawParameterValue("master");
 
-	synthAudioSource.reset(new SynthAudioSource(adsr, keyboardState, values));
+	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
+	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));
 	
 	parameters.getParameter("drive")->addListener(this);
 	parameters.getParameter("driveType")->addListener(this);
@@ -165,15 +165,11 @@ void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 {
 	synthAudioSource->prepareToPlay(samplesPerBlock, sampleRate);
 	
-	setGlide(*values.glide);
-	setBendAmount(*values.bendAmount);
-	setBendDuration(*values.bendDuration);
 	setDrive(*values.drive);
 	setDriveType(static_cast<Distortion<float>::TransferFunction>((int)*values.driveType));
 	setBrightness(*values.brightness);
 	setOutputGain(*values.master);
-	adsr.prepare(sampleRate);
-	adsr.setParameters(*values.attack, *values.decay, *values.sustain, *values.release);
+	adsr->prepare(sampleRate);
 
 	dsp::ProcessSpec spec { sampleRate, (uint32)samplesPerBlock, 2 };
 	fxChain.prepare (spec);

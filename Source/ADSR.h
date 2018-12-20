@@ -33,7 +33,7 @@ public:
 		offState
 	};
 
-	ADSREnvelope(const ADSRParameters& p) : attack(p.attack), decay(p.decay), sustain(p.sustain), release(p.release),
+	ADSREnvelope(float* a, float* d, float* s, float* r) : attack(a), decay(d), sustain(s), release(r),
 		sampleRate(0.0),
 		numSamplesBeforeDecay(-1), numSamplesBeforeReleaseEnd(-1),
         rampStart(0.0f),
@@ -42,53 +42,12 @@ public:
         exponentialAttack(false),
         exponentialDecay(true),
         exponentialRelease(true),
+		currentlyOn(false),
         state(offState),
 		envelopeLUT([](float x) { return pow(x, 2); }, 0.0f, 1.0f, 128)
 	{
 	}
-
-	ADSREnvelope(float a, float d, float s, float r) : attack(a), decay(d), sustain(s), release(r),
-		sampleRate(0.0),
-		numSamplesBeforeDecay(-1), numSamplesBeforeReleaseEnd(-1),
-        rampStart(0.0f),
-        rampEnd(1.0f),
-        lastOutput(0.0f),
-        exponentialAttack(false),
-        exponentialDecay(true),
-        exponentialRelease(true),
-        state(offState),
-		envelopeLUT([](float x) { return pow(x, 2); }, 0.0f, 1.0f, 128)
-	{
-	}
-
-	void setParameters(float a, float d, float s, float r)
-	{
-		attack =	a;
-		decay =		d;
-		sustain =	s;
-		release =	r;
-	}
-
-	void setAttack(float newValue)
-	{
-		attack = newValue;
-	}
-
-	void setDecay(float newValue)
-	{
-		decay = newValue;
-	}
-
-	void setSustain(float newValue)
-	{
-		sustain = newValue;
-	}
-
-	void setRelease(float newValue)
-	{
-		release = newValue;
-	}
-
+	
 	void prepare(double sr)
 	{
 		sampleRate = sr;
@@ -120,12 +79,12 @@ public:
 			if (--numSamplesBeforeDecay == 0)
 			{
 				// Prepare decay phase
-				ramp.reset(sampleRate, decay);
+				ramp.reset(sampleRate, *decay);
 				ramp.setValue(0.0f, true);
 				ramp.setValue(1.0f, false);
 
 				rampStart = 1.0;
-				rampEnd = sustain;
+				rampEnd = *sustain;
 
 				state = decayState;
 			}
@@ -137,7 +96,7 @@ public:
 			break;
 
 		case sustainState:
-			output = sustain;
+			output = *sustain;
 			break;
 
 		case releaseState:
@@ -165,7 +124,7 @@ public:
 
 		if (isCurrentlyOn() && skipAttackForLegato)
 		{
-			ramp.reset(sampleRate, decay);
+			ramp.reset(sampleRate, *decay);
 			ramp.setValue(0.0f, true);
 			ramp.setValue(1.0f, false);
 
@@ -173,7 +132,7 @@ public:
 			numSamplesBeforeReleaseEnd = -1;
 
 			rampStart = lastOutput;
-			rampEnd = sustain;
+			rampEnd = *sustain;
 
 			state = decayState;
 
@@ -181,17 +140,18 @@ public:
 		}
 
 		// Prepare attack phase
-		ramp.reset(sampleRate, attack);
-		ramp.setValue(lastOutput, true);
+		ramp.reset(sampleRate, *attack);
+		ramp.setValue(0.0f, true);
 		ramp.setValue(1.0f, false);
 
-		numSamplesBeforeDecay = attack * sampleRate;
+		numSamplesBeforeDecay = *attack * sampleRate;
 		numSamplesBeforeReleaseEnd = -1;
 
 		rampStart = lastOutput;
 		rampEnd = 1.0f;
 
 		state = attackState;
+		currentlyOn = true;
 	}
 
 	void noteOff()
@@ -203,17 +163,18 @@ public:
 			return;
 
 		// Prepare release phase
-		ramp.reset(sampleRate, release);
+		ramp.reset(sampleRate, *release);
 		ramp.setValue(0.0f, true);
 		ramp.setValue(1.0f, false);
 
 		numSamplesBeforeDecay = -1;
-		numSamplesBeforeReleaseEnd = release * sampleRate;
+		numSamplesBeforeReleaseEnd = *release * sampleRate;
 
 		rampStart = lastOutput;
 		rampEnd = 0.0f;
 
 		state = releaseState;
+		currentlyOn = false;
 	}
 
 	bool isCurrentlySounding()
@@ -223,7 +184,7 @@ public:
 
 	bool isCurrentlyOn()
 	{
-		return (state != offState) && (state != releaseState);
+		return currentlyOn;
 	}
 
 	void releaseResources()
@@ -238,8 +199,10 @@ public:
 	}
 
 private:
-	float attack, decay, sustain, release;
+	float *attack, *decay, *sustain, *release;
+
 	double sampleRate;
+
 	int numSamplesBeforeDecay;
 	int numSamplesBeforeReleaseEnd;
 
@@ -250,6 +213,8 @@ private:
 	bool exponentialAttack;
 	bool exponentialDecay;
 	bool exponentialRelease;
+
+	bool currentlyOn;
 
 	LinearSmoothedValue<float> ramp;
 	State state;

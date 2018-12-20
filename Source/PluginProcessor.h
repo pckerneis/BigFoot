@@ -83,17 +83,6 @@ public:
 	}
 
 	//==============================================================================
-	void setBendAmount(float newValue)
-	{
-		*values.bendAmount = newValue;
-	}
-
-	void setBendDuration(float newValue)
-	{
-		*values.bendDuration = newValue;
-	}
-
-	//==============================================================================
 	void setBrightness(float newValue)
 	{
 		*values.brightness = newValue;
@@ -103,41 +92,6 @@ public:
 
 		auto& filter = fxChain.template get<filterIndex>();
 		filter.state->setCutOffFrequency(getSampleRate(), newValue);
-	}
-
-	//==============================================================================
-	void setAttack(float newValue)
-	{
-		*values.attack = newValue;
-
-		adsr.setAttack(newValue);
-	}
-
-	void setDecay(float newValue)
-	{
-		*values.decay = newValue;
-
-		adsr.setDecay(newValue);
-	}
-
-	void setSustain(float newValue)
-	{
-		*values.sustain = newValue;
-
-		adsr.setSustain(newValue);
-	}
-
-	void setRelease(float newValue)
-	{
-		*values.release = newValue;
-
-		adsr.setRelease(newValue);
-	}
-
-	//==============================================================================
-	void setGlide(float newValue)
-	{
-		*values.glide = newValue;
 	}
 
 	//==============================================================================
@@ -188,7 +142,7 @@ private:
 	ParameterValues values;
 
 	ADSRParameters adsrParams;
-	ADSREnvelope adsr;
+	std::unique_ptr<ADSREnvelope> adsr;
 
 	//==============================================================================
 	MidiKeyboardState keyboardState;

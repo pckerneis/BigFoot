@@ -73,10 +73,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	// Bend sliders
 	addAndMakeVisible(bendAmountSlider);
 	bendAmountSlider.setRange(Range<double>(defaultValues.minBendAmount, defaultValues.maxBendAmount), 0.001f);
-	bendAmountSlider.onValueChange = [this]() 
-	{ 
-		processor.setBendAmount (bendAmountSlider.getValue());
-	};
 	bendAmountSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	bendAmountSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	bendAmountSlider.setColour(Slider::rotarySliderFillColourId, Colours::orange);
@@ -84,10 +80,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	addAndMakeVisible(bendDurationSlider);
 	bendDurationSlider.setRange(Range<double>(defaultValues.minBendDuration, defaultValues.maxBendDuration), 0.001f);
-	bendDurationSlider.onValueChange = [this]() 
-	{ 
-		processor.setBendDuration (bendDurationSlider.getValue());
-	};
 	bendDurationSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	bendDurationSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	bendDurationSlider.setColour(Slider::rotarySliderFillColourId, Colours::orange);
@@ -96,22 +88,18 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	// Brightness slider
 	addAndMakeVisible(brightnessSlider);
 	brightnessSlider.setRange(Range<double>(defaultValues.minBrightness, defaultValues.maxBrightness), 0.01f);
-	brightnessSlider.onValueChange = [this]() 
-	{ 
-		processor.setBrightness(brightnessSlider.getValue());
-	};
 	brightnessSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	brightnessSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	brightnessSlider.setColour(Slider::rotarySliderFillColourId, Colours::red.withMultipliedSaturation(0.9f));
+	brightnessSlider.onValueChange = [this]()
+	{
+		processor.setBrightness(brightnessSlider.getValue());
+	};
 	brightnessAttachment.reset(new SliderAttachment(valueTreeState, "brightness", brightnessSlider));
 	
 	// ADSR sliders
 	addAndMakeVisible(attackSlider);
 	attackSlider.setRange(Range<double>(defaultValues.minAttack, defaultValues.maxAttack), 0.001f);
-	attackSlider.onValueChange = [this]() 
-	{ 
-		processor.setAttack(attackSlider.getValue());
-	};
 	attackSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	attackSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
 	attackSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
@@ -119,10 +107,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	addAndMakeVisible(decaySlider);
 	decaySlider.setRange(Range<double>(defaultValues.minDecay, defaultValues.maxDecay), 0.001f);
-	decaySlider.onValueChange = [this]() 
-	{
-		processor.setDecay(decaySlider.getValue());
-	};
 	decaySlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	decaySlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
 	decaySlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
@@ -130,10 +114,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	addAndMakeVisible(sustainSlider);
 	sustainSlider.setRange(Range<double>(0, 1), 0.001f);
-	sustainSlider.onValueChange = [this]() 
-	{
-		processor.setSustain(sustainSlider.getValue());
-	};
 	sustainSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	sustainSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
 	sustainSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
@@ -141,10 +121,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	addAndMakeVisible(releaseSlider);
 	releaseSlider.setRange(Range<double>(defaultValues.minRelease, defaultValues.maxRelease), 0.001f);
-	releaseSlider.onValueChange = [this]() 
-	{ 
-		processor.setRelease(releaseSlider.getValue());
-	};
 	releaseSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	releaseSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
 	releaseSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
@@ -153,10 +129,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	// Glide slider
 	addAndMakeVisible(glideSlider);
 	glideSlider.setRange(Range<double>(0.0f, defaultValues.maxGlide), 0.01f);
-	glideSlider.onValueChange = [this]()
-	{ 
-		processor.setGlide(glideSlider.getValue());
-	};
 	glideSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	glideSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	glideSlider.setColour(Slider::rotarySliderFillColourId, Colours::gold);

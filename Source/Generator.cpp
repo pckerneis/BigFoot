@@ -15,7 +15,8 @@ SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, ParameterValues& v) :
 	currentAngle(0.0f),
 	values(v),
 	adsr(envelope),
-	sampleRate(-1)
+	sampleRate(-1),
+	legato(false)
 {
 }
 
@@ -25,6 +26,7 @@ void SineWaveVoice::prepare(double sr)
 	level.reset(sr, 0.01f);
 	bendRamp.reset(sr, 0.01f);
 	noteRamp.reset(sr, 0.01f);
+	legato = false;
 }
 
 bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)
@@ -38,11 +40,8 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 	level.setValue(velocity * 0.35f);
 
 	// If there's already a note playing and glide param is non 0
-	if (adsr.isCurrentlyOn() && *values.glide >= 0.01f)
+	if (legato && *values.glide != 0.0f)
 	{
-		// Stop the current note to avoid legato mode
-		adsr.noteOff();
-
 		// Glide to the target note without bending
 		noteRamp.reset(sampleRate, *values.glide);
 		noteRamp.setValue(midiNoteNumber);
@@ -57,6 +56,9 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		bendRamp.reset(sampleRate, *values.bendDuration);
 		bendRamp.setValue(*values.bendAmount, true);
 		bendRamp.setValue(0.0f);
+
+		// Stop the current note to avoid legato mode
+		adsr.noteOff();
 	}
 
 	// Initialise angleDelta
@@ -64,6 +66,8 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 
 	// Prepare AD phase
 	adsr.noteOn();
+
+	legato = false;
 }
 
 void SineWaveVoice::stopNote(float /*velocity*/, bool allowTailOff)
@@ -72,12 +76,15 @@ void SineWaveVoice::stopNote(float /*velocity*/, bool allowTailOff)
 	// If we need to send a noteOff to the ADSR (otherwise next startNote() won't allow glide)
 	if (allowTailOff)
 	{
-		// We need a valid sample rate to prepare ramps
+		// We need a valid sample rate to prepare any ramps
 		if (getSampleRate() > 0)
 			adsr.noteOff();
+
+		legato = false;
 	}
 	else
 	{
+		legato = true;
 		clearCurrentNote();
 		angleDelta = 0.0;
 	}

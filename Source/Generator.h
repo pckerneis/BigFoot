@@ -62,6 +62,8 @@ private:
 	LinearSmoothedValue<float> gainValue;
 
 	double sampleRate;
+
+	bool legato;
 };
 
 //==============================================================================
