@@ -42,7 +42,7 @@ struct DefaultParameterValues
 
 	float bendDuration = 0.2f;
 	float minBendDuration = 0.001f;
-	float maxBendDuration = 1.0f;
+	float maxBendDuration = 2.0f;
 
 	float bendAmount = 7.0f;
 	float minBendAmount = -24.0f;
