@@ -68,16 +68,12 @@ public:
 	//==============================================================================
 	void setDrive (float newValue) 
 	{
-		*values.drive = newValue;
-
 		auto& distortion = fxChain.template get<distortionIndex>();
 		distortion.setDrive(*values.drive);
 	}
 
 	void setDriveType(Distortion<float>::TransferFunction func)
 	{
-		*values.driveType = func;
-
 		auto& distortion = fxChain.template get<distortionIndex>();
 		distortion.setTransferFunction(func);
 	}
@@ -85,8 +81,6 @@ public:
 	//==============================================================================
 	void setBrightness(float newValue)
 	{
-		*values.brightness = newValue;
-
 		if (getSampleRate() <= 0)	// If prepareToPlay() wasn't called yet, the filter state will be set there
 			return;
 
@@ -97,8 +91,6 @@ public:
 	//==============================================================================
 	void setOutputGain(float newValue)
 	{
-		*values.master = newValue;
-
 		auto& gain = fxChain.template get<masterGainIndex>();
 		gain.setGainDecibels(newValue);
 	}
@@ -116,12 +108,52 @@ public:
 
 	//==============================================================================
 	/* Implementation of AudioProcessorParameter::Listener. */
-	virtual void parameterValueChanged(int parameterIndex, float newValue) override {}
+	virtual void parameterValueChanged(int parameterIndex, float newValue) override 
+	{
+		// It looks like the raw value pointers are not updated yet in case of host automation
+		// So we need to use the normalized newValue argument...
+
+		if (parameterIndex == driveParam)
+		{
+			setDrive(newValue);
+		}
+		else if (parameterIndex == driveTypeParam)
+		{
+			setDriveType(static_cast<Distortion<float>::TransferFunction>((int)newValue));
+		}
+		else if (parameterIndex == brightnessParam)
+		{
+			auto v = parameters.getParameter("brightness")->getNormalisableRange().convertFrom0to1(newValue);
+			setBrightness(v);
+		}
+		else if (parameterIndex == masterParam)
+		{
+			auto v = parameters.getParameter("master")->getNormalisableRange().convertFrom0to1(newValue);
+			setOutputGain(newValue);
+		}
+	}
+
 	virtual void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override 
 	{
 		parameters.state.setProperty("presetChanged", true, nullptr);
 	}
+	
 private:
+	//==============================================================================
+	enum
+	{
+		driveParam,
+		driveTypeParam,
+		bendAmountParam,
+		bendDurationParam,
+		brightnessParam,
+		attackParam,
+		decayParam,
+		sustainParam,
+		releaseParam,
+		glideParam,
+		masterParam
+	};
     //==============================================================================
 	enum
 	{

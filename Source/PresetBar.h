@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class PresetBar    : public Component, ValueTree::Listener, public AsyncUpdater
+class PresetBar    : public Component,/* ValueTree::Listener,*/ public AsyncUpdater
 {
 public:
     PresetBar(AudioProcessorValueTreeState& vts);
@@ -34,6 +34,7 @@ public:
 
 	//==============================================================================
 	/** ValueTree::Listener implementation */
+	/*
 	virtual void valueTreePropertyChanged(ValueTree&, const Identifier&) override
 	{
 		processorParametersMayHaveChanged();
@@ -42,6 +43,7 @@ public:
 	virtual void valueTreeChildRemoved(ValueTree&, ValueTree&, int) override {}
 	virtual void valueTreeChildOrderChanged(ValueTree&, int, int) override {}
 	virtual void valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) override {}
+	*/
 
 	//==============================================================================
 	/** AsyncUpdater implementation. Try to load first preset after the factory presets were

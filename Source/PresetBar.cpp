@@ -65,9 +65,7 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 
 	if (processorState.state.hasProperty("presetNameEdited"))
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"), dontSendNotification);
-
-	processorState.state.addListener(this);
-
+	
 	if (currentPreset == nullptr)
 		triggerAsyncUpdate();
 }
@@ -75,7 +73,6 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 PresetBar::~PresetBar()
 {
 	AboutScreen::close();
-	processorState.state.removeListener(this);
 }
 
 void PresetBar::paint (Graphics& g)

@@ -41,6 +41,7 @@ public:
 
 private:
 	//==========================================================================
+	void renderBackgroundImage(Graphics& g);
 	void drawDriveTypeSymbols(Graphics&, Rectangle<float>);
 
 	//==========================================================================
@@ -89,6 +90,8 @@ private:
 	std::unique_ptr<SliderAttachment> masterAttachment;
 
 	PresetBar presetBar;
+
+	std::unique_ptr<Image> backgroundImage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessorEditor)
 };

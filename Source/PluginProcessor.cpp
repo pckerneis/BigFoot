@@ -83,14 +83,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	
 	parameters.getParameter("drive")->addListener(this);
 	parameters.getParameter("driveType")->addListener(this);
-	parameters.getParameter("bendAmount")->addListener(this);
-	parameters.getParameter("bendDuration")->addListener(this);
 	parameters.getParameter("brightness")->addListener(this);
-	parameters.getParameter("attack")->addListener(this);
-	parameters.getParameter("decay")->addListener(this);
-	parameters.getParameter("sustain")->addListener(this);
-	parameters.getParameter("release")->addListener(this);
-	parameters.getParameter("glide")->addListener(this);
 	parameters.getParameter("master")->addListener(this);
 }
 
@@ -163,6 +156,8 @@ void BassGeneratorAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+	fxChain.template get<filterIndex>().reset();
+
 	synthAudioSource->prepareToPlay(samplesPerBlock, sampleRate);
 	
 	setDrive(*values.drive);
@@ -173,6 +168,8 @@ void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 
 	dsp::ProcessSpec spec { sampleRate, (uint32)samplesPerBlock, 2 };
 	fxChain.prepare (spec);
+
+	fxChain.template get<masterGainIndex>().setRampDurationSeconds(0.005);
 }
 
 void BassGeneratorAudioProcessor::releaseResources()
@@ -214,10 +211,11 @@ void BassGeneratorAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+	
 	// MIDI note processing and sound generation
 	AudioSourceChannelInfo infos (buffer);
 	synthAudioSource->process(infos, midiMessages);
-
+	
 	// FX processing
 	auto block = juce::dsp::AudioBlock<float>(buffer);
 	auto context = juce::dsp::ProcessContextReplacing<float>(block);

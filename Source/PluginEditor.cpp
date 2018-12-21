@@ -46,10 +46,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	// Drive sliders
 	addAndMakeVisible(driveSlider);
 	driveSlider.setRange(Range<double>(0.0f, 1.0f), 0.001f);
-	driveSlider.onValueChange = [this]() 
-	{
-		processor.setDrive(driveSlider.getValue());
-	};
 	driveSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	driveSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	driveSlider.setColour(Slider::rotarySliderFillColourId, Colours::orangered);
@@ -57,14 +53,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	addAndMakeVisible(driveTypeSlider);
 	driveTypeSlider.setRange(Range<double>(0.0f, 2.0f), 1.0f);
-	driveTypeSlider.onValueChange = [this]() 
-	{ 
-		int v = (int)driveTypeSlider.getValue();
-
-		if (v == 0)			processor.setDriveType(Distortion<float>::TransferFunction::softType);
-		else if (v == 1)	processor.setDriveType(Distortion<float>::TransferFunction::hardType);
-		else				processor.setDriveType(Distortion<float>::TransferFunction::sinType);
-	};
 	driveTypeSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
 	driveTypeSlider.setColour(Slider::backgroundColourId, Colours::grey);
 	driveTypeSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
@@ -91,10 +79,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	brightnessSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	brightnessSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	brightnessSlider.setColour(Slider::rotarySliderFillColourId, Colours::red.withMultipliedSaturation(0.9f));
-	brightnessSlider.onValueChange = [this]()
-	{
-		processor.setBrightness(brightnessSlider.getValue());
-	};
 	brightnessAttachment.reset(new SliderAttachment(valueTreeState, "brightness", brightnessSlider));
 	
 	// ADSR sliders
@@ -136,10 +120,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
 	// Master slider
 	addAndMakeVisible(masterSlider);
-	masterSlider.onValueChange = [this]() 
-	{
-		processor.setOutputGain(masterSlider.getValue());
-	};
 	masterSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	masterSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	masterSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
@@ -182,10 +162,14 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
     // Set editor size and start timer for the keyboard to grab focus
 #if PAWG_USE_MIDI_KEYBOARD
     setSize (400, 300);
+	startTimer(400);
 #else
 	setSize(400, 230);
 #endif
-	startTimer(400);
+	backgroundImage.reset (new Image (Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
+
+	Graphics g (*backgroundImage);
+	renderBackgroundImage(g);
 }
 
 BassGeneratorAudioProcessorEditor::~BassGeneratorAudioProcessorEditor()
@@ -193,9 +177,15 @@ BassGeneratorAudioProcessorEditor::~BassGeneratorAudioProcessorEditor()
 }
 
 //==============================================================================
-void BassGeneratorAudioProcessorEditor::paint (Graphics& g)
+void BassGeneratorAudioProcessorEditor::paint(Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	g.drawImage(*backgroundImage, getLocalBounds().toFloat());
+}
+
+void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
+{
+	g.fillAll(Colours::darkslategrey.darker(1.2f));
+    //g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
 	const int labelHeight = 20;
 	const int marginHeight = 8;
@@ -244,8 +234,7 @@ void BassGeneratorAudioProcessorEditor::resized()
 	const auto cellW = r.proportionOfWidth(0.2);
 	const auto adsrW = cellW * (3.0f / 4.0f);
 
-	auto header = r.removeFromTop(headerHeight);
-
+	r.removeFromTop(headerHeight);
 
 	auto labelTop = r.removeFromTop(labelHeight).withTrimmedTop(10);
 	for (int i = 0; i < 5; ++i)
