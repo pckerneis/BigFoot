@@ -53,6 +53,13 @@ public:
 		sampleRate = sr;
 		ramp.reset(sr, 0.01f);
 		ramp.setValue(0.0f, true);
+		rampStart = 0.0f;
+		rampEnd = 0.0f;
+		lastOutput = 0;
+		state = offState;
+		currentlyOn = false;
+		numSamplesBeforeDecay = -1;
+		numSamplesBeforeReleaseEnd = -1;
 	}
 
 	float getNextValue()
