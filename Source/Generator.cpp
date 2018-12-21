@@ -74,7 +74,7 @@ void SineWaveVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
 	// Looks like allowTailOff is false only when stopNote is called just before a startNote. We can use it to determine
 	// If we need to send a noteOff to the ADSR (otherwise next startNote() won't allow glide)
-	if (allowTailOff)
+	if (allowTailOff || adsr.getState() == ADSREnvelope::releaseState)
 	{
 		// We need a valid sample rate to prepare any ramps
 		if (getSampleRate() > 0)

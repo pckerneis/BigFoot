@@ -177,12 +177,14 @@ public:
 		currentlyOn = false;
 	}
 
-	bool isCurrentlySounding()
+	State getState() const { return state; }
+
+	bool isCurrentlySounding() const
 	{
 		return state != offState;
 	}
 
-	bool isCurrentlyOn()
+	bool isCurrentlyOn() const
 	{
 		return currentlyOn;
 	}
