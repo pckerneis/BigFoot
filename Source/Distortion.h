@@ -34,6 +34,9 @@ public:
 	//==============================================================================
 	void setTransferFunction(TransferFunction f)
 	{
+		if (currentTransferFunction == f)
+			return;
+
 		currentTransferFunction = f;
 
 		auto& waveshaper = processorChain.template get<waveshaperIndex>();
@@ -54,12 +57,13 @@ public:
 		default:
 			break;
 		}
-
-		setDrive(currentDrive);
 	}
 
 	void setDrive(float newValue)
 	{
+		if (currentDrive == newValue)
+			return;
+
 		currentDrive = newValue;
 
 		auto& preGain = processorChain.template get<preGainIndex>();
@@ -73,6 +77,9 @@ public:
 	void prepare(const juce::dsp::ProcessSpec& spec)
 	{
 		processorChain.prepare(spec);
+
+		processorChain.template get<preGainIndex>().setRampDurationSeconds(0.005);
+		processorChain.template get<postGainIndex>().setRampDurationSeconds(0.005);
 	}
 
 	//==============================================================================
