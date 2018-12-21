@@ -509,8 +509,8 @@ void PresetBar::restoreFactoryPresets()
 	presetValues.add(PresetValues({ "Attack sin",	"Sub",		0.0,	0.0,	7.5,	0.06,	10000.,	0.002,	0.1,	0.43,	0.1,	0.0,	9.79 }));
 	presetValues.add(PresetValues({ "Deep sin",		"Sub",		0.3,	1.0,	1.9,	0.022,	511.,	0.14,	1.0,	0.15,	0.1,	0.0,	5.34 }));
 
-	presetValues.add(PresetValues({ "Simple sinus",	"Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.001,	0.001,	1.0,	0.001,	0.0,	0.0 }));
-	presetValues.add(PresetValues({ "Sin to square","Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.001,	0.001,	1.0,	0.001,	0.0,	0.0 }));
+	presetValues.add(PresetValues({ "Simple sinus",	"Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
+	presetValues.add(PresetValues({ "Sin to square","Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
 
 	auto userFolder = getUserPresetsFolder();
 	
