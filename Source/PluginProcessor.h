@@ -119,7 +119,11 @@ public:
 		}
 		else if (parameterIndex == driveTypeParam)
 		{
-			setDriveType(static_cast<Distortion<float>::TransferFunction>((int)newValue));
+			auto v = (int)parameters.getParameter("driveType")->getNormalisableRange().convertFrom0to1(newValue);
+
+			if (v == 0)			setDriveType(Distortion<float>::TransferFunction::softType);
+			else if (v == 1)	setDriveType(Distortion<float>::TransferFunction::hardType);
+			else				setDriveType(Distortion<float>::TransferFunction::sinType);
 		}
 		else if (parameterIndex == brightnessParam)
 		{
