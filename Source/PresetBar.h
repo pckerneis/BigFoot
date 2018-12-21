@@ -55,15 +55,35 @@ private:
 	//==============================================================================
 	struct Preset
 	{
+		String name;
+		String category;
 		File file;
 		XmlElement state;
 		bool factoryPreset;
 	};
 
+	struct PresetComparator
+	{
+		static int compareElements(Preset* first, Preset* second)
+		{
+			const auto firstCategory = first->category;
+			const auto secondCategory = second->category;
+
+			if (firstCategory == secondCategory)
+			{
+				const auto firstName = first->file.getFileNameWithoutExtension();
+				const auto secondName = second->file.getFileNameWithoutExtension();
+
+				return firstName.compareNatural(secondName);
+			}
+			else
+				return firstCategory.compareNatural(secondCategory);
+		}
+	};
 	//==============================================================================
 	/*	Creates a new preset file with the current combo box text and the current processor state. 
 		If the desired name is already taken, add suffix */
-	void saveAsNewPreset();
+	void saveAsNewPreset(String category);
 
 	/* Deletes current preset file and add a new one with current parameters. */
 	void replaceCurrentPreset();
@@ -76,6 +96,25 @@ private:
 
 	/* Creates a XmlElement with the current processor state and some info about the current preset. */
 	XmlElement* getCurrentPresetAsXml(String presetName);
+
+	void showCategoryChooser(int& result, String& category)
+	{
+		// Category chooser
+		StringArray categories;
+
+		for (auto p : presetList)
+			categories.addIfNotAlreadyThere(p->category);
+
+		AlertWindow alert("Preset category", "Choose or create a preset category", AlertWindow::AlertIconType::QuestionIcon);
+		alert.addComboBox("Category", categories);
+		alert.addButton("Cancel", 0);
+		alert.addButton("Apply", KeyPress::backspaceKey);
+		alert.getComboBoxComponent("Category")->setEditableText(true);
+		alert.setColour(AlertWindow::backgroundColourId, findColour(ResizableWindow::backgroundColourId));
+
+		result = alert.runModalLoop();
+		category = alert.getComboBoxComponent("Category")->getText();
+	}
 
 	//==============================================================================
 	/* Opens a FileChooser. If a suitable preset file is chosen, it will be loaded. */

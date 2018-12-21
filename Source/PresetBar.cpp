@@ -152,8 +152,16 @@ void PresetBar::showSavePopupMenu()
 	}
 	else if (result == 2)
 	{
+		String category;
+		int result;
+
+		showCategoryChooser(result, category);
+
+		if (result == 0)
+			return;
+
 		// Save as
-		saveAsNewPreset();
+		saveAsNewPreset(category);
 	}
 	else if (result == 3)
 	{
@@ -162,8 +170,9 @@ void PresetBar::showSavePopupMenu()
 	}
 }
 
-void PresetBar::saveAsNewPreset()
+void PresetBar::saveAsNewPreset(String category)
 {
+	// Get file
 	auto userFolder = getUserPresetsFolder();
 	auto wantedName = comboBox.getText();
 
@@ -176,32 +185,25 @@ void PresetBar::saveAsNewPreset()
 
 	if (fos.openedOk())
 		fos.writeText(xml->createDocument(""), false, false, nullptr);
-
-	struct PresetComparator
-	{
-		static int compareElements(Preset* first, Preset* second)
-		{
-			const auto firstName = first->file.getFileNameWithoutExtension();
-			const auto secondName = second->file.getFileNameWithoutExtension();
-			return firstName.compareNatural(secondName);
-		}
-	};
-
+	
 	PresetComparator comparator;
+	const auto presetName = f.getFileNameWithoutExtension();
 
-	presetList.addSorted(comparator, new Preset({ f, *xml, false }));
+	presetList.addSorted(comparator, new Preset({ presetName, category, f, *xml, false }));
 
 	refreshComboBox();
-	comboBox.setText(f.getFileNameWithoutExtension());
+	comboBox.setText(presetName);
 }
 
 void PresetBar::replaceCurrentPreset()
 {
 	if (canOverrideCurrentPreset())
 	{
+		const String category = currentPreset->category;
+
 		currentPreset->file.deleteFile();		// Delete file
 		refreshPresetList();
-		saveAsNewPreset();						// Add new preset
+		saveAsNewPreset(category);						// Add new preset
 	}
 }
 
@@ -314,22 +316,12 @@ void PresetBar::refreshPresetList()
 				return;
 			}
 
-			presetList.add(new Preset({ f, *xml, false }));
+			presetList.add(new Preset({ xml->getStringAttribute("PresetName"), xml->getStringAttribute("PresetCategory"), f, *xml, false }));
 		}
 		else
 			jassertfalse;
 	}
-
-	struct PresetComparator
-	{
-		static int compareElements(Preset* first, Preset* second)
-		{
-			const auto firstName = first->file.getFileNameWithoutExtension();
-			const auto secondName = second->file.getFileNameWithoutExtension();
-			return firstName.compareNatural(secondName);
-		}
-	};
-
+	
 	PresetComparator comparator;
 	presetList.sort(comparator);
 
@@ -339,15 +331,82 @@ void PresetBar::refreshPresetList()
 
 void PresetBar::refreshComboBox()
 {
+	const auto otherCategory = "Other";
+
+	// Store current state
 	auto previousChoice = comboBox.getSelectedId();
 	auto previousText = comboBox.getText();
 
 	comboBox.clear();
 
-	int i = 0;
+	// Build categories
+	struct PresetCategory
+	{
+		String name;
+
+		struct IndexedPreset
+		{
+			Preset* preset;
+			int index;
+		};
+
+		Array<IndexedPreset> presets;
+	};
+
+	Array<PresetCategory> categories;
+
+	auto addToCategory = [&categories] (String cat, Preset* p, int i)
+	{
+		for (auto& c : categories)
+		{
+			if (c.name == cat)
+			{
+				c.presets.add({ p, i });
+				return;
+			}
+		}
+
+		Array<PresetCategory::IndexedPreset> arr;
+		arr.add({ p, i });
+		categories.add(PresetCategory({ cat, arr }));
+	};
+
+	int index = 0; // This is a "1 based" index as it really refers to the comboBox itemId (presetIndex + 1)
 
 	for (auto p : presetList)
-		comboBox.addItem(p->file.getFileNameWithoutExtension(), ++i);
+	{
+		if (p->category.isEmpty())
+			addToCategory(otherCategory, p, ++index);
+		else
+			addToCategory(p->category, p, ++index);
+	}
+	
+	// Sort categories
+	struct CategoryComparator
+	{
+		static int compareElements(const PresetCategory& first, const PresetCategory& second)
+		{
+			const auto firstName = first.name;
+			const auto secondName = second.name;
+			return firstName.compareNatural(secondName);
+		}
+	};
+
+	CategoryComparator comparator;
+	categories.sort(comparator);
+
+	// Build combo box preset list
+	auto rootMenu = comboBox.getRootMenu();
+
+	for (auto c : categories)
+	{
+		PopupMenu m;
+		
+		for (auto pi : c.presets)
+			m.addItem(pi.index, pi.preset->name);
+
+		rootMenu->addSubMenu(c.name, m);
+	}
 
 	comboBox.addSeparator();
 	comboBox.addItem("Restore factory presets", restoreFactoryItemId);
@@ -412,6 +471,7 @@ void PresetBar::restoreFactoryPresets()
 	struct PresetValues
 	{
 		String name;
+		String category;
 		double drive;
 		double driveType;
 		double bendAmount;
@@ -427,19 +487,30 @@ void PresetBar::restoreFactoryPresets()
 
 	Array<PresetValues> presetValues;
 
-	presetValues.add(PresetValues({ "PAWG",			0.5,	0.0,	7.0,	0.2,	1000.0,	0.01,	0.1,	0.8,	0.1,	0.2,	5.7 }));
-	presetValues.add(PresetValues({ "Stomper",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.01,	0.1,	0.43,	0.1,	0.2,	4.8 }));
-	presetValues.add(PresetValues({ "Dark times",	0.56,	2.0,	-5.8,	0.07,	266.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0 }));
-	presetValues.add(PresetValues({ "WOAW",			0.83,	2.0,	-16.0,	0.18,	712.0,	0.45,	0.55,	0.0,	0.39,	0.09,	6.45 }));
-	presetValues.add(PresetValues({ "Kick",			0.0,	0.0,	24.0,	0.138,	2781.0,	0.005,	0.209,	0.0,	0.1,	0.0,	9.46 }));
-	presetValues.add(PresetValues({ "Kick harder",	0.4,	1.0,	24.0,	0.138,	712.0,	0.002,	0.3,	0.0,	0.18,	0.0,	0.03 }));
-	presetValues.add(PresetValues({ "Sub drop",		0.77,	0.0,	12.0,	0.93,	60.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77 }));
-	presetValues.add(PresetValues({ "Hit & hold",	0.4,	1.0,	24.0,	0.047,	920.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45 }));
-	presetValues.add(PresetValues({ "Hollow",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0031,	0.49,	0.12,	0.1,	0.2,	6.0 }));
-	presetValues.add(PresetValues({ "Dark thoughts",0.73,	2.0,	4.22,	0.248,	325.0,	1.2,	1.57,	0.0,	0.074,	0.2,	5.17 }));
-	presetValues.add(PresetValues({ "Squarish",		1.0,	1.0,	0.08,	0.2,	10000.,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57 }));
-	presetValues.add(PresetValues({ "BBW",			0.656,	2.0,	0.28,	0.15,	5392.,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81 }));
-	presetValues.add(PresetValues({ "Simply sin",	0.0,	0.0,	0.0,	0.0,	10000.,	0.01,	0.1,	0.43,	0.1,	0.18,	9.79 }));
+	presetValues.add(PresetValues({ "PAWG",			"Bass",		0.5,	0.0,	7.0,	0.2,	1000.0,	0.01,	0.1,	0.8,	0.1,	0.08,	5.7 }));
+	presetValues.add(PresetValues({ "Stomper",		"Bass",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.01,	0.1,	0.43,	0.1,	0.08,	4.8 }));
+	presetValues.add(PresetValues({ "Dark times",	"Bass",		0.56,	2.0,	-5.8,	0.07,	266.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0 }));
+	presetValues.add(PresetValues({ "WOAW",			"Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.45,	0.55,	0.0,	0.39,	0.09,	6.45 }));
+	presetValues.add(PresetValues({ "Hit & hold",	"Bass",		0.4,	1.0,	24.0,	0.047,	920.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45 }));
+	presetValues.add(PresetValues({ "Hollow",		"Bass",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0031,	0.49,	0.12,	0.1,	0.1,	6.0 }));
+	presetValues.add(PresetValues({ "Dark thoughts","Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17 }));
+	presetValues.add(PresetValues({ "Squarish",		"Bass",		1.0,	1.0,	0.08,	0.2,	10000.,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57 }));
+	presetValues.add(PresetValues({ "BBW",			"Bass",		0.656,	2.0,	0.28,	0.15,	5392.,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81 }));
+
+	presetValues.add(PresetValues({ "Kick",			"Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.005,	0.209,	0.0,	0.1,	0.0,	9.46 }));
+	presetValues.add(PresetValues({ "Kick harder",	"Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.002,	0.3,	0.0,	0.18,	0.0,	0.03 }));
+	presetValues.add(PresetValues({ "Kick longer",	"Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.005,	1.4,	0.0,	1.16,	0.0,	9.46 }));
+	presetValues.add(PresetValues({ "Kick tighter",	"Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.005,	0.258,	0.0,	0.1,	0.0,	10.15 }))
+		;
+	presetValues.add(PresetValues({ "Sub drop",		"Drop",		0.77,	0.0,	12.0,	2.0,	60.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77 }));
+	presetValues.add(PresetValues({ "SciFi drop",	"Drop",		1.0,	2.0,	14.0,	2.0,	186.0,	0.64,	2.58,	0.0,	0.77,	0.0,	9.95 }));
+
+	presetValues.add(PresetValues({ "Glide sin",	"Sub",		0.0,	0.0,	0.0,	0.0,	10000.,	0.01,	0.1,	0.43,	0.1,	0.08,	9.79 }));
+	presetValues.add(PresetValues({ "Attack sin",	"Sub",		0.0,	0.0,	7.5,	0.06,	10000.,	0.002,	0.1,	0.43,	0.1,	0.0,	9.79 }));
+	presetValues.add(PresetValues({ "Deep sin",		"Sub",		0.3,	1.0,	1.9,	0.022,	511.,	0.14,	1.0,	0.15,	0.1,	0.0,	5.34 }));
+
+	presetValues.add(PresetValues({ "Simple sinus",	"Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
+	presetValues.add(PresetValues({ "Sin to square","Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
 
 	auto userFolder = getUserPresetsFolder();
 	
@@ -450,22 +521,24 @@ void PresetBar::restoreFactoryPresets()
 		xml->addChildElement(child);
 	};
 
-	int index = -1;
-
 	for (auto pv : presetValues)
 	{
-		const auto fileName = String(++index).paddedLeft('0', 2) + " " + pv.name + extension;
+		const auto category = pv.category;
+		const auto presetName = pv.name;
+		const auto fileName = presetName + extension;
+
 		auto f = userFolder.getChildFile(fileName);
 		f.deleteFile();
 
 		std::unique_ptr<XmlElement> xml(new XmlElement("BassGenParameters"));
 
-		xml->setAttribute("PluginName", JucePlugin_Name);
-		xml->setAttribute("PluginVersion", JucePlugin_VersionString);
-		xml->setAttribute("PluginManufacturer", JucePlugin_Manufacturer);
+		xml->setAttribute("PluginName",				JucePlugin_Name);
+		xml->setAttribute("PluginVersion",			JucePlugin_VersionString);
+		xml->setAttribute("PluginManufacturer",		JucePlugin_Manufacturer);
 
-		xml->setAttribute("PresetName", f.getFileNameWithoutExtension());
-		xml->setAttribute("PresetCreation", Time::getCurrentTime().toString(true, true));
+		xml->setAttribute("PresetName",				f.getFileNameWithoutExtension());
+		xml->setAttribute("PresetCategory",			category);
+		xml->setAttribute("PresetCreation",			Time::getCurrentTime().toString(true, true));
 
 		addParamChild(xml.get(), "drive",			pv.drive);
 		addParamChild(xml.get(), "driveType",		pv.driveType);
@@ -484,7 +557,7 @@ void PresetBar::restoreFactoryPresets()
 		if (fos.openedOk())
 			fos.writeText(xml->createDocument(""), false, false, nullptr);
 
-		presetList.add(new Preset({ f, *xml, false }));
+		presetList.add(new Preset({ presetName, category, f, *xml, false }));
 	}
 
 	refreshPresetList();
