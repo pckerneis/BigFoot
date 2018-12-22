@@ -86,14 +86,19 @@ private:
 		nouns.add("opossum");
 		nouns.add("youth");
 		nouns.add("dream");
-		nouns.add("though");
+		nouns.add("thought");
 		nouns.add("trap");
 		nouns.add("vision");
 		nouns.add("pyramid");
 		nouns.add("theory");
 		nouns.add("toy");
+		nouns.add("animals");
+		nouns.add("gang");
+		nouns.add("hood");
+		nouns.add("group");
+		nouns.add("team");
 
-		// Synthesis things
+		// Synthesis and computer things
 		nouns.add("synth");
 		nouns.add("circuit");
 		nouns.add("OSC");
@@ -104,6 +109,8 @@ private:
 		nouns.add("buffer");
 		nouns.add("808");
 		nouns.add("drive");
+		nouns.add("update");
+		nouns.add("reboot");
 
 		// Science things
 		nouns.add("cell");
@@ -116,6 +123,10 @@ private:
 		nouns.add("lab");
 		nouns.add("tube");
 		nouns.add("volume");
+		nouns.add("science");
+		nouns.add("experiment");
+		nouns.add("collision");
+		nouns.add("detection");
 
 		// BIG
 		adjectives.add("big");
@@ -210,7 +221,6 @@ private:
 		adjectives.add("darth");
 		adjectives.add("deadly");
 		adjectives.add("poisonous");
-		adjectives.add("poisonous");
 		adjectives.add("weird");
 		adjectives.add("strange");
 
@@ -249,6 +259,11 @@ private:
 		adjectives.add("lord");
 		adjectives.add("king");
 		adjectives.add("overdriven");
+		adjectives.add("thoughtful");
+		adjectives.add("careless");
+		adjectives.add("stainless");
+		adjectives.add("audacious");
+		adjectives.add("bizarre");
 	}
 
 	StringArray adjectives;
