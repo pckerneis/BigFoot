@@ -109,10 +109,23 @@ class CustomLookAndFeel : public LookAndFeel_V4
 
 		// graduations
 		int numGrad = 10;
-		float gradWidth = lineW * 0.3f;
 
 		for (int i = 0; i < numGrad + 1; ++i)
 		{
+			float gradWidth;
+
+			if (slider.getName() == "bendAmountSlider" || slider.getName() == "masterSlider")
+			{
+				if (i == 5)
+					gradWidth = lineW * 0.5f;
+				else
+					gradWidth = lineW * 0.3f;
+			}
+			else if (i == 0 || i == 10)
+				gradWidth = lineW * 0.5f;
+			else
+				gradWidth = lineW * 0.3f;
+
 			auto thumbWidth = lineW;
 			auto angle = rotaryStartAngle + ((float)i / (float)numGrad) * (rotaryEndAngle - rotaryStartAngle);
 

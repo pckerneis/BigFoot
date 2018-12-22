@@ -61,7 +61,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  defaultParameterValues.glide),
 
 			std::make_unique<AudioParameterFloat>("master", "Output gain",
-												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, 2.0f),
+												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
 												  defaultParameterValues.master)
 
 		})

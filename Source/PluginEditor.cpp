@@ -64,6 +64,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	bendAmountSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	bendAmountSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	bendAmountSlider.setColour(Slider::rotarySliderFillColourId, Colours::orange);
+	bendAmountSlider.setName("bendAmountSlider");													// Used for custom styling
 	bendAmountAttachment.reset(new SliderAttachment(valueTreeState, "bendAmount", bendAmountSlider));
 
 	addAndMakeVisible(bendDurationSlider);
@@ -123,6 +124,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	masterSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	masterSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
 	masterSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
+	masterSlider.setName("masterSlider");													// Used for custom styling
 	masterAttachment.reset(new SliderAttachment(valueTreeState, "master", masterSlider));
 
 	StringArray labelTexts;
