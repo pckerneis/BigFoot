@@ -11,6 +11,7 @@
 #pragma once
 
 #include "LookAndFeel.h"
+#include "RandomPresetNameGenerator.h"
 
 //==============================================================================
 /*
@@ -151,6 +152,13 @@ private:
 	void restoreFactoryPresets();
 
 	//==============================================================================
+	/* Set the current parameters to random values */
+	void randomizeParameters();
+
+	/* Generates some random preset name */
+	String getRandomPresetName() const;
+
+	//==============================================================================
 	OwnedArray<Preset> presetList;
 	Preset* currentPreset;
 
@@ -166,10 +174,13 @@ private:
 	enum SpecialComboItemIds
 	{
 		restoreFactoryItemId = 1000,
-		revealPresetsItemId = 1001
+		revealPresetsItemId = 1001,
+		randomizeItemId = 1002
 	};
 
 	String extension = ".preset";
+
+	RandomPresetNameGenerator nameGenerator;
 
 	SharedResourcePointer<LogoButtonLF> logoLF;
 

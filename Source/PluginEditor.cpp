@@ -184,8 +184,7 @@ void BassGeneratorAudioProcessorEditor::paint(Graphics& g)
 
 void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 {
-	g.fillAll(Colours::darkslategrey.darker(1.2f));
-    //g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
 	const int labelHeight = 20;
 	const int marginHeight = 8;

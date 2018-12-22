@@ -253,7 +253,7 @@ void PresetBar::loadPresetFromFile()
 		processorState.state.setProperty("presetName", presetName, nullptr);
 		processorState.state.setProperty("presetNameEdited", presetName, nullptr);
 
-		// Te combo index will act as if it was on 0, so we can't go to the previous
+		// The combo index will act as if it was on 0, so we can't go to the previous
 		// The next button will select the preset on top of the list
 		previousButton.setEnabled(false);
 		nextButton.setEnabled(true);
@@ -406,6 +406,8 @@ void PresetBar::refreshComboBox()
 	}
 
 	comboBox.addSeparator();
+	comboBox.addItem("Randomize parameters", randomizeItemId);
+	comboBox.addSeparator();
 	comboBox.addItem("Restore factory presets", restoreFactoryItemId);
 	comboBox.addItem("Show presets folder", revealPresetsItemId);
 
@@ -419,13 +421,24 @@ void PresetBar::comboBoxChanged()
 {
 	auto selectedId = comboBox.getSelectedId();
 
-	if (selectedId == restoreFactoryItemId) // Restore factory presets
+	if (selectedId == randomizeItemId)
+	{
+		currentPreset = nullptr;
+		randomizeParameters();
+		comboBox.setText(nameGenerator.get());
+
+		// Behaves as if it was on top of the list
+		previousButton.setEnabled(false);
+		nextButton.setEnabled(true);
+		return;
+	}
+	else if (selectedId == restoreFactoryItemId)
 	{
 		restoreFactoryPresets();
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
 		return;
 	}
-	else if (selectedId == revealPresetsItemId) // Reveal presets folder
+	else if (selectedId == revealPresetsItemId)
 	{
 		getUserPresetsFolder().startAsProcess();
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
@@ -487,7 +500,7 @@ void PresetBar::restoreFactoryPresets()
 	presetValues.add(PresetValues({ "PAWG",			"Bass",		0.5,	0.0,	7.0,	0.2,	1000.0,	0.01,	0.1,	0.8,	0.1,	0.08,	5.7 }));
 	presetValues.add(PresetValues({ "Stomper",		"Bass",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.01,	0.1,	0.43,	0.1,	0.08,	4.8 }));
 	presetValues.add(PresetValues({ "Dark times",	"Bass",		0.56,	2.0,	-5.8,	0.07,	266.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0 }));
-	presetValues.add(PresetValues({ "WOAW",			"Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.45,	0.55,	0.0,	0.39,	0.09,	6.45 }));
+	presetValues.add(PresetValues({ "WOAW",			"Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.45,	0.55,	0.3,	0.39,	0.09,	6.45 }));
 	presetValues.add(PresetValues({ "Hit & hold",	"Bass",		0.4,	1.0,	24.0,	0.047,	920.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45 }));
 	presetValues.add(PresetValues({ "Hollow",		"Bass",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0031,	0.49,	0.12,	0.1,	0.1,	6.0 }));
 	presetValues.add(PresetValues({ "Dark thoughts","Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17 }));
@@ -558,4 +571,29 @@ void PresetBar::restoreFactoryPresets()
 	}
 
 	refreshPresetList();
+}
+
+void PresetBar::randomizeParameters()
+{
+	Random random;
+
+	auto setRandomValue = [this, &random](String paramId)
+	{
+		processorState.getParameter(paramId)->setValueNotifyingHost(random.nextFloat());
+	};
+
+	setRandomValue("drive");
+	setRandomValue("driveType");
+	setRandomValue("attack");
+	setRandomValue("decay");
+	setRandomValue("sustain");
+	setRandomValue("release");
+	setRandomValue("bendAmount");
+	setRandomValue("bendDuration");
+	setRandomValue("brightness");
+	setRandomValue("glide");
+
+	// Limit current master gain
+	auto master = processorState.getParameter("master");
+	master->setValueNotifyingHost(jmin(0.8f, master->getValue()));
 }

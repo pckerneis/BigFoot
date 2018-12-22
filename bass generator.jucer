@@ -26,6 +26,8 @@
               file="Source/PluginProcessor.h"/>
       </GROUP>
       <GROUP id="{07AE8638-4124-C0F4-9CAB-57550C80E154}" name="GUI">
+        <FILE id="v6J59a" name="RandomPresetNameGenerator.h" compile="0" resource="0"
+              file="Source/RandomPresetNameGenerator.h"/>
         <FILE id="TxpzcV" name="AboutWindow.cpp" compile="1" resource="0" file="Source/AboutWindow.cpp"/>
         <FILE id="erpFJh" name="AboutWindow.h" compile="0" resource="0" file="Source/AboutWindow.h"/>
         <FILE id="Kd226Z" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
