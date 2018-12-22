@@ -233,7 +233,7 @@ private:
 		adjectives.add("like a");
 		adjectives.add("more");
 		adjectives.add("what the");
-		adjectives.add("fuck the");
+		adjectives.add("fck the");
 		adjectives.add("oh my");
 		adjectives.add("again");
 		adjectives.add("more about");
