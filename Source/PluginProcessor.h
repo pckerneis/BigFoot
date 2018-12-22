@@ -133,7 +133,7 @@ public:
 		else if (parameterIndex == masterParam)
 		{
 			auto v = parameters.getParameter("master")->getNormalisableRange().convertFrom0to1(newValue);
-			setOutputGain(newValue);
+			setOutputGain(v);
 		}
 	}
 
