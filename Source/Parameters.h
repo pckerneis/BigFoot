@@ -24,6 +24,8 @@ struct ParameterValues
 	float* brightness;
 	float* glide;
 	float* master;
+	float* filterModAmount;
+	float* filterModDuration;
 };
 
 //==============================================================================
@@ -72,6 +74,14 @@ struct DefaultParameterValues
 	float master = 0.0f;
 	float minOutputGain = -60.0f;
 	float maxOutputGain = 16.0f;
+
+	float filterModAmount = 8000.0f;
+	float minFilterModAmount = -8000.0f;
+	float maxFilterModAmount = 8000.0f;
+
+	float filterModDuration = 0.1f;
+	float minFilterModDuration = 0.001f;
+	float maxFilterModDuration = 2.0f;
 
 	float computeSkewForMasterSlider()
 	{

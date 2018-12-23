@@ -23,6 +23,7 @@ struct SineWaveSound : public SynthesiserSound
 
 //==============================================================================
 #include "ADSR.h"
+#include "Distortion.h"
 
 struct ParameterValues;
 
@@ -42,6 +43,13 @@ struct SineWaveVoice : public SynthesiserVoice
 
 	void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
 
+	//==============================================================================
+	void setDrive(float newValue);
+	void setDriveType(Distortion<float>::TransferFunction func);
+
+	//==============================================================================
+	void setOutputGain(float newValue);
+
 private:
 	// Not using MidiMessage::getMidiNoteInHertz as it only takes integer midi note numbers
 	double getMidiNoteInHertz(const float noteNumber) noexcept;
@@ -55,6 +63,8 @@ private:
 	LinearSmoothedValue<float> level;
 	LinearSmoothedValue<float> noteRamp;
 	LinearSmoothedValue<float> bendRamp;
+	LinearSmoothedValue<float> filterRamp;
+	LinearSmoothedValue<float> cutOffRamp;
 
 	ParameterValues& values;
 
@@ -64,6 +74,17 @@ private:
 	double sampleRate;
 
 	bool legato;
+
+	enum
+	{
+		distortionIndex,
+		filterIndex,
+		masterGainIndex
+	};
+
+	using Filter = dsp::StateVariableFilter::Filter<float>;
+	using FilterParams = dsp::StateVariableFilter::Parameters<float>;
+	juce::dsp::ProcessorChain<Distortion<float>, dsp::ProcessorDuplicator<Filter, FilterParams>, dsp::Gain<float>> fxChain;
 };
 
 //==============================================================================
@@ -82,6 +103,11 @@ public:
 
 	// NOT USED !! See process() which handles incoming midi
 	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override {}
+
+	SineWaveVoice* getVoice(int index)
+	{
+		return voices[index];
+	}
 
 private:
 	MidiKeyboardState & keyboardState;

@@ -64,36 +64,6 @@ public:
 	//==============================================================================
 	SynthAudioSource& getSynthAudioSource() { return *synthAudioSource;  }
 	MidiKeyboardState& getKeyboardState() { return keyboardState; }
-
-	//==============================================================================
-	void setDrive (float newValue) 
-	{
-		auto& distortion = fxChain.template get<distortionIndex>();
-		distortion.setDrive(*values.drive);
-	}
-
-	void setDriveType(Distortion<float>::TransferFunction func)
-	{
-		auto& distortion = fxChain.template get<distortionIndex>();
-		distortion.setTransferFunction(func);
-	}
-
-	//==============================================================================
-	void setBrightness(float newValue)
-	{
-		if (getSampleRate() <= 0)	// If prepareToPlay() wasn't called yet, the filter state will be set there
-			return;
-
-		auto& filter = fxChain.template get<filterIndex>();
-		filter.state->setCutOffFrequency(getSampleRate(), newValue);
-	}
-
-	//==============================================================================
-	void setOutputGain(float newValue)
-	{
-		auto& gain = fxChain.template get<masterGainIndex>();
-		gain.setGainDecibels(newValue);
-	}
 	
 	//==============================================================================
 	DefaultParameterValues getDefaultParameterValues()
@@ -113,27 +83,27 @@ public:
 		// It looks like the raw value pointers are not updated yet in case of host automation
 		// So we need to use the normalized newValue argument...
 
+		auto voice = synthAudioSource->getVoice(0);
+
+		if (voice == nullptr)
+			return;
+
 		if (parameterIndex == driveParam)
 		{
-			setDrive(newValue);
+			voice->setDrive(newValue);
 		}
 		else if (parameterIndex == driveTypeParam)
 		{
 			auto v = (int)parameters.getParameter("driveType")->getNormalisableRange().convertFrom0to1(newValue);
 
-			if (v == 0)			setDriveType(Distortion<float>::TransferFunction::softType);
-			else if (v == 1)	setDriveType(Distortion<float>::TransferFunction::hardType);
-			else				setDriveType(Distortion<float>::TransferFunction::sinType);
-		}
-		else if (parameterIndex == brightnessParam)
-		{
-			auto v = parameters.getParameter("brightness")->getNormalisableRange().convertFrom0to1(newValue);
-			setBrightness(v);
+			if (v == 0)			voice->setDriveType(Distortion<float>::TransferFunction::softType);
+			else if (v == 1)	voice->setDriveType(Distortion<float>::TransferFunction::hardType);
+			else				voice->setDriveType(Distortion<float>::TransferFunction::sinType);
 		}
 		else if (parameterIndex == masterParam)
 		{
 			auto v = parameters.getParameter("master")->getNormalisableRange().convertFrom0to1(newValue);
-			setOutputGain(v);
+			voice->setOutputGain(v);
 		}
 	}
 
@@ -156,20 +126,11 @@ private:
 		sustainParam,
 		releaseParam,
 		glideParam,
-		masterParam
+		masterParam,
+		filterModAmount,
+		filterModDuration
 	};
     //==============================================================================
-	enum
-	{
-		distortionIndex,
-		filterIndex,
-		masterGainIndex
-	};
-
-	using Filter = dsp::StateVariableFilter::Filter<float>;
-	using FilterParams = dsp::StateVariableFilter::Parameters<float>;
-
-	juce::dsp::ProcessorChain<Distortion<float>, dsp::ProcessorDuplicator<Filter, FilterParams>, dsp::Gain<float>> fxChain;
 
 	//==============================================================================
 	DefaultParameterValues defaultParameterValues;

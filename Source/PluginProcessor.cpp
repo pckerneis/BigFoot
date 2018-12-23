@@ -62,21 +62,31 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 
 			std::make_unique<AudioParameterFloat>("master", "Output gain",
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
-												  defaultParameterValues.master)
+												  defaultParameterValues.master),
+
+			std::make_unique<AudioParameterFloat>("filterModAmount", "Filter modulation amount",
+												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
+												  defaultParameterValues.filterModAmount),
+
+			 std::make_unique<AudioParameterFloat>("filterModDuration", "Filter modulation duration",
+												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
+												  defaultParameterValues.filterModDuration)
 
 		})
 {
-	values.drive			= parameters.getRawParameterValue("drive");
-	values.driveType		= parameters.getRawParameterValue("driveType");
-	values.bendAmount		= parameters.getRawParameterValue("bendAmount");
-	values.bendDuration		= parameters.getRawParameterValue("bendDuration");
-	values.brightness		= parameters.getRawParameterValue("brightness");
-	values.attack			= parameters.getRawParameterValue("attack");
-	values.decay			= parameters.getRawParameterValue("decay");
-	values.sustain			= parameters.getRawParameterValue("sustain");
-	values.release			= parameters.getRawParameterValue("release");
-	values.glide			= parameters.getRawParameterValue("glide");
-	values.master			= parameters.getRawParameterValue("master");
+	values.drive				= parameters.getRawParameterValue("drive");
+	values.driveType			= parameters.getRawParameterValue("driveType");
+	values.bendAmount			= parameters.getRawParameterValue("bendAmount");
+	values.bendDuration			= parameters.getRawParameterValue("bendDuration");
+	values.brightness			= parameters.getRawParameterValue("brightness");
+	values.attack				= parameters.getRawParameterValue("attack");
+	values.decay				= parameters.getRawParameterValue("decay");
+	values.sustain				= parameters.getRawParameterValue("sustain");
+	values.release				= parameters.getRawParameterValue("release");
+	values.glide				= parameters.getRawParameterValue("glide");
+	values.master				= parameters.getRawParameterValue("master");
+	values.filterModAmount		= parameters.getRawParameterValue("filterModAmount");
+	values.filterModDuration	= parameters.getRawParameterValue("filterModDuration");
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
 	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));
@@ -156,20 +166,8 @@ void BassGeneratorAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	fxChain.template get<filterIndex>().reset();
-
 	synthAudioSource->prepareToPlay(samplesPerBlock, sampleRate);
-	
-	setDrive(*values.drive);
-	setDriveType(static_cast<Distortion<float>::TransferFunction>((int)*values.driveType));
-	setBrightness(*values.brightness);
-	setOutputGain(*values.master);
 	adsr->prepare(sampleRate);
-
-	dsp::ProcessSpec spec { sampleRate, (uint32)samplesPerBlock, 2 };
-	fxChain.prepare (spec);
-
-	fxChain.template get<masterGainIndex>().setRampDurationSeconds(0.005);
 }
 
 void BassGeneratorAudioProcessor::releaseResources()
@@ -215,11 +213,6 @@ void BassGeneratorAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
 	// MIDI note processing and sound generation
 	AudioSourceChannelInfo infos (buffer);
 	synthAudioSource->process(infos, midiMessages);
-	
-	// FX processing
-	auto block = juce::dsp::AudioBlock<float>(buffer);
-	auto context = juce::dsp::ProcessContextReplacing<float>(block);
-	fxChain.process(context);
 
 	midiMessages.clear();
 }

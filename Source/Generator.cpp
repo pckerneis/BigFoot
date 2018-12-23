@@ -22,11 +22,23 @@ SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, ParameterValues& v) :
 
 void SineWaveVoice::prepare(double sr)
 {
+	fxChain.template get<filterIndex>().reset();
+	fxChain.template get<masterGainIndex>().setRampDurationSeconds(0.005);
+
+	dsp::ProcessSpec spec{ sampleRate, (uint32)sr, 2 };
+	fxChain.prepare(spec);
+
 	sampleRate = sr;
 	level.reset(sr, 0.01f);
 	bendRamp.reset(sr, 0.01f);
 	noteRamp.reset(sr, 0.01f);
+	filterRamp.reset(sr, 0.01f);
+	cutOffRamp.reset(sr, 0.02f);
 	legato = false;
+
+	setDrive(*values.drive);
+	setDriveType(static_cast<Distortion<float>::TransferFunction>((int)*values.driveType));
+	setOutputGain(*values.master);
 }
 
 bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)
@@ -52,10 +64,15 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		// Else just set the note (force)
 		noteRamp.setValue(midiNoteNumber, true);
 
-		// ...and prepare bend ramp
+		// .. prepare bend ramp
 		bendRamp.reset(sampleRate, *values.bendDuration);
 		bendRamp.setValue(*values.bendAmount, true);
 		bendRamp.setValue(0.0f);
+
+		// .. prepare filter ramp
+		filterRamp.reset(sampleRate, *values.filterModDuration);
+		filterRamp.setValue(*values.filterModAmount, true);
+		filterRamp.setValue(0.0f);
 
 		// Stop the current note to avoid legato mode
 		adsr.noteOff();
@@ -93,28 +110,79 @@ void SineWaveVoice::stopNote(float /*velocity*/, bool allowTailOff)
 void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples)
 {
 	if (angleDelta == 0.0)
-		return;
-
-	if (!adsr.isCurrentlySounding())
+	{
+		// No sound generation
+	}
+	else if (!adsr.isCurrentlySounding())
 	{
 		clearCurrentNote();
 		angleDelta = 0.0;
 	}
 	else
 	{
-		while (--numSamples >= 0)
+		auto end = numSamples;
+		auto start = startSample;
+
+		while (--end >= 0)
 		{
 			auto currentSample = (float)(std::sin(currentAngle) * getNextEnvelopeValue());
 
 			for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-				outputBuffer.addSample(i, startSample, currentSample);
+				outputBuffer.addSample(i, start, currentSample);
 
 			currentAngle += angleDelta;
-			++startSample;
+			++start;
 
 			updateAngleDelta();
 		}
 	}
+
+	// FX processing
+	const int freqUpdateRate = 50;
+
+	auto block = juce::dsp::AudioBlock<float>(outputBuffer).getSubBlock(startSample, numSamples);
+
+	for (int pos = 0; pos < numSamples; ++pos)
+	{
+		// Maximum block length for this pass
+
+		if (pos % freqUpdateRate == 0)
+		{
+			// adjust cutoff value
+			auto maxSize = jmin((numSamples - pos), freqUpdateRate);
+			const auto cutOff = jlimit(20.0f, 20000.0f, filterRamp.getNextValue() + *values.brightness);
+			filterRamp.skip(maxSize - 1);
+
+			cutOffRamp.setValue(cutOff);
+		}
+
+		auto& filter = fxChain.template get<filterIndex>();
+		filter.state->setCutOffFrequency(getSampleRate(), cutOffRamp.getNextValue());
+
+		// get sub-block context
+		auto context = juce::dsp::ProcessContextReplacing<float>(block.getSubBlock(pos, 1));
+
+		// process
+		fxChain.process(context);
+	}
+}
+
+void SineWaveVoice::setDrive(float newValue)
+{
+	auto& distortion = fxChain.template get<distortionIndex>();
+	distortion.setDrive(*values.drive);
+}
+
+void SineWaveVoice::setDriveType(Distortion<float>::TransferFunction func)
+{
+	auto& distortion = fxChain.template get<distortionIndex>();
+	distortion.setTransferFunction(func);
+}
+
+void SineWaveVoice::setOutputGain(float newValue)
+{
+	auto& gain = fxChain.template get<masterGainIndex>();
+	gain.setGainDecibels(newValue);
 }
 
 double SineWaveVoice::getMidiNoteInHertz(const float noteNumber) noexcept
