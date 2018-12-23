@@ -476,6 +476,8 @@ File PresetBar::getUserPresetsFolder()
 	return rootFolder;
 }
 
+#include "Parameters.h"
+
 void PresetBar::restoreFactoryPresets()
 {
 	struct PresetValues
@@ -486,7 +488,9 @@ void PresetBar::restoreFactoryPresets()
 		double driveType;
 		double bendAmount;
 		double bendDuration;
-		double brightness;
+		double lpFreq;
+		double lpModAmount;
+		double lpModDuration;
 		double attack;
 		double decay;
 		double sustain;
@@ -497,30 +501,30 @@ void PresetBar::restoreFactoryPresets()
 
 	Array<PresetValues> presetValues;
 
-	presetValues.add(PresetValues({ "PAWG",			"Bass",		0.5,	0.0,	7.0,	0.2,	1000.0,	0.01,	0.1,	0.8,	0.1,	0.08,	5.7 }));
-	presetValues.add(PresetValues({ "Stomper",		"Bass",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.01,	0.1,	0.43,	0.1,	0.08,	4.8 }));
-	presetValues.add(PresetValues({ "Dark times",	"Bass",		0.56,	2.0,	-5.8,	0.07,	266.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0 }));
-	presetValues.add(PresetValues({ "WOAW",			"Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.45,	0.55,	0.3,	0.39,	0.09,	6.45 }));
-	presetValues.add(PresetValues({ "Hit & hold",	"Bass",		0.4,	1.0,	24.0,	0.047,	920.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45 }));
-	presetValues.add(PresetValues({ "Hollow",		"Bass",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0031,	0.49,	0.12,	0.1,	0.1,	6.0 }));
-	presetValues.add(PresetValues({ "Dark thoughts","Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17 }));
-	presetValues.add(PresetValues({ "Squarish",		"Bass",		1.0,	1.0,	0.08,	0.2,	10000.,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57 }));
-	presetValues.add(PresetValues({ "BBW",			"Bass",		0.656,	2.0,	0.28,	0.15,	5392.,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81 }));
+	presetValues.add(PresetValues({ "PAWG",			"Bass",		0.5,	0.0,	7.0,	0.2,	1000.0,	0.0,	0.0,	0.01,	0.1,	0.8,	0.1,	0.08,	5.7 }));
+	presetValues.add(PresetValues({ "Stomper",		"Bass",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.0,	0.0,	0.01,	0.1,	0.43,	0.1,	0.08,	4.8 }));
+	presetValues.add(PresetValues({ "Dark times",	"Bass",		0.56,	2.0,	-5.8,	0.07,	266.0,	0.0,	0.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0 }));
+	presetValues.add(PresetValues({ "WOAW",			"Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.0,	0.0,	0.45,	0.55,	0.3,	0.39,	0.09,	6.45 }));
+	presetValues.add(PresetValues({ "Hit & hold",	"Bass",		0.4,	1.0,	24.0,	0.047,	920.0,	0.0,	0.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45 }));
+	presetValues.add(PresetValues({ "Hollow",		"Bass",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0,	0.0,	0.0031,	0.49,	0.12,	0.1,	0.1,	6.0 }));
+	presetValues.add(PresetValues({ "Dark thoughts","Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	0.0,	0.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17 }));
+	presetValues.add(PresetValues({ "Squarish",		"Bass",		1.0,	1.0,	0.08,	0.2,	10000.,	0.0,	0.0,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57 }));
+	presetValues.add(PresetValues({ "BBW",			"Bass",		0.656,	2.0,	0.28,	0.15,	5392.,	0.0,	0.0,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81 }));
 
-	presetValues.add(PresetValues({ "Kick",			"Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.005,	0.209,	0.0,	0.1,	0.0,	9.46 }));
-	presetValues.add(PresetValues({ "Kick harder",	"Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.002,	0.3,	0.0,	0.18,	0.0,	0.03 }));
-	presetValues.add(PresetValues({ "Kick longer",	"Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.005,	1.4,	0.0,	1.16,	0.0,	9.46 }));
-	presetValues.add(PresetValues({ "Kick tighter",	"Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.005,	0.258,	0.0,	0.1,	0.0,	6.25 }))
+	presetValues.add(PresetValues({ "Kick",			"Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.0,	0.0,	0.005,	0.209,	0.0,	0.1,	0.0,	9.46 }));
+	presetValues.add(PresetValues({ "Kick harder",	"Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.0,	0.0,	0.002,	0.3,	0.0,	0.18,	0.0,	0.03 }));
+	presetValues.add(PresetValues({ "Kick longer",	"Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.0,	0.0,	0.005,	1.4,	0.0,	1.16,	0.0,	9.46 }));
+	presetValues.add(PresetValues({ "Kick tighter",	"Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.0,	0.0,	0.005,	0.258,	0.0,	0.1,	0.0,	6.25 }))
 		;
-	presetValues.add(PresetValues({ "Sub drop",		"Drop",		0.77,	0.0,	12.0,	2.0,	60.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77 }));
-	presetValues.add(PresetValues({ "SciFi drop",	"Drop",		1.0,	2.0,	14.0,	2.0,	186.0,	0.64,	2.58,	0.0,	0.77,	0.0,	9.95 }));
+	presetValues.add(PresetValues({ "Sub drop",		"Drop",		0.77,	0.0,	12.0,	2.0,	60.0,	0.0,	0.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77 }));
+	presetValues.add(PresetValues({ "SciFi drop",	"Drop",		1.0,	2.0,	14.0,	2.0,	186.0,	0.0,	0.0,	0.64,	2.58,	0.0,	0.77,	0.0,	9.95 }));
 
-	presetValues.add(PresetValues({ "Glide sin",	"Sub",		0.0,	0.0,	0.0,	0.0,	10000.,	0.01,	0.1,	0.43,	0.1,	0.08,	6.79 }));
-	presetValues.add(PresetValues({ "Attack sin",	"Sub",		0.0,	0.0,	7.5,	0.06,	10000.,	0.002,	0.1,	0.43,	0.1,	0.0,	6.79 }));
-	presetValues.add(PresetValues({ "Deep sin",		"Sub",		0.3,	1.0,	1.9,	0.022,	511.,	0.14,	1.0,	0.15,	0.1,	0.0,	3.34 }));
+	presetValues.add(PresetValues({ "Glide sin",	"Sub",		0.0,	0.0,	0.0,	0.0,	10000.,	0.0,	0.0,	0.01,	0.1,	0.43,	0.1,	0.08,	6.79 }));
+	presetValues.add(PresetValues({ "Attack sin",	"Sub",		0.0,	0.0,	7.5,	0.06,	10000.,	0.0,	0.0,	0.002,	0.1,	0.43,	0.1,	0.0,	6.79 }));
+	presetValues.add(PresetValues({ "Deep sin",		"Sub",		0.3,	1.0,	1.9,	0.022,	511.,	0.0,	0.0,	0.14,	1.0,	0.15,	0.1,	0.0,	3.34 }));
 
-	presetValues.add(PresetValues({ "Simple sinus",	"Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
-	presetValues.add(PresetValues({ "Sin to square","Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
+	presetValues.add(PresetValues({ "Simple sinus",	"Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.0,	0.0,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
+	presetValues.add(PresetValues({ "Sin to square","Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.0,	0.0,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0 }));
 
 	auto userFolder = getUserPresetsFolder();
 	
@@ -550,17 +554,19 @@ void PresetBar::restoreFactoryPresets()
 		xml->setAttribute("PresetCategory",			category);
 		xml->setAttribute("PresetCreation",			Time::getCurrentTime().toString(true, true));
 
-		addParamChild(xml.get(), "drive",			pv.drive);
-		addParamChild(xml.get(), "driveType",		pv.driveType);
-		addParamChild(xml.get(), "bendAmount",		pv.bendAmount);
-		addParamChild(xml.get(), "bendDuration",	pv.bendDuration);
-		addParamChild(xml.get(), "brightness",		pv.brightness);
-		addParamChild(xml.get(), "attack",			pv.attack);
-		addParamChild(xml.get(), "decay",			pv.decay);
-		addParamChild(xml.get(), "sustain",			pv.sustain);
-		addParamChild(xml.get(), "release",			pv.release);
-		addParamChild(xml.get(), "glide",			pv.glide);
-		addParamChild(xml.get(), "master",			pv.master);
+		addParamChild(xml.get(), ParameterIDs::drive,			pv.drive);
+		addParamChild(xml.get(), ParameterIDs::driveType,		pv.driveType);
+		addParamChild(xml.get(), ParameterIDs::bendAmount,		pv.bendAmount);
+		addParamChild(xml.get(), ParameterIDs::bendDuration,	pv.bendDuration);
+		addParamChild(xml.get(), ParameterIDs::lpFreq,			pv.lpFreq);
+		addParamChild(xml.get(), ParameterIDs::lpModAmount,		pv.lpModAmount);
+		addParamChild(xml.get(), ParameterIDs::lpModDuration,	pv.lpModDuration);
+		addParamChild(xml.get(), ParameterIDs::attack,			pv.attack);
+		addParamChild(xml.get(), ParameterIDs::decay,			pv.decay);
+		addParamChild(xml.get(), ParameterIDs::sustain,			pv.sustain);
+		addParamChild(xml.get(), ParameterIDs::release,			pv.release);
+		addParamChild(xml.get(), ParameterIDs::glide,			pv.glide);
+		addParamChild(xml.get(), ParameterIDs::master,			pv.master);
 
 		FileOutputStream fos(f);
 
@@ -582,18 +588,20 @@ void PresetBar::randomizeParameters()
 		processorState.getParameter(paramId)->setValueNotifyingHost(random.nextFloat());
 	};
 
-	setRandomValue("drive");
-	setRandomValue("driveType");
-	setRandomValue("attack");
-	setRandomValue("decay");
-	setRandomValue("sustain");
-	setRandomValue("release");
-	setRandomValue("bendAmount");
-	setRandomValue("bendDuration");
-	setRandomValue("brightness");
-	setRandomValue("glide");
+	setRandomValue(ParameterIDs::drive);
+	setRandomValue(ParameterIDs::driveType);
+	setRandomValue(ParameterIDs::attack);
+	setRandomValue(ParameterIDs::decay);
+	setRandomValue(ParameterIDs::sustain);
+	setRandomValue(ParameterIDs::release);
+	setRandomValue(ParameterIDs::bendAmount);
+	setRandomValue(ParameterIDs::bendDuration);
+	setRandomValue(ParameterIDs::lpFreq);
+	setRandomValue(ParameterIDs::lpModAmount);
+	setRandomValue(ParameterIDs::lpModDuration);
+	setRandomValue(ParameterIDs::glide);
 
 	// Limit current master gain
-	auto master = processorState.getParameter("master");
+	auto master = processorState.getParameter(ParameterIDs::master);
 	master->setValueNotifyingHost(jmin(0.8f, master->getValue()));
 }

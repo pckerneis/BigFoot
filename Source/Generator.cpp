@@ -70,8 +70,8 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		bendRamp.setValue(0.0f);
 
 		// .. prepare filter ramp
-		filterRamp.reset(sampleRate, *values.filterModDuration);
-		filterRamp.setValue(*values.filterModAmount, true);
+		filterRamp.reset(sampleRate, *values.lpModDuration);
+		filterRamp.setValue(*values.lpModAmount, true);
 		filterRamp.setValue(0.0f);
 
 		// Stop the current note to avoid legato mode
@@ -150,7 +150,7 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 		{
 			// adjust cutoff value
 			auto maxSize = jmin((numSamples - pos), freqUpdateRate);
-			const auto cutOff = jlimit(20.0f, 20000.0f, filterRamp.getNextValue() + *values.brightness);
+			const auto cutOff = jlimit(20.0f, 20000.0f, filterRamp.getNextValue() + *values.lpFreq);
 			filterRamp.skip(maxSize - 1);
 
 			cutOffRamp.setValue(cutOff);

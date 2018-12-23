@@ -40,6 +40,11 @@ public:
     void resized() override;
 
 private:
+	void addLinearSlider(AudioProcessorValueTreeState& vts, String paramName, bool reversed = false);
+	void addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour);
+
+	Slider* getSlider(String param);
+
 	//==========================================================================
 	void renderBackgroundImage(Graphics& g);
 	void drawDriveTypeSymbols(Graphics&, Rectangle<float>);
@@ -61,33 +66,11 @@ private:
 	MidiKeyboardComponent keyboardComponent;
 #endif
 
-	Slider driveSlider;
-	ReversedSlider driveTypeSlider;
-	Slider attackSlider;
-	Slider decaySlider;
-	Slider sustainSlider;
-	Slider releaseSlider;
-	Slider bendAmountSlider;
-	Slider bendDurationSlider;
-	Slider brightnessSlider;
-	Slider glideSlider;
-	Slider masterSlider;
-
-	OwnedArray<Label> labels;
-
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
-	std::unique_ptr<SliderAttachment> driveAttachment;
-	std::unique_ptr<SliderAttachment> driveTypeAttachment;
-	std::unique_ptr<SliderAttachment> attackAttachment;
-	std::unique_ptr<SliderAttachment> decayAttachment;
-	std::unique_ptr<SliderAttachment> sustainAttachment;
-	std::unique_ptr<SliderAttachment> releaseAttachment;
-	std::unique_ptr<SliderAttachment> bendAmountAttachment;
-	std::unique_ptr<SliderAttachment> bendDurationAttachment;
-	std::unique_ptr<SliderAttachment> brightnessAttachment;
-	std::unique_ptr<SliderAttachment> glideAttachment;
-	std::unique_ptr<SliderAttachment> masterAttachment;
+	OwnedArray<Slider> sliders;
+	OwnedArray<SliderAttachment> sliderAttachments;
+	OwnedArray<Label> labels;
 
 	PresetBar presetBar;
 

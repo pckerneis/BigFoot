@@ -27,12 +27,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	const auto bgColour = Colours::black.withBrightness(0.08f);
 	lf->setColour(ResizableWindow::backgroundColourId, bgColour);
 	lf->setColour(PopupMenu::backgroundColourId, bgColour);
-	
-	const float textBoxWidth = 60;
-	const float adsrTextBoxWidth = 50;
-	const float textBoxHeight = 18;
-
-	const auto textBoxStyle = Slider::NoTextBox; // Slider::TextBoxBelow;
 
 	// Keyboard comp
 #if PAWG_USE_MIDI_KEYBOARD
@@ -43,111 +37,18 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	// Get default param values
 	auto defaultValues = p.getDefaultParameterValues();
 
-	// Drive sliders
-	addAndMakeVisible(driveSlider);
-	driveSlider.setRange(Range<double>(0.0f, 1.0f), 0.001f);
-	driveSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	driveSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	driveSlider.setColour(Slider::rotarySliderFillColourId, Colours::orangered);
-	driveAttachment.reset(new SliderAttachment(valueTreeState, "drive", driveSlider));
-
-	addAndMakeVisible(driveTypeSlider);
-	driveTypeSlider.setRange(Range<double>(0.0f, 2.0f), 1.0f);
-	driveTypeSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
-	driveTypeSlider.setColour(Slider::backgroundColourId, Colours::grey);
-	driveTypeSlider.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	driveTypeAttachment.reset(new SliderAttachment(valueTreeState, "driveType", driveTypeSlider));
-
-	// Bend sliders
-	addAndMakeVisible(bendAmountSlider);
-	bendAmountSlider.setRange(Range<double>(defaultValues.minBendAmount, defaultValues.maxBendAmount), 0.001f);
-	bendAmountSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	bendAmountSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	bendAmountSlider.setColour(Slider::rotarySliderFillColourId, Colours::orange);
-	bendAmountSlider.setName("bendAmountSlider");													// Used for custom styling
-	bendAmountAttachment.reset(new SliderAttachment(valueTreeState, "bendAmount", bendAmountSlider));
-
-	addAndMakeVisible(bendDurationSlider);
-	bendDurationSlider.setRange(Range<double>(defaultValues.minBendDuration, defaultValues.maxBendDuration), 0.001f);
-	bendDurationSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	bendDurationSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	bendDurationSlider.setColour(Slider::rotarySliderFillColourId, Colours::orange);
-	bendDurationAttachment.reset(new SliderAttachment(valueTreeState, "bendDuration", bendDurationSlider));
-
-	// Brightness slider
-	addAndMakeVisible(brightnessSlider);
-	brightnessSlider.setRange(Range<double>(defaultValues.minBrightness, defaultValues.maxBrightness), 0.01f);
-	brightnessSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	brightnessSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	brightnessSlider.setColour(Slider::rotarySliderFillColourId, Colours::red.withMultipliedSaturation(0.9f));
-	brightnessAttachment.reset(new SliderAttachment(valueTreeState, "brightness", brightnessSlider));
-	
-	// ADSR sliders
-	addAndMakeVisible(attackSlider);
-	attackSlider.setRange(Range<double>(defaultValues.minAttack, defaultValues.maxAttack), 0.001f);
-	attackSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	attackSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
-	attackSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
-	attackAttachment.reset(new SliderAttachment(valueTreeState, "attack", attackSlider));
-
-	addAndMakeVisible(decaySlider);
-	decaySlider.setRange(Range<double>(defaultValues.minDecay, defaultValues.maxDecay), 0.001f);
-	decaySlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	decaySlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
-	decaySlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
-	decayAttachment.reset(new SliderAttachment(valueTreeState, "decay", decaySlider));
-
-	addAndMakeVisible(sustainSlider);
-	sustainSlider.setRange(Range<double>(0, 1), 0.001f);
-	sustainSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	sustainSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
-	sustainSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
-	sustainAttachment.reset(new SliderAttachment(valueTreeState, "sustain", sustainSlider));
-
-	addAndMakeVisible(releaseSlider);
-	releaseSlider.setRange(Range<double>(defaultValues.minRelease, defaultValues.maxRelease), 0.001f);
-	releaseSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	releaseSlider.setTextBoxStyle(textBoxStyle, false, adsrTextBoxWidth, textBoxHeight);
-	releaseSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
-	releaseAttachment.reset(new SliderAttachment(valueTreeState, "release", releaseSlider));
-
-	// Glide slider
-	addAndMakeVisible(glideSlider);
-	glideSlider.setRange(Range<double>(0.0f, defaultValues.maxGlide), 0.01f);
-	glideSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	glideSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	glideSlider.setColour(Slider::rotarySliderFillColourId, Colours::gold);
-	glideAttachment.reset(new SliderAttachment(valueTreeState, "glide", glideSlider));
-
-	// Master slider
-	addAndMakeVisible(masterSlider);
-	masterSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	masterSlider.setTextBoxStyle(textBoxStyle, false, textBoxWidth, textBoxHeight);
-	masterSlider.setColour(Slider::rotarySliderFillColourId, Colours::beige);
-	masterSlider.setName("masterSlider");													// Used for custom styling
-	masterAttachment.reset(new SliderAttachment(valueTreeState, "master", masterSlider));
-
-	StringArray labelTexts;
-	labelTexts.add("Glide");
-	labelTexts.add("Bend");
-	labelTexts.add("Time");
-	labelTexts.add("Drive");
-	labelTexts.add("Type");
-	labelTexts.add("Attack");
-	labelTexts.add("Decay");
-	labelTexts.add("Sustain");
-	labelTexts.add("Release");
-	labelTexts.add("Low-pass");
-	labelTexts.add("Output");
-
-	for (auto t : labelTexts)
-	{
-		auto l = new Label(t + "Label", t.toUpperCase());
-		l->setJustificationType(Justification::centred);
-		l->setFont(l->getFont().withHeight(12.0f));
-		addAndMakeVisible(l);
-		labels.add(l);
-	}
+	// Add sliders
+	addRotarySlider(valueTreeState, ParameterIDs::glide,		Colours::gold);
+	addRotarySlider(valueTreeState, ParameterIDs::bendAmount,	Colours::orange);
+	addRotarySlider(valueTreeState, ParameterIDs::bendDuration, Colours::orange);
+	addRotarySlider(valueTreeState, ParameterIDs::drive,		Colours::orangered);
+	addLinearSlider(valueTreeState, ParameterIDs::driveType,	true);
+	addRotarySlider(valueTreeState, ParameterIDs::attack,		Colours::beige);
+	addRotarySlider(valueTreeState, ParameterIDs::decay,		Colours::beige);
+	addRotarySlider(valueTreeState, ParameterIDs::sustain,		Colours::beige);
+	addRotarySlider(valueTreeState, ParameterIDs::release,		Colours::beige);
+	addRotarySlider(valueTreeState, ParameterIDs::lpFreq,		Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::master,       Colours::beige);
 
 	// More slider styling
 	for (auto c : getChildren())
@@ -226,6 +127,9 @@ void BassGeneratorAudioProcessorEditor::resized()
 {
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
+	if (sliders.isEmpty())
+		return;
+
 	const int labelHeight = 20;
 	const int marginHeight = 8;
 	const int sliderHeight = 70;
@@ -243,11 +147,11 @@ void BassGeneratorAudioProcessorEditor::resized()
 
 	auto top = r.removeFromTop(sliderHeight);
 
-	glideSlider.setBounds(top.removeFromLeft(cellW));
-	bendAmountSlider.setBounds(top.removeFromLeft(cellW));
-	bendDurationSlider.setBounds(top.removeFromLeft(cellW));
-	driveSlider.setBounds(top.removeFromLeft(cellW));
-	driveTypeSlider.setBounds(top.removeFromLeft(cellW * 0.5f).withSizeKeepingCentre(cellW * 0.5, top.getHeight() * 0.7f));
+	getSlider(ParameterIDs::glide)->setBounds(top.removeFromLeft(cellW));
+	getSlider(ParameterIDs::bendAmount)->setBounds(top.removeFromLeft(cellW));
+	getSlider(ParameterIDs::bendDuration)->setBounds(top.removeFromLeft(cellW));
+	getSlider(ParameterIDs::drive)->setBounds(top.removeFromLeft(cellW));
+	getSlider(ParameterIDs::driveType)->setBounds(top.removeFromLeft(cellW * 0.5f).withSizeKeepingCentre(cellW * 0.5, top.getHeight() * 0.7f));
 
 	r.removeFromTop(marginHeight);
 
@@ -259,13 +163,13 @@ void BassGeneratorAudioProcessorEditor::resized()
 		labels[i]->setBounds(labelDown.removeFromLeft(cellW));
 
 	auto bottom = r.removeFromTop(sliderHeight);
-	attackSlider.setBounds(bottom.removeFromLeft(adsrW));
-	decaySlider.setBounds(bottom.removeFromLeft(adsrW));
-	sustainSlider.setBounds(bottom.removeFromLeft(adsrW));
-	releaseSlider.setBounds(bottom.removeFromLeft(adsrW));
+	getSlider(ParameterIDs::attack)->setBounds(bottom.removeFromLeft(adsrW));
+	getSlider(ParameterIDs::decay)->setBounds(bottom.removeFromLeft(adsrW));
+	getSlider(ParameterIDs::sustain)->setBounds(bottom.removeFromLeft(adsrW));
+	getSlider(ParameterIDs::release)->setBounds(bottom.removeFromLeft(adsrW));
 
-	brightnessSlider.setBounds(bottom.removeFromLeft(cellW));
-	masterSlider.setBounds(bottom);
+	getSlider(ParameterIDs::lpFreq)->setBounds(bottom.removeFromLeft(cellW));
+	getSlider(ParameterIDs::master)->setBounds(bottom);
 
 #if PAWG_USE_MIDI_KEYBOARD
 	r.removeFromTop(marginHeight);
@@ -273,9 +177,69 @@ void BassGeneratorAudioProcessorEditor::resized()
 #endif
 }
 
+void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
+{
+	// Create slider and attachment
+	auto slider = reversed ? new ReversedSlider(paramName + "Slider") : new Slider(paramName + "Slider");
+	auto attachment = new SliderAttachment(vts, paramName, *slider);
+
+	// Styling
+	addAndMakeVisible(slider);
+	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	slider->setSliderStyle(Slider::SliderStyle::LinearVertical);
+	slider->setColour(Slider::backgroundColourId, Colours::grey);
+
+	// Create and style label
+	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
+	addAndMakeVisible(l);
+	l->setJustificationType(Justification::centred);
+	l->setFont(l->getFont().withHeight(12.0f));
+
+	// Keep pointers
+	sliders.add(slider);
+	sliderAttachments.add(attachment);
+	labels.add(l);
+}
+
+void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
+{
+	// Create slider and attachment
+	auto slider = new Slider(paramName + "Slider");
+	auto attachment = new SliderAttachment(vts, paramName, *slider);
+
+	// Styling
+	addAndMakeVisible(slider);
+	slider->setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	slider->setColour(Slider::rotarySliderFillColourId, colour);
+
+	// Create and style label
+	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
+	addAndMakeVisible(l);
+	l->setJustificationType(Justification::centred);
+	l->setFont(l->getFont().withHeight(12.0f));
+
+	// Keep pointers
+	sliders.add(slider);
+	sliderAttachments.add(attachment);
+	labels.add(l);
+}
+
+Slider * BassGeneratorAudioProcessorEditor::getSlider(String param)
+{
+	for (auto s : sliders)
+		if (s->getName() == param + "Slider")
+			return s;
+
+	jassertfalse;
+
+	return nullptr;
+}
+
 void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g, Rectangle<float> area)
 {
-	const auto sliderArea = driveTypeSlider.getBounds().reduced(10);
+	auto slider = getSlider("driveType");
+	const auto sliderArea = slider->getBounds().reduced(10);
 
 	// Lines
 	const auto lineW = 4;

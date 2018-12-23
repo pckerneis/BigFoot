@@ -25,76 +25,76 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 #endif
 	parameters (*this, nullptr, "BassGenParameters",
 		{
-			std::make_unique<AudioParameterFloat>("drive", "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
-			std::make_unique<AudioParameterChoice>("driveType", "Drive type", defaultParameterValues.driveTypes, 0),
+			std::make_unique<AudioParameterFloat>(ParameterIDs::drive, "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
+			std::make_unique<AudioParameterChoice>(ParameterIDs::driveType, "Drive type", defaultParameterValues.driveTypes, 0),
 
-			std::make_unique<AudioParameterFloat>("bendAmount", "Bend amount",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::bendAmount, "Bend amount",
 												  NormalisableRange<float>(defaultParameterValues.minBendAmount, defaultParameterValues.maxBendAmount),
 												  defaultParameterValues.bendAmount),
 				
-			std::make_unique<AudioParameterFloat>("bendDuration", "Bend duration",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::bendDuration, "Bend duration",
 												  NormalisableRange<float>(defaultParameterValues.minBendDuration, defaultParameterValues.maxBendDuration, 0.0001f, 0.4f),
 												  defaultParameterValues.bendDuration),
 												  
-			std::make_unique<AudioParameterFloat>("brightness", "Brightness",
-												  NormalisableRange<float>(defaultParameterValues.minBrightness, defaultParameterValues.maxBrightness, 0.0001f, 0.25f),
-												  defaultParameterValues.brightness),
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpFreq, "Brightness",
+												  NormalisableRange<float>(defaultParameterValues.minLpFreq, defaultParameterValues.maxLpFreq, 0.0001f, 0.25f),
+												  defaultParameterValues.lpFreq),
 													  
-			std::make_unique<AudioParameterFloat>("attack", "Attack",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::attack, "Attack",
 												  NormalisableRange<float>(defaultParameterValues.minAttack, defaultParameterValues.maxAttack, 0.0001f, 0.25f),
 												  defaultParameterValues.attack),
 
-			std::make_unique<AudioParameterFloat>("decay", "Decay",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::decay, "Decay",
 												  NormalisableRange<float>(defaultParameterValues.minDecay, defaultParameterValues.maxDecay, 0.0001f, 0.25f),
 												  defaultParameterValues.decay),
 
-			std::make_unique<AudioParameterFloat>("sustain", "Sustain",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::sustain, "Sustain",
 												  0.0f, 1.0f,
 												  defaultParameterValues.sustain),
 
-			std::make_unique<AudioParameterFloat>("release", "Release",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::release, "Release",
 												  NormalisableRange<float>(defaultParameterValues.minRelease, defaultParameterValues.maxRelease, 0.0001f, 0.25f),
 												  defaultParameterValues.release),
 												   
-			std::make_unique<AudioParameterFloat>("glide", "Glide",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::glide, "Glide",
 												  NormalisableRange<float>(0.0f, defaultParameterValues.maxGlide, 0.0001f, 0.4f),
 												  defaultParameterValues.glide),
 
-			std::make_unique<AudioParameterFloat>("master", "Output gain",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::master, "Output gain",
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
 												  defaultParameterValues.master),
 
-			std::make_unique<AudioParameterFloat>("filterModAmount", "Filter modulation amount",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModAmount, "Filter modulation amount",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
 												  defaultParameterValues.filterModAmount),
 
-			 std::make_unique<AudioParameterFloat>("filterModDuration", "Filter modulation duration",
+			 std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "Filter modulation duration",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
 												  defaultParameterValues.filterModDuration)
 
 		})
 {
-	values.drive				= parameters.getRawParameterValue("drive");
-	values.driveType			= parameters.getRawParameterValue("driveType");
-	values.bendAmount			= parameters.getRawParameterValue("bendAmount");
-	values.bendDuration			= parameters.getRawParameterValue("bendDuration");
-	values.brightness			= parameters.getRawParameterValue("brightness");
-	values.attack				= parameters.getRawParameterValue("attack");
-	values.decay				= parameters.getRawParameterValue("decay");
-	values.sustain				= parameters.getRawParameterValue("sustain");
-	values.release				= parameters.getRawParameterValue("release");
-	values.glide				= parameters.getRawParameterValue("glide");
-	values.master				= parameters.getRawParameterValue("master");
-	values.filterModAmount		= parameters.getRawParameterValue("filterModAmount");
-	values.filterModDuration	= parameters.getRawParameterValue("filterModDuration");
+	values.drive				= parameters.getRawParameterValue(ParameterIDs::drive);
+	values.driveType			= parameters.getRawParameterValue(ParameterIDs::driveType);
+	values.bendAmount			= parameters.getRawParameterValue(ParameterIDs::bendAmount);
+	values.bendDuration			= parameters.getRawParameterValue(ParameterIDs::bendDuration);
+	values.lpFreq				= parameters.getRawParameterValue(ParameterIDs::lpFreq);
+	values.attack				= parameters.getRawParameterValue(ParameterIDs::attack);
+	values.decay				= parameters.getRawParameterValue(ParameterIDs::decay);
+	values.sustain				= parameters.getRawParameterValue(ParameterIDs::sustain);
+	values.release				= parameters.getRawParameterValue(ParameterIDs::release);
+	values.glide				= parameters.getRawParameterValue(ParameterIDs::glide);
+	values.master				= parameters.getRawParameterValue(ParameterIDs::master);
+	values.lpModAmount			= parameters.getRawParameterValue(ParameterIDs::lpModAmount);
+	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
 	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));
 	
-	parameters.getParameter("drive")->addListener(this);
-	parameters.getParameter("driveType")->addListener(this);
-	parameters.getParameter("brightness")->addListener(this);
-	parameters.getParameter("master")->addListener(this);
+	parameters.getParameter(ParameterIDs::drive)->addListener(this);
+	parameters.getParameter(ParameterIDs::driveType)->addListener(this);
+	parameters.getParameter(ParameterIDs::lpFreq)->addListener(this);
+	parameters.getParameter(ParameterIDs::master)->addListener(this);
 }
 
 BassGeneratorAudioProcessor::~BassGeneratorAudioProcessor()

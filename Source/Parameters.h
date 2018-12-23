@@ -10,6 +10,57 @@
 
 #pragma once
 
+namespace ParameterIDs
+{
+#define DECLARE_ID(name) const juce::String name (#name);
+
+
+	DECLARE_ID(glide)
+
+	DECLARE_ID(bendAmount)
+	DECLARE_ID(bendDuration)
+
+	DECLARE_ID(drive)
+	DECLARE_ID(driveType)
+
+	DECLARE_ID(attack)
+	DECLARE_ID(decay)
+	DECLARE_ID(sustain)
+	DECLARE_ID(release)
+
+	DECLARE_ID(lpFreq)
+	DECLARE_ID(lpModAmount)
+	DECLARE_ID(lpModDuration)
+
+	DECLARE_ID(master)
+
+
+#undef DECLARE_ID
+
+	static String getLabel(String paramId);
+}
+
+String ParameterIDs::getLabel(String type)
+{
+	String name;
+
+	if (type == glide)						name = "Glide";
+	else if (type == bendAmount)            name = "Bend";
+	else if (type == bendDuration)          name = "Time";
+	else if (type == drive)					name = "Drive";
+	else if (type == driveType)				name = "Type";
+	else if (type == attack)				name = "Attack";
+	else if (type == decay)					name = "Decay";
+	else if (type == sustain)				name = "Sustain";
+	else if (type == release)               name = "Release";
+	else if (type == lpFreq)                name = "Low-pass";
+	else if (type == lpModAmount)			name = "Mod. amount";
+	else if (type == lpModDuration)			name = "Mod. time";
+	else if (type == master)                name = "Output";
+
+	return name;
+}
+
 //==============================================================================
 struct ParameterValues
 {
@@ -21,11 +72,11 @@ struct ParameterValues
 	float* release;
 	float* bendAmount;
 	float* bendDuration;
-	float* brightness;
 	float* glide;
 	float* master;
-	float* filterModAmount;
-	float* filterModDuration;
+	float* lpFreq;
+	float* lpModAmount;
+	float* lpModDuration;
 };
 
 //==============================================================================
@@ -50,10 +101,6 @@ struct DefaultParameterValues
 	float minBendAmount = -24.0f;
 	float maxBendAmount = 24.0f;
 
-	float brightness = 10000.0f;
-	float minBrightness = 50.0f;
-	float maxBrightness = 10000.0f;
-
 	float minAttack = 0.001;
 	float maxAttack = 2.0f;
 	float attack = 0.001f;
@@ -74,6 +121,10 @@ struct DefaultParameterValues
 	float master = 0.0f;
 	float minOutputGain = -60.0f;
 	float maxOutputGain = 16.0f;
+
+	float lpFreq = 10000.0f;
+	float minLpFreq = 50.0f;
+	float maxLpFreq = 10000.0f;
 
 	float filterModAmount = 8000.0f;
 	float minFilterModAmount = -8000.0f;
