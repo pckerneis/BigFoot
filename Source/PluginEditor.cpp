@@ -45,10 +45,14 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	addRotarySlider(valueTreeState, ParameterIDs::sustain,		Colours::beige);
 	addRotarySlider(valueTreeState, ParameterIDs::release,		Colours::beige);
 	addRotarySlider(valueTreeState, ParameterIDs::lpFreq,		Colours::red.withMultipliedSaturation(0.9f));
-	addRotarySlider(valueTreeState, ParameterIDs::lpModAmount,	Colours::red.withMultipliedSaturation(0.9f));
-	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration,Colours::red.withMultipliedSaturation(0.9f));
 	addRotarySlider(valueTreeState, ParameterIDs::lpReso,		Colours::red.withMultipliedSaturation(0.9f));
 	addRotarySlider(valueTreeState, ParameterIDs::master,       Colours::beige);
+
+#if PAWG_ALLOW_LPF_MODULATION
+	addRotarySlider(valueTreeState, ParameterIDs::lpModAmount, Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration, Colours::red.withMultipliedSaturation(0.9f));
+#endif
+
 
 	// More slider styling
 	for (auto c : getChildren())
@@ -63,16 +67,29 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	addAndMakeVisible(presetBar);
 
     // Set editor size and start timer for the keyboard to grab focus
-#if PAWG_USE_MIDI_KEYBOARD
-    setSize (440, 300);
-	startTimer(400);
+
+#if PAWG_ALLOW_LPF_MODULATION
+	const int width = 440;
 #else
-	setSize(440, 230);
+	const int width = 400;
 #endif
+
+#if PAWG_USE_MIDI_KEYBOARD
+	const int height = 300;
+#else
+	const int height = 230;
+#endif
+
+	setSize(width, height);
+
 	backgroundImage.reset (new Image (Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
 
 	Graphics g (*backgroundImage);
 	renderBackgroundImage(g);
+
+#if PAWG_USE_MIDI_KEYBOARD
+	startTimer(400);
+#endif
 }
 
 BassGeneratorAudioProcessorEditor::~BassGeneratorAudioProcessorEditor()
@@ -96,29 +113,45 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 	const int cellHeight = sliderHeight + labelHeight + (marginHeight * 0.5);
 
 	auto r = getLocalBounds().reduced(5).toFloat();
+#if PAWG_ALLOW_LPF_MODULATION
 	const auto cellW = int((float)r.getWidth() / 7.0f);
+#else
+	const auto cellW = int((float)r.getWidth() / 6.0f);
+#endif
 
 	const float cornerSize = 6.0f;
 	const float lineThickness = 0.8f;
 	const float margin = 2.0f;
 
-	g.setColour(Colours::white);
+	g.setColour(Colours::lightgrey);
 	
 	r.removeFromTop(headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
 
 	Array<int> topCells;
+#if PAWG_ALLOW_LPF_MODULATION
 	topCells.add(1);
 	topCells.add(2);
 	topCells.add(4);
+#else
+	topCells.add(2);
+	topCells.add(4);
+#endif
 
 	for (auto c : topCells)
 		g.drawRoundedRectangle(topRow.removeFromLeft(c * cellW).reduced(margin, 0), cornerSize, lineThickness);
 
 	Array<int> bottomCells;
+#if PAWG_ALLOW_LPF_MODULATION
 	bottomCells.add(2);
 	bottomCells.add(4);
 	bottomCells.add(1);
+#else
+	bottomCells.add(1);
+	bottomCells.add(2);
+	bottomCells.add(2);
+	bottomCells.add(1);
+#endif
 
 	r.removeFromTop(marginHeight * 0.5);
 	auto bottomRow = r.removeFromTop(cellHeight);
@@ -171,6 +204,8 @@ void BassGeneratorAudioProcessorEditor::resized()
 	};
 
 	StringArray topRow;
+
+#if PAWG_ALLOW_LPF_MODULATION
 	topRow.add(ParameterIDs::glide);
 	topRow.add(ParameterIDs::bendAmount);
 	topRow.add(ParameterIDs::bendDuration);
@@ -178,6 +213,14 @@ void BassGeneratorAudioProcessorEditor::resized()
 	topRow.add(ParameterIDs::decay);
 	topRow.add(ParameterIDs::sustain);
 	topRow.add(ParameterIDs::release);
+#else
+	topRow.add(ParameterIDs::bendAmount);
+	topRow.add(ParameterIDs::bendDuration);
+	topRow.add(ParameterIDs::attack);
+	topRow.add(ParameterIDs::decay);
+	topRow.add(ParameterIDs::sustain);
+	topRow.add(ParameterIDs::release);
+#endif
 
 	layoutLabels(topRow, r.removeFromTop(labelHeight));
 	layoutSliders(topRow, r.removeFromTop(sliderHeight));
@@ -185,6 +228,8 @@ void BassGeneratorAudioProcessorEditor::resized()
 	r.removeFromTop(marginHeight);
 
 	StringArray bottomRow;
+
+#if PAWG_ALLOW_LPF_MODULATION
 	bottomRow.add(ParameterIDs::drive);
 	bottomRow.add(ParameterIDs::driveType);
 	bottomRow.add(ParameterIDs::lpFreq);
@@ -192,6 +237,14 @@ void BassGeneratorAudioProcessorEditor::resized()
 	bottomRow.add(ParameterIDs::lpModAmount);
 	bottomRow.add(ParameterIDs::lpModDuration);
 	bottomRow.add(ParameterIDs::master);
+#else
+	bottomRow.add(ParameterIDs::glide);
+	bottomRow.add(ParameterIDs::drive);
+	bottomRow.add(ParameterIDs::driveType);
+	bottomRow.add(ParameterIDs::lpFreq);
+	bottomRow.add(ParameterIDs::lpReso);
+	bottomRow.add(ParameterIDs::master);
+#endif
 
 	layoutLabels(bottomRow, r.removeFromTop(labelHeight));
 	layoutSliders(bottomRow, r.removeFromTop(sliderHeight));
