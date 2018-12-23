@@ -156,7 +156,7 @@ private:
 	void randomizeParameters();
 
 	/* Generates some random preset name */
-	String getRandomPresetName() const;
+	void setDefaultValues();
 
 	//==============================================================================
 	OwnedArray<Preset> presetList;
@@ -175,7 +175,8 @@ private:
 	{
 		restoreFactoryItemId = 1000,
 		revealPresetsItemId = 1001,
-		randomizeItemId = 1002
+		randomizeItemId = 1002,
+		setDefaultValuesItemId = 1003
 	};
 
 	String extension = ".preset";

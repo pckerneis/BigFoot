@@ -74,7 +74,7 @@ private:
 		nouns.add("narcotic");
 		nouns.add("pill");
 		nouns.add("prescription");
-		nouns.add("pharmaceutic");
+		nouns.add("pharmaceutics");
 		nouns.add("candy");
 		nouns.add("sugar");
 		nouns.add("inspection");
