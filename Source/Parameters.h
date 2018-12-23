@@ -126,12 +126,12 @@ struct DefaultParameterValues
 	float maxOutputGain = 16.0f;
 
 	float lpFreq = 10000.0f;
-	float minLpFreq = 50.0f;
+	float minLpFreq = 10.0f;
 	float maxLpFreq = 10000.0f;
 
 	float filterModAmount = 8000.0f;
-	float minFilterModAmount = -8000.0f;
-	float maxFilterModAmount = 8000.0f;
+	float minFilterModAmount = -8.0f;
+	float maxFilterModAmount = 8.0f;
 
 	float filterModDuration = 0.1f;
 	float minFilterModDuration = 0.001f;
@@ -139,7 +139,7 @@ struct DefaultParameterValues
 
 	float lpReso = 1 / sqrt(2);
 	float minLpReso = 0.001f;
-	float maxLpReso = 8.0f;
+	float maxLpReso = 10.0f;
 
 	float computeSkewForMasterSlider()
 	{

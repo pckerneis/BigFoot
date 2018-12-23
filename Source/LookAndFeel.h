@@ -105,7 +105,6 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		auto radius = size / 3.0f;
 		auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 		auto lineW = jmin(8.0f, radius * 0.5f);
-		auto thumbDist = radius * 0.9f;
 
 		// graduations
 		int numGrad = 10;
@@ -137,18 +136,19 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		}
 
 		// knob
-		auto knobBounds = bounds.reduced(size * 0.1f);
+		auto knobBounds = bounds.reduced(size * 0.15f);
 		g.setColour(fill);
 		g.fillEllipse(knobBounds);
-		g.setColour(outline);
-		g.drawEllipse(knobBounds, 1.5f);
+		g.setColour(outline.interpolatedWith(fill, 0.7f));
+		g.drawEllipse(knobBounds, 2.2f);
 
 		// thumb
+		auto thumbDist = radius * 0.77f;
 		auto thumbWidth = lineW * 0.7f;
 		Point<float> thumbPoint(bounds.getCentreX() + thumbDist * std::cos(toAngle - MathConstants<float>::halfPi),
 			bounds.getCentreY() + thumbDist * std::sin(toAngle - MathConstants<float>::halfPi));
 
-		g.setColour(slider.findColour(Slider::thumbColourId));
+		g.setColour(slider.findColour(Slider::thumbColourId).interpolatedWith(fill, 0.3f));
 		g.fillEllipse(Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
 	}
 

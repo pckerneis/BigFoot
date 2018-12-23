@@ -64,10 +64,10 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 
     // Set editor size and start timer for the keyboard to grab focus
 #if PAWG_USE_MIDI_KEYBOARD
-    setSize (400, 300);
+    setSize (440, 300);
 	startTimer(400);
 #else
-	setSize(400, 230);
+	setSize(440, 230);
 #endif
 	backgroundImage.reset (new Image (Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
 
@@ -163,7 +163,7 @@ void BassGeneratorAudioProcessorEditor::resized()
 			auto b = bounds.removeFromLeft(w);
 
 			if (paramId == ParameterIDs::driveType)
-				b = b.withTrimmedRight(b.proportionOfWidth(0.5f)).withSizeKeepingCentre(b.proportionOfWidth(0.5f), b.proportionOfHeight(0.7f));
+				b = b.withTrimmedRight(b.proportionOfWidth(0.5f)).withSizeKeepingCentre(b.proportionOfWidth(0.35f), b.proportionOfHeight(0.56f));
 
 			getSlider(paramId)->setBounds(b);
 
@@ -271,7 +271,7 @@ Label * BassGeneratorAudioProcessorEditor::getLabel(String param)
 void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
 {
 	auto slider = getSlider("driveType");
-	const auto sliderArea = slider->getBounds().reduced(10);
+	const auto sliderArea = slider->getBounds().reduced(10, 6);
 
 	// Lines
 	const auto lineW = 4;

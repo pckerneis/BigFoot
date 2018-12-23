@@ -150,7 +150,9 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 		{
 			// adjust cutoff value
 			auto maxSize = jmin((numSamples - pos), freqUpdateRate);
-			const auto cutOff = jlimit(20.0f, 20000.0f, filterRamp.getNextValue() + *values.lpFreq);
+			
+			auto cutOff = float(1.0f + std::pow(2, filterRamp.getNextValue())) * *values.lpFreq;
+			cutOff = jlimit(20.0f, 20000.0f, cutOff);
 			filterRamp.skip(maxSize - 1);
 
 			cutOffRamp.setValue(cutOff);
