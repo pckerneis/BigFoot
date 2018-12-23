@@ -510,11 +510,12 @@ void PresetBar::restoreFactoryPresets()
 	presetValues.add(PresetValues({ "Dark thoughts","Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	0.0,	0.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17 }));
 	presetValues.add(PresetValues({ "Squarish",		"Bass",		1.0,	1.0,	0.08,	0.2,	10000.,	0.0,	0.0,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57 }));
 	presetValues.add(PresetValues({ "BBW",			"Bass",		0.656,	2.0,	0.28,	0.15,	5392.,	0.0,	0.0,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81 }));
+	presetValues.add(PresetValues({ "Futurism",		"Bass",		0.53,	0.0,	8.9,	0.043,	460.,	0.0,	0.0,	0.01,	1.02,	0.0,	0.21,	0.0,	5.69 }));
 
-	presetValues.add(PresetValues({ "Kick",			"Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.0,	0.0,	0.005,	0.209,	0.0,	0.1,	0.0,	9.46 }));
-	presetValues.add(PresetValues({ "Kick harder",	"Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.0,	0.0,	0.002,	0.3,	0.0,	0.18,	0.0,	0.03 }));
-	presetValues.add(PresetValues({ "Kick longer",	"Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.0,	0.0,	0.005,	1.4,	0.0,	1.16,	0.0,	9.46 }));
-	presetValues.add(PresetValues({ "Kick tighter",	"Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.0,	0.0,	0.005,	0.258,	0.0,	0.1,	0.0,	6.25 }))
+	presetValues.add(PresetValues({ "Kick",			"Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.0,	0.0,	0.005,	0.209,	0.0,	0.1,	0.0,	7.6 }));
+	presetValues.add(PresetValues({ "Kick harder",	"Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.0,	0.0,	0.002,	0.3,	0.0,	0.18,	0.0,	2.03 }));
+	presetValues.add(PresetValues({ "Kick longer",	"Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.0,	0.0,	0.005,	1.4,	0.0,	1.16,	0.0,	7.46 }));
+	presetValues.add(PresetValues({ "Kick tighter",	"Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.0,	0.0,	0.005,	0.258,	0.0,	0.1,	0.0,	7.25 }))
 		;
 	presetValues.add(PresetValues({ "Sub drop",		"Drop",		0.77,	0.0,	12.0,	2.0,	60.0,	0.0,	0.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77 }));
 	presetValues.add(PresetValues({ "SciFi drop",	"Drop",		1.0,	2.0,	14.0,	2.0,	186.0,	0.0,	0.0,	0.64,	2.58,	0.0,	0.77,	0.0,	9.95 }));
