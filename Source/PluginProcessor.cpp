@@ -68,9 +68,13 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
 												  defaultParameterValues.filterModAmount),
 
-			 std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "Filter modulation duration",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "Filter modulation duration",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
-												  defaultParameterValues.filterModDuration)
+												  defaultParameterValues.filterModDuration),
+
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter modulation duration",
+												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
+												  defaultParameterValues.lpReso)
 
 		})
 {
@@ -86,7 +90,8 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	values.glide				= parameters.getRawParameterValue(ParameterIDs::glide);
 	values.master				= parameters.getRawParameterValue(ParameterIDs::master);
 	values.lpModAmount			= parameters.getRawParameterValue(ParameterIDs::lpModAmount);
-	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);
+	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);;
+	values.lpReso				= parameters.getRawParameterValue(ParameterIDs::lpReso);
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
 	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));

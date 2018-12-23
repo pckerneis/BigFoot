@@ -33,10 +33,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	addAndMakeVisible (keyboardComponent);
 	keyboardComponent.setLowestVisibleKey(12);
 #endif
-
-	// Get default param values
-	auto defaultValues = p.getDefaultParameterValues();
-
+	
 	// Add sliders
 	addRotarySlider(valueTreeState, ParameterIDs::glide,		Colours::gold);
 	addRotarySlider(valueTreeState, ParameterIDs::bendAmount,	Colours::orange);
@@ -48,6 +45,9 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	addRotarySlider(valueTreeState, ParameterIDs::sustain,		Colours::beige);
 	addRotarySlider(valueTreeState, ParameterIDs::release,		Colours::beige);
 	addRotarySlider(valueTreeState, ParameterIDs::lpFreq,		Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::lpModAmount,	Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration,Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::lpReso,		Colours::red.withMultipliedSaturation(0.9f));
 	addRotarySlider(valueTreeState, ParameterIDs::master,       Colours::beige);
 
 	// More slider styling
@@ -96,31 +96,37 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 	const int cellHeight = sliderHeight + labelHeight + (marginHeight * 0.5);
 
 	auto r = getLocalBounds().reduced(5).toFloat();
-	const auto cellW = r.proportionOfWidth(0.2);
-	const auto adsrW = cellW * (3.0f / 4.0f);
+	const auto cellW = int((float)r.getWidth() / 7.0f);
 
 	const float cornerSize = 6.0f;
 	const float lineThickness = 0.8f;
 	const float margin = 2.0f;
 
+	g.setColour(Colours::white);
+	
 	r.removeFromTop(headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
 
-	g.setColour(Colours::white);
+	Array<int> topCells;
+	topCells.add(1);
+	topCells.add(2);
+	topCells.add(4);
 
-	g.drawRoundedRectangle(topRow.removeFromLeft(cellW).reduced(margin, 0), cornerSize, lineThickness);
-	g.drawRoundedRectangle(topRow.removeFromLeft(2 * cellW).reduced(margin, 0), cornerSize, lineThickness);
-	g.drawRoundedRectangle(topRow.reduced(margin, 0), cornerSize, lineThickness);
+	for (auto c : topCells)
+		g.drawRoundedRectangle(topRow.removeFromLeft(c * cellW).reduced(margin, 0), cornerSize, lineThickness);
 
-	auto switchArea = topRow.removeFromRight(topRow.proportionOfWidth(0.5f)).toFloat();
-	drawDriveTypeSymbols(g, switchArea);
+	Array<int> bottomCells;
+	bottomCells.add(2);
+	bottomCells.add(4);
+	bottomCells.add(1);
 
 	r.removeFromTop(marginHeight * 0.5);
-
 	auto bottomRow = r.removeFromTop(cellHeight);
-	g.drawRoundedRectangle(bottomRow.removeFromLeft(adsrW * 4).reduced(margin, 0), cornerSize, lineThickness);
-	g.drawRoundedRectangle(bottomRow.removeFromLeft(cellW).reduced(margin, 0), cornerSize, lineThickness);
-	g.drawRoundedRectangle(bottomRow.reduced(margin, 0), cornerSize, lineThickness);
+
+	for (auto c : bottomCells)
+		g.drawRoundedRectangle(bottomRow.removeFromLeft(c * cellW).reduced(margin, 0), cornerSize, lineThickness);
+
+	drawDriveTypeSymbols(g);
 }
 
 void BassGeneratorAudioProcessorEditor::resized()
@@ -130,46 +136,65 @@ void BassGeneratorAudioProcessorEditor::resized()
 	if (sliders.isEmpty())
 		return;
 
-	const int labelHeight = 20;
 	const int marginHeight = 8;
 	const int sliderHeight = 70;
 	const int headerHeight = 30;
+	const int labelHeight = 20;
 
 	auto r = getLocalBounds().reduced(5);
-	const auto cellW = r.proportionOfWidth(0.2);
-	const auto adsrW = cellW * (3.0f / 4.0f);
-
 	r.removeFromTop(headerHeight);
 
-	auto labelTop = r.removeFromTop(labelHeight).withTrimmedTop(10);
-	for (int i = 0; i < 5; ++i)
-		labels[i]->setBounds(labelTop.removeFromLeft(cellW));
+	auto layoutLabels = [this](StringArray ids, Rectangle<int> bounds)
+	{
+		bounds = bounds.withTrimmedTop(10);
 
-	auto top = r.removeFromTop(sliderHeight);
+		auto w = int((float)bounds.getWidth() / (float)ids.size());
 
-	getSlider(ParameterIDs::glide)->setBounds(top.removeFromLeft(cellW));
-	getSlider(ParameterIDs::bendAmount)->setBounds(top.removeFromLeft(cellW));
-	getSlider(ParameterIDs::bendDuration)->setBounds(top.removeFromLeft(cellW));
-	getSlider(ParameterIDs::drive)->setBounds(top.removeFromLeft(cellW));
-	getSlider(ParameterIDs::driveType)->setBounds(top.removeFromLeft(cellW * 0.5f).withSizeKeepingCentre(cellW * 0.5, top.getHeight() * 0.7f));
+		for (auto paramId : ids)
+			getLabel(paramId)->setBounds(bounds.removeFromLeft(w));
+	};
+
+	auto layoutSliders = [this](StringArray ids, Rectangle<int> bounds)
+	{
+		auto w = int((float)bounds.getWidth() / (float)ids.size());
+
+		for (auto paramId : ids)
+		{
+			auto b = bounds.removeFromLeft(w);
+
+			if (paramId == ParameterIDs::driveType)
+				b = b.withTrimmedRight(b.proportionOfWidth(0.5f)).withSizeKeepingCentre(b.proportionOfWidth(0.5f), b.proportionOfHeight(0.7f));
+
+			getSlider(paramId)->setBounds(b);
+
+		}
+	};
+
+	StringArray topRow;
+	topRow.add(ParameterIDs::glide);
+	topRow.add(ParameterIDs::bendAmount);
+	topRow.add(ParameterIDs::bendDuration);
+	topRow.add(ParameterIDs::attack);
+	topRow.add(ParameterIDs::decay);
+	topRow.add(ParameterIDs::sustain);
+	topRow.add(ParameterIDs::release);
+
+	layoutLabels(topRow, r.removeFromTop(labelHeight));
+	layoutSliders(topRow, r.removeFromTop(sliderHeight));
 
 	r.removeFromTop(marginHeight);
 
-	auto labelDown = r.removeFromTop(labelHeight).withTrimmedTop(10);
-	for (int i = 5; i < 9; ++i)
-		labels[i]->setBounds(labelDown.removeFromLeft(adsrW));
+	StringArray bottomRow;
+	bottomRow.add(ParameterIDs::drive);
+	bottomRow.add(ParameterIDs::driveType);
+	bottomRow.add(ParameterIDs::lpFreq);
+	bottomRow.add(ParameterIDs::lpReso);
+	bottomRow.add(ParameterIDs::lpModAmount);
+	bottomRow.add(ParameterIDs::lpModDuration);
+	bottomRow.add(ParameterIDs::master);
 
-	for (int i = 9; i < 11; ++i)
-		labels[i]->setBounds(labelDown.removeFromLeft(cellW));
-
-	auto bottom = r.removeFromTop(sliderHeight);
-	getSlider(ParameterIDs::attack)->setBounds(bottom.removeFromLeft(adsrW));
-	getSlider(ParameterIDs::decay)->setBounds(bottom.removeFromLeft(adsrW));
-	getSlider(ParameterIDs::sustain)->setBounds(bottom.removeFromLeft(adsrW));
-	getSlider(ParameterIDs::release)->setBounds(bottom.removeFromLeft(adsrW));
-
-	getSlider(ParameterIDs::lpFreq)->setBounds(bottom.removeFromLeft(cellW));
-	getSlider(ParameterIDs::master)->setBounds(bottom);
+	layoutLabels(bottomRow, r.removeFromTop(labelHeight));
+	layoutSliders(bottomRow, r.removeFromTop(sliderHeight));
 
 #if PAWG_USE_MIDI_KEYBOARD
 	r.removeFromTop(marginHeight);
@@ -196,9 +221,7 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	l->setFont(l->getFont().withHeight(12.0f));
 
 	// Keep pointers
-	sliders.add(slider);
-	sliderAttachments.add(attachment);
-	labels.add(l);
+	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
 void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
@@ -220,23 +243,32 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	l->setFont(l->getFont().withHeight(12.0f));
 
 	// Keep pointers
-	sliders.add(slider);
-	sliderAttachments.add(attachment);
-	labels.add(l);
+	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
 Slider * BassGeneratorAudioProcessorEditor::getSlider(String param)
 {
 	for (auto s : sliders)
-		if (s->getName() == param + "Slider")
-			return s;
+		if (s->paramId == param)
+			return s->slider.get();
 
 	jassertfalse;
 
 	return nullptr;
 }
 
-void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g, Rectangle<float> area)
+Label * BassGeneratorAudioProcessorEditor::getLabel(String param)
+{
+	for (auto s : sliders)
+		if (s->paramId == param)
+			return s->label.get();
+
+	jassertfalse;
+
+	return nullptr;
+}
+
+void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
 {
 	auto slider = getSlider("driveType");
 	const auto sliderArea = slider->getBounds().reduced(10);
@@ -246,13 +278,13 @@ void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g, Rectan
 	const auto lineH = 2;
 
 	g.setColour(Colours::white);
-	g.drawRect(sliderArea.getRight() + 2, sliderArea.getY(), lineW, lineH);
-	g.drawRect(sliderArea.getRight() + 2, sliderArea.getCentreY() - (int)(lineH * 0.5f), lineW, lineH);
-	g.drawRect(sliderArea.getRight() + 2, sliderArea.getBottom() - lineH, lineW, lineH);
+	g.drawRect(sliderArea.getRight() + 8, sliderArea.getY(), lineW, lineH);
+	g.drawRect(sliderArea.getRight() + 8, sliderArea.getCentreY() - (int)(lineH * 0.5f), lineW, lineH);
+	g.drawRect(sliderArea.getRight() + 8, sliderArea.getBottom() - lineH, lineW, lineH);
 
-	const float symbolW = 15.0f;
+	const float symbolW = 13.0f;
 	const float symbolH = 8.0f;
-	const int symbolLeft = 18;
+	const int symbolLeft = 16;
 
 	// Soft clip
 	Path softPath;

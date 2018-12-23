@@ -44,10 +44,11 @@ private:
 	void addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour);
 
 	Slider* getSlider(String param);
+	Label* getLabel(String param);
 
 	//==========================================================================
 	void renderBackgroundImage(Graphics& g);
-	void drawDriveTypeSymbols(Graphics&, Rectangle<float>);
+	void drawDriveTypeSymbols(Graphics& g);
 
 	//==========================================================================
 	void timerCallback() override
@@ -68,9 +69,22 @@ private:
 
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
-	OwnedArray<Slider> sliders;
-	OwnedArray<SliderAttachment> sliderAttachments;
-	OwnedArray<Label> labels;
+	struct AttachedSlider
+	{
+		AttachedSlider(String param, Slider* s, SliderAttachment* a, Label* l) : paramId(param)
+		{
+			slider.reset(s);
+			attachment.reset(a);
+			label.reset(l);
+		}
+
+		const String paramId;
+		std::unique_ptr<Slider> slider;
+		std::unique_ptr<SliderAttachment> attachment;
+		std::unique_ptr<Label> label;
+	};
+
+	OwnedArray<AttachedSlider> sliders;
 
 	PresetBar presetBar;
 

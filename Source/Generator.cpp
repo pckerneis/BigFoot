@@ -157,7 +157,7 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 		}
 
 		auto& filter = fxChain.template get<filterIndex>();
-		filter.state->setCutOffFrequency(getSampleRate(), cutOffRamp.getNextValue());
+		filter.state->setCutOffFrequency(getSampleRate(), cutOffRamp.getNextValue(), *values.lpReso);
 
 		// get sub-block context
 		auto context = juce::dsp::ProcessContextReplacing<float>(block.getSubBlock(pos, 1));
