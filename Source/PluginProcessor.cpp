@@ -36,7 +36,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minBendDuration, defaultParameterValues.maxBendDuration, 0.0001f, 0.4f),
 												  defaultParameterValues.bendDuration),
 												  
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpFreq, "Brightness",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpFreq, "Low-pass frequency",
 												  NormalisableRange<float>(defaultParameterValues.minLpFreq, defaultParameterValues.maxLpFreq, 0.0001f, 0.25f),
 												  defaultParameterValues.lpFreq),
 													  
@@ -72,7 +72,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
 												  defaultParameterValues.filterModDuration),
 
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter modulation duration",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter resonance",
 												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
 												  defaultParameterValues.lpReso)
 

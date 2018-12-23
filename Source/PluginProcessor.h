@@ -120,15 +120,16 @@ private:
 		driveTypeParam,
 		bendAmountParam,
 		bendDurationParam,
-		brightnessParam,
+		lpFreqParam,
 		attackParam,
 		decayParam,
 		sustainParam,
 		releaseParam,
 		glideParam,
 		masterParam,
-		filterModAmount,
-		filterModDuration
+		lpModAmountParam,
+		lpModDurationParam,
+		lpResoParam
 	};
     //==============================================================================
 
