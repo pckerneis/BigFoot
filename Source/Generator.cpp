@@ -144,14 +144,12 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 
 	for (int pos = 0; pos < numSamples; ++pos)
 	{
-		// Maximum block length for this pass
-
 		if (pos % freqUpdateRate == 0)
 		{
 			// adjust cutoff value
 			auto maxSize = jmin((numSamples - pos), freqUpdateRate);
 			
-			auto cutOff = float(1.0f + std::pow(2, filterRamp.getNextValue())) * *values.lpFreq;
+			auto cutOff = float(std::pow(2, filterRamp.getNextValue())) * *values.lpFreq;
 			cutOff = jlimit(20.0f, 20000.0f, cutOff);
 			filterRamp.skip(maxSize - 1);
 
@@ -172,7 +170,7 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 void SineWaveVoice::setDrive(float newValue)
 {
 	auto& distortion = fxChain.template get<distortionIndex>();
-	distortion.setDrive(*values.drive);
+	distortion.setDrive(newValue);
 }
 
 void SineWaveVoice::setDriveType(Distortion<float>::TransferFunction func)
