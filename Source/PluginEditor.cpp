@@ -266,6 +266,7 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	slider->setSliderStyle(Slider::SliderStyle::LinearVertical);
 	slider->setColour(Slider::backgroundColourId, Colours::grey);
+	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
 	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
@@ -288,6 +289,7 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	slider->setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	slider->setColour(Slider::rotarySliderFillColourId, colour);
+	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
 	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
