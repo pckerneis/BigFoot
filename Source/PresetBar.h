@@ -171,8 +171,19 @@ private:
 	OwnedArray<Preset> presetList;
 	Preset* currentPreset;
 
+	class CustomComboBox : public ComboBox
+	{
+		void showPopup() override
+		{
+			if (auto bar = findParentComponentOfClass<PresetBar>())
+				bar->refreshPresetList();
+
+			ComboBox::showPopup();
+		}
+	};
+
 	TextButton aboutButton;
-	ComboBox comboBox;
+	CustomComboBox comboBox;
 	TextButton previousButton;
 	TextButton nextButton;
 	TextButton saveButton;
