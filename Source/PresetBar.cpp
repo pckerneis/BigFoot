@@ -58,6 +58,7 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 
 	refreshPresetList();
 
+	// TODO : remove these and find a better way to handle preset name change flag
 	if (processorState.state.hasProperty("presetName"))
 		for (auto preset : presetList)
 			if (preset->file.getFileNameWithoutExtension() == processorState.state.getProperty("presetName").toString())
@@ -175,7 +176,7 @@ void PresetBar::saveAsNewPreset(String category)
 
 	auto f = userFolder.getNonexistentChildFile(wantedName, extension);
 	std::unique_ptr<XmlElement> xml;
-	xml.reset(getCurrentPresetAsXml(f.getFileNameWithoutExtension()));
+	xml.reset(getCurrentPresetAsXml(f.getFileNameWithoutExtension(), category));
 
 	f.deleteFile();
 	FileOutputStream fos(f);
@@ -214,7 +215,7 @@ bool PresetBar::currentPresetChanged()
 	return processorState.state.getProperty("presetChanged");
 }
 
-XmlElement * PresetBar::getCurrentPresetAsXml(String presetName)
+XmlElement * PresetBar::getCurrentPresetAsXml(String presetName, String category)
 { 
 	auto state = processorState.copyState();
 	std::unique_ptr<XmlElement> xml(state.createXml());
@@ -225,6 +226,7 @@ XmlElement * PresetBar::getCurrentPresetAsXml(String presetName)
 
 	xml->setAttribute("PresetName", presetName);
 	xml->setAttribute("PresetCreation", Time::getCurrentTime().toString(true, true));
+	xml->setAttribute("PresetCategory", category);
 
 	return xml.release();
 }
@@ -271,7 +273,7 @@ void PresetBar::exportPreset()
 		File destination(fc.getResult().withFileExtension(extension));
 
 		std::unique_ptr<XmlElement> xml;
-		xml.reset(getCurrentPresetAsXml(destination.getFileNameWithoutExtension()));
+		xml.reset(getCurrentPresetAsXml(destination.getFileNameWithoutExtension(), currentPreset->category));
 
 		destination.deleteFile();
 		FileOutputStream fos(destination);
@@ -412,6 +414,11 @@ void PresetBar::refreshComboBox()
 	comboBox.addSeparator();
 	comboBox.addItem("Restore factory presets", restoreFactoryItemId);
 	comboBox.addItem("Show presets folder", revealPresetsItemId);
+#if PAWG_PRESET_DESIGNER
+	comboBox.addSeparator();
+	comboBox.addItem("Save preset sheet", savePresetSheetItemId);
+	comboBox.addItem("Load preset sheet", loadPresetSheetItemId);
+#endif
 
 	if (previousChoice > 0)
 		comboBox.setSelectedId(previousChoice);
@@ -450,6 +457,16 @@ void PresetBar::comboBoxChanged()
 	{
 		getUserPresetsFolder().startAsProcess();
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
+		return;
+	}
+	else if (selectedId == savePresetSheetItemId)
+	{
+		savePresetSheet();
+		return;
+	}
+	else if (selectedId == loadPresetSheetItemId)
+	{
+		loadPresetSheet();
 		return;
 	}
 
@@ -648,3 +665,75 @@ void PresetBar::setDefaultValues()
 	setDefaultValue(ParameterIDs::glide);
 	setDefaultValue(ParameterIDs::master);
 }
+
+#if PAWG_PRESET_DESIGNER
+void PresetBar::loadPresetSheet()
+{
+	FileChooser fc("Select a preset file...",
+		File::getSpecialLocation(File::userHomeDirectory),
+		"*" + extension);
+
+	if (fc.browseForFileToOpen())
+	{
+		File f(fc.getResult());
+
+		XmlDocument doc(f);
+
+		std::unique_ptr<XmlElement> xml;
+		xml.reset(doc.getDocumentElement());
+
+		if (xml == nullptr || xml->getTagName() != "PRESET_SHEET")
+			return;
+
+		auto userFolder = getUserPresetsFolder();
+		userFolder.moveToTrash();
+		userFolder.createDirectory();
+
+		forEachXmlChildElement(*xml.get(), e)
+		{
+			auto f = userFolder.getChildFile(e->getStringAttribute("PresetName") + extension);
+
+			FileOutputStream fos(f);
+
+			if (fos.openedOk())
+				fos.writeText(e->createDocument(""), false, false, nullptr);
+		}
+
+		refreshPresetList();
+	}
+}
+
+void PresetBar::savePresetSheet()
+{
+	FileChooser fc("Select a preset location...",
+		File::getSpecialLocation(File::userHomeDirectory).getChildFile(comboBox.getText()),
+		"*.xml");
+
+	if (fc.browseForFileToOpen())
+	{
+		File destination(fc.getResult().withFileExtension(extension));
+
+		std::unique_ptr<XmlElement> xml;
+		xml.reset(new XmlElement("PRESET_SHEET"));
+
+		xml->setAttribute("PluginName",			JucePlugin_Name);
+		xml->setAttribute("PluginVersion",		JucePlugin_VersionString);
+		xml->setAttribute("PluginManufacturer", JucePlugin_Manufacturer);
+		xml->setAttribute("Creation", Time::getCurrentTime().toString(true, true));
+
+		for (auto p : presetList)
+		{
+			XmlDocument doc(p->file);
+
+			if (auto element = doc.getDocumentElement())
+				xml->addChildElement(element);
+		}
+
+		destination.deleteFile();
+		FileOutputStream fos(destination);
+
+		if (fos.openedOk())
+			fos.writeText(xml->createDocument(""), false, false, nullptr);
+	}
+}
+#endif

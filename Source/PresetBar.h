@@ -98,7 +98,7 @@ private:
 	bool currentPresetChanged();
 
 	/* Creates a XmlElement with the current processor state and some info about the current preset. */
-	XmlElement* getCurrentPresetAsXml(String presetName);
+	XmlElement* getCurrentPresetAsXml(String presetName, String category);
 
 	void showCategoryChooser(int& result, String& category)
 	{
@@ -159,6 +159,15 @@ private:
 	void setDefaultValues();
 
 	//==============================================================================
+#if PAWG_PRESET_DESIGNER
+	/* Load preset sheet */
+	void loadPresetSheet();
+
+	/* Save preset sheet */
+	void savePresetSheet();
+#endif
+
+	//==============================================================================
 	OwnedArray<Preset> presetList;
 	Preset* currentPreset;
 
@@ -176,7 +185,9 @@ private:
 		restoreFactoryItemId = 1000,
 		revealPresetsItemId = 1001,
 		randomizeItemId = 1002,
-		setDefaultValuesItemId = 1003
+		setDefaultValuesItemId = 1003,
+		savePresetSheetItemId = 1004,
+		loadPresetSheetItemId = 1005
 	};
 
 	String extension = ".preset";
