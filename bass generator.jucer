@@ -12,6 +12,10 @@
               pluginAUExportPrefix="PAWGAU" pluginRTASCategory="" bundleIdentifier="com.pckerneis.PAWG"
               aaxIdentifier="com.pckerneis.PAWG" pluginAAXCategory="2" includeBinaryInAppConfig="1">
   <MAINGROUP id="VGAmmy" name="PAWG">
+    <GROUP id="{34B25619-CF49-73F7-94FA-2DAF811CB136}" name="Resources">
+      <FILE id="Gg3ocP" name="preset_sheet.preset" compile="0" resource="1"
+            file="Resources/preset_sheet.preset"/>
+    </GROUP>
     <GROUP id="{4597911F-BD20-A52B-995B-2D0D0CA045FF}" name="Source">
       <GROUP id="{31722F44-49F6-53E6-FE33-01E19B0C985E}" name="Audio">
         <FILE id="R3VcXr" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>

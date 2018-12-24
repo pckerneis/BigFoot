@@ -511,110 +511,24 @@ File PresetBar::getUserPresetsFolder()
 
 void PresetBar::restoreFactoryPresets()
 {
-	struct PresetValues
-	{
-		String name;
-		String category;
-		double drive;
-		double driveType;
-		double bendAmount;
-		double bendDuration;
-		double lpFreq;
-		double lpModAmount;
-		double lpModDuration;
-		double attack;
-		double decay;
-		double sustain;
-		double release;
-		double glide;
-		double master;
-		double lpReso;
-	};
+	auto s = String::createStringFromData(BinaryData::preset_sheet_preset, BinaryData::preset_sheet_presetSize);
+	std::unique_ptr<XmlElement> xml(XmlDocument::parse(s));
 
-	Array<PresetValues> presetValues;
-
-	presetValues.add(PresetValues({ "PAWG",			"01. Bass",		0.5,	0.0,	7.0,	0.2,	1000.0,	0.0,	0.0,	0.01,	0.1,	0.8,	0.1,	0.08,	5.7,	0.707 }));
-	presetValues.add(PresetValues({ "Stomper",		"01. Bass",		0.7,	1.0,	13.0,	0.14,	2663.0,	0.0,	0.0,	0.01,	0.1,	0.43,	0.1,	0.08,	4.8,	0.707 }));
-	presetValues.add(PresetValues({ "Dark times",	"01. Bass",		0.56,	2.0,	-5.8,	0.07,	266.0,	0.0,	0.0,	0.047,	0.99,	0.0,	0.99,	0.0,	5.0,	0.707 }));
-	presetValues.add(PresetValues({ "WOAW",			"01. Bass",		0.83,	2.0,	-16.0,	0.18,	712.0,	0.0,	0.0,	0.45,	0.55,	0.3,	0.39,	0.09,	6.45,	0.707 }));
-	presetValues.add(PresetValues({ "Hit & hold",	"01. Bass",		0.4,	1.0,	24.0,	0.047,	920.0,	0.0,	0.0,	0.0035,	0.1,	0.3,	0.1,	0.0,	2.45,	0.707 }));
-	presetValues.add(PresetValues({ "Hollow",		"01. Bass",		0.56,	2.0,	-24.0,	0.083,	188.0,	0.0,	0.0,	0.0031,	0.49,	0.12,	0.1,	0.1,	6.0,	0.707 }));
-	presetValues.add(PresetValues({ "Dark thoughts","01. Bass",		0.73,	2.0,	4.22,	0.248,	325.0,	0.0,	0.0,	1.2,	1.57,	0.0,	0.074,	0.1,	5.17,	0.707 }));
-	presetValues.add(PresetValues({ "Squarish",		"01. Bass",		1.0,	1.0,	0.08,	0.2,	10000.,	0.0,	0.0,	0.6,	0.001,	1.0,	0.1,	0.27,	6.57,	0.707 }));
-	presetValues.add(PresetValues({ "BBW",			"01. Bass",		0.656,	2.0,	0.28,	0.15,	5392.,	0.0,	0.0,	0.008,	0.51,	0.1,	0.56,	0.0,	4.81,	0.707 }));
-	presetValues.add(PresetValues({ "Futurism",		"01. Bass",		0.53,	0.0,	8.9,	0.043,	460.,	0.0,	0.0,	0.01,	1.02,	0.0,	0.21,	0.0,	5.69,	0.707 }));
-
-	presetValues.add(PresetValues({ "Kick",			"03. Kick",		0.0,	0.0,	24.0,	0.138,	2781.0,	0.0,	0.0,	0.005,	0.209,	0.0,	0.1,	0.0,	7.6,	0.707 }));
-	presetValues.add(PresetValues({ "Kick harder",	"03. Kick",		0.4,	1.0,	24.0,	0.138,	712.0,	0.0,	0.0,	0.002,	0.3,	0.0,	0.18,	0.0,	2.03,	0.707 }));
-	presetValues.add(PresetValues({ "Kick longer",	"03. Kick",		0.0,	0.0,	24.0,	0.178,	2781.0,	0.0,	0.0,	0.005,	1.4,	0.0,	1.16,	0.0,	7.46,	0.707 }));
-	presetValues.add(PresetValues({ "Kick tighter",	"03. Kick",		0.39,	2.0,	24.0,	0.059,	10000.,	0.0,	0.0,	0.005,	0.258,	0.0,	0.1,	0.0,	7.25,	0.707 }));
-	presetValues.add(PresetValues({ "Kick tek",		"03. Kick",		0.56,	1.0,	18.8,	0.056,	590.,	0.0,	0.0,	0.001,	0.290,	0.02,	0.1,	0.0,	2.02,	3.62 }));
-
-	presetValues.add(PresetValues({ "Mystic dive",	"04. Drop",		0.9,	2.0,	2.5,	1.45,	147.0,	0.0,	0.0,	0.64,	2.58,	0.0,	0.77,	0.0,	5.41,	3.157 }));
-	presetValues.add(PresetValues({ "Sub drop",		"04. Drop",		0.77,	0.0,	12.0,	2.0,	60.0,	0.0,	0.0,	0.01,	0.94,	0.95,	0.52,	0.0,	7.77,	0.707 }));
-	presetValues.add(PresetValues({ "SciFi drop",	"04. Drop",		1.0,	2.0,	14.0,	2.0,	186.0,	0.0,	0.0,	0.64,	2.58,	0.0,	0.77,	0.0,	9.95,	0.707 }));
-	presetValues.add(PresetValues({ "This is war",	"04. Drop",		0.89,	1.0,	10.0,	2.0,	578.0,	0.0,	0.0,	2.0,	4.17,	0.0,	0.77,	0.0,	5.41,	2.02 }));
-
-	presetValues.add(PresetValues({ "Glide sin",	"02. Sub",		0.0,	0.0,	0.0,	0.0,	10000.,	0.0,	0.0,	0.01,	0.1,	0.43,	0.1,	0.08,	6.79,	0.707 }));
-	presetValues.add(PresetValues({ "Attack sin",	"02. Sub",		0.0,	0.0,	7.5,	0.06,	10000.,	0.0,	0.0,	0.002,	0.1,	0.43,	0.1,	0.0,	6.79,	0.707 }));
-	presetValues.add(PresetValues({ "Deep sin",		"02. Sub",		0.3,	1.0,	1.9,	0.022,	511.,	0.0,	0.0,	0.14,	1.0,	0.15,	0.1,	0.0,	3.34,	0.707 }));
-
-	presetValues.add(PresetValues({ "Simple sinus",	"05. Other",	0.0,	0.0,	0.0,	0.0,	1000.,	0.0,	0.0,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0,	0.707 }));
-	presetValues.add(PresetValues({ "Sin to square","05. Other",	0.5,	0.0,	0.0,	0.0,	1000.,	0.0,	0.0,	0.005,	0.001,	1.0,	0.005,	0.0,	0.0,	0.707 }));
-	presetValues.add(PresetValues({ "Freaky",		"05. Other",	0.98,	2.0,	3.07,	0.08,	312.,	0.0,	0.0,	0.001,	0.044,	0.5,	0.005,	0.17,	0.0,	2.7 }));
-	presetValues.add(PresetValues({ "Chunky toy",	"05. Other",	0.75,	1.0,	0.00,	0.001,	546.,	0.0,	0.0,	0.897,	0.013,	0.029,	0.075,	0.002,	0.0,	3.07 }));
+	if (xml == nullptr || xml->getTagName() != "PRESET_SHEET")
+		return;
 
 	auto userFolder = getUserPresetsFolder();
-	
-	auto addParamChild = [](XmlElement* xml, String name, float value) {
-		auto child = new XmlElement("PARAM");
-		child->setAttribute("id", name);
-		child->setAttribute("value", value);
-		xml->addChildElement(child);
-	};
+	userFolder.moveToTrash();
+	userFolder.createDirectory();
 
-	for (auto pv : presetValues)
+	forEachXmlChildElement(*xml.get(), e)
 	{
-		const auto category = pv.category;
-		const auto presetName = pv.name;
-		const auto fileName = presetName + extension;
-
-		auto f = userFolder.getChildFile(fileName);
-		f.deleteFile();
-
-		std::unique_ptr<XmlElement> xml(new XmlElement("BassGenParameters"));
-
-		xml->setAttribute("PluginName",				JucePlugin_Name);
-		xml->setAttribute("PluginVersion",			JucePlugin_VersionString);
-		xml->setAttribute("PluginManufacturer",		JucePlugin_Manufacturer);
-
-		xml->setAttribute("PresetName",				f.getFileNameWithoutExtension());
-		xml->setAttribute("PresetCategory",			category);
-		xml->setAttribute("PresetCreation",			Time::getCurrentTime().toString(true, true));
-
-		addParamChild(xml.get(), ParameterIDs::drive,			pv.drive);
-		addParamChild(xml.get(), ParameterIDs::driveType,		pv.driveType);
-		addParamChild(xml.get(), ParameterIDs::bendAmount,		pv.bendAmount);
-		addParamChild(xml.get(), ParameterIDs::bendDuration,	pv.bendDuration);
-		addParamChild(xml.get(), ParameterIDs::lpFreq,			pv.lpFreq);
-#if PAWG_ALLOW_LPF_MODULATION
-		addParamChild(xml.get(), ParameterIDs::lpModAmount,		pv.lpModAmount);
-		addParamChild(xml.get(), ParameterIDs::lpModDuration,	pv.lpModDuration);
-#endif
-		addParamChild(xml.get(), ParameterIDs::attack,			pv.attack);
-		addParamChild(xml.get(), ParameterIDs::decay,			pv.decay);
-		addParamChild(xml.get(), ParameterIDs::sustain,			pv.sustain);
-		addParamChild(xml.get(), ParameterIDs::release,			pv.release);
-		addParamChild(xml.get(), ParameterIDs::glide,			pv.glide);
-		addParamChild(xml.get(), ParameterIDs::master,			pv.master);
-		addParamChild(xml.get(), ParameterIDs::lpReso,			pv.lpReso);
+		auto f = userFolder.getChildFile(e->getStringAttribute("PresetName") + extension);
 
 		FileOutputStream fos(f);
 
 		if (fos.openedOk())
-			fos.writeText(xml->createDocument(""), false, false, nullptr);
-
-		presetList.add(new Preset({ presetName, category, f, *xml, false }));
+			fos.writeText(e->createDocument(""), false, false, nullptr);
 	}
 
 	refreshPresetList();
