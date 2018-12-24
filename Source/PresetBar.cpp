@@ -445,6 +445,10 @@ void PresetBar::comboBoxChanged()
 	{
 		setDefaultValues();
 		comboBox.setText("");
+
+		// Behaves as if it was on top of the list
+		previousButton.setEnabled(false);
+		nextButton.setEnabled(true);
 		return;
 	}
 	else if (selectedId == restoreFactoryItemId)
@@ -462,11 +466,13 @@ void PresetBar::comboBoxChanged()
 	else if (selectedId == savePresetSheetItemId)
 	{
 		savePresetSheet();
+		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
 		return;
 	}
 	else if (selectedId == loadPresetSheetItemId)
 	{
 		loadPresetSheet();
+		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
 		return;
 	}
 
