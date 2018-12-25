@@ -46,8 +46,8 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 	{
 		if (auto b = dynamic_cast<Button*>(c))
 		{
-			b->setColour(TextButton::buttonColourId, Colours::transparentBlack);
-			b->setColour(ComboBox::outlineColourId, Colours::darkgrey);
+			//b->setColour(TextButton::buttonColourId, Colours::transparentBlack);
+			//b->setColour(ComboBox::outlineColourId, Colours::darkgrey);
 		}
 	}
 
@@ -80,7 +80,7 @@ void PresetBar::paint (Graphics& g)
 {
 	g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
-    g.setColour (Colours::darkgrey);
+	g.setColour(getLookAndFeel().findColour(ComboBox::outlineColourId));
     g.fillRect (getLocalBounds().removeFromBottom(1));
 }
 

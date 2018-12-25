@@ -15,6 +15,12 @@
 //==============================================================================
 class CustomLookAndFeel : public LookAndFeel_V4
 {
+	void positionComboBoxText(ComboBox& box, Label& label) override
+	{
+		label.setBounds(1, 1, box.getWidth() - 22, box.getHeight() - 2);
+		label.setFont(getComboBoxFont(box));
+	}
+
 	void drawComboBox(Graphics& g, int width, int height, bool,
 		int, int, int, int, ComboBox& box)
 	{
@@ -25,16 +31,17 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
 
 		g.setColour(box.findColour(ComboBox::outlineColourId));
-		g.drawRoundedRectangle(boxBounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
+		//g.drawRoundedRectangle(boxBounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
+		g.drawRect(boxBounds.toFloat(), 1.0f);
 
-		Rectangle<int> arrowZone(width - 30, 0, 20, height);
+		Rectangle<int> arrowZone(width - 20, 0, 16, height);
 		Path path;
 		path.startNewSubPath(arrowZone.getX() + 3.0f, arrowZone.getCentreY() - 2.0f);
 		path.lineTo(static_cast<float> (arrowZone.getCentreX()), arrowZone.getCentreY() + 3.0f);
 		path.lineTo(arrowZone.getRight() - 3.0f, arrowZone.getCentreY() - 2.0f);
 
 		g.setColour(box.findColour(ComboBox::arrowColourId).withAlpha((box.isEnabled() ? 0.9f : 0.2f)));
-		g.strokePath(path, PathStrokeType(2.0f));
+		g.strokePath(path, PathStrokeType(1.6f));
 	}
 
 	Font getComboBoxFont(ComboBox& box)
@@ -109,6 +116,8 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		// graduations
 		int numGrad = 10;
 
+		g.setColour(outline);
+
 		for (int i = 0; i < numGrad + 1; ++i)
 		{
 			float gradWidth;
@@ -131,7 +140,6 @@ class CustomLookAndFeel : public LookAndFeel_V4
 			Point<float> thumbPoint(bounds.getCentreX() + gradRadius * std::cos(angle - MathConstants<float>::halfPi),
 				bounds.getCentreY() + gradRadius * std::sin(angle - MathConstants<float>::halfPi));
 
-			g.setColour(Colours::white);
 			g.fillEllipse(Rectangle<float>(gradWidth, gradWidth).withCentre(thumbPoint));
 		}
 
@@ -139,7 +147,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		auto knobBounds = bounds.reduced(size * 0.15f);
 		g.setColour(fill);
 		g.fillEllipse(knobBounds);
-		g.setColour(outline.interpolatedWith(fill, 0.7f));
+		g.setColour(slider.findColour(Slider::thumbColourId).interpolatedWith(fill, 0.7f));
 		g.drawEllipse(knobBounds, 2.2f);
 
 		// thumb

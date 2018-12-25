@@ -97,5 +97,21 @@ private:
 	const int sliderHeight = 64;
 	const int headerHeight = 30;
 
+	struct UIColours
+	{
+		const Colour backgroundColour		= Colours::darkslategrey.withBrightness(0.08f);
+		const Colour textColour				= Colours::white;
+		const Colour bendSliderColour		= Colours::orange;
+		const Colour adsrSliderColour		= Colours::beige;
+		const Colour glideSliderColour		= Colours::gold;
+		const Colour driveSliderColour		= Colours::orangered;
+		const Colour filterSliderColour		= Colours::Colours::red.withMultipliedSaturation(0.9f);
+		const Colour masterSliderColour		= Colours::beige;
+		const Colour lineColour				= Colours::grey;
+		const Colour thumbColour			= Colours::black;
+	};
+
+	UIColours colors;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessorEditor)
 };

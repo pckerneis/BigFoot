@@ -26,9 +26,24 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	auto tf = Typeface::createSystemTypefaceFor(BinaryData::RobotoMedium_ttf, BinaryData::RobotoMedium_ttfSize);
 	lf->setDefaultSansSerifTypeface(tf);
 
-	const auto bgColour = Colours::darkslategrey.withBrightness(0.09f).withSaturation(0.38f);
-	lf->setColour(ResizableWindow::backgroundColourId, bgColour);
-	lf->setColour(PopupMenu::backgroundColourId, bgColour);
+	lf->setColour(ResizableWindow::backgroundColourId,	colors.backgroundColour);
+	lf->setColour(PopupMenu::backgroundColourId,		colors.backgroundColour);
+	lf->setColour(TextButton::textColourOnId,			colors.textColour);
+	lf->setColour(TextButton::textColourOffId,			colors.textColour);
+	lf->setColour(ComboBox::textColourId,				colors.textColour);
+	lf->setColour(ComboBox::arrowColourId,				colors.textColour);
+	lf->setColour(PopupMenu::textColourId,				colors.textColour);
+	lf->setColour(TextEditor::textColourId,				colors.textColour); 
+	lf->setColour(Slider::rotarySliderOutlineColourId,	colors.textColour);	// Used for rotary slider graduations
+	lf->setColour(ComboBox::outlineColourId,			colors.lineColour);	// Used for buttons outline
+	lf->setColour(TextButton::buttonColourId,			Colours::transparentBlack);
+	lf->setColour(Slider::thumbColourId,				colors.thumbColour);
+
+	// We'll also style the logo button here even if it's used in PresetBar
+	SharedResourcePointer<LogoButtonLF> logoLF;
+	logoLF->setColour(TextButton::textColourOnId,		colors.textColour);
+	logoLF->setColour(TextButton::textColourOffId,		colors.textColour);
+	logoLF->setColour(TextButton::buttonColourId,		Colours::transparentBlack);
 
 	// Keyboard comp
 #if PAWG_USE_MIDI_KEYBOARD
@@ -37,22 +52,22 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 #endif
 	
 	// Add sliders
-	addRotarySlider(valueTreeState, ParameterIDs::glide,		Colours::gold);
-	addRotarySlider(valueTreeState, ParameterIDs::bendAmount,	Colours::orange);
-	addRotarySlider(valueTreeState, ParameterIDs::bendDuration, Colours::orange);
-	addRotarySlider(valueTreeState, ParameterIDs::drive,		Colours::orangered);
+	addRotarySlider(valueTreeState, ParameterIDs::glide,		colors.glideSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::bendAmount,	colors.bendSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::bendDuration, colors.bendSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::drive,		colors.driveSliderColour);
 	addLinearSlider(valueTreeState, ParameterIDs::driveType,	true);
-	addRotarySlider(valueTreeState, ParameterIDs::attack,		Colours::beige);
-	addRotarySlider(valueTreeState, ParameterIDs::decay,		Colours::beige);
-	addRotarySlider(valueTreeState, ParameterIDs::sustain,		Colours::beige);
-	addRotarySlider(valueTreeState, ParameterIDs::release,		Colours::beige);
-	addRotarySlider(valueTreeState, ParameterIDs::lpFreq,		Colours::red.withMultipliedSaturation(0.9f));
-	addRotarySlider(valueTreeState, ParameterIDs::lpReso,		Colours::red.withMultipliedSaturation(0.9f));
-	addRotarySlider(valueTreeState, ParameterIDs::master,       Colours::beige);
+	addRotarySlider(valueTreeState, ParameterIDs::attack,		colors.adsrSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::decay,		colors.adsrSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::sustain,		colors.adsrSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::release,		colors.adsrSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::lpFreq,		colors.filterSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::lpReso,		colors.filterSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::master,       colors.masterSliderColour);
 
 #if PAWG_ALLOW_LPF_MODULATION
-	addRotarySlider(valueTreeState, ParameterIDs::lpModAmount, Colours::red.withMultipliedSaturation(0.9f));
-	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration, Colours::red.withMultipliedSaturation(0.9f));
+	addRotarySlider(valueTreeState, ParameterIDs::lpModAmount,	 colors.filterSliderColour);
+	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration, colors.filterSliderColour);
 #endif
 
 
@@ -61,8 +76,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	{
 		if (auto s = dynamic_cast<Slider*>(c))
 		{
-			s->setColour(Slider::thumbColourId, Colours::black);
-			s->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
+			//s->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
 		}
 	}
 
@@ -118,10 +132,10 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 #endif
 
 	const float cornerSize = 6.0f;
-	const float lineThickness = 0.8f;
+	const float lineThickness = 1.2f;
 	const float margin = 2.0f;
 
-	g.setColour(Colours::lightgrey);
+	g.setColour(colors.lineColour);
 	
 	r.removeFromTop(headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
@@ -266,6 +280,7 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	addAndMakeVisible(l);
 	l->setJustificationType(Justification::centred);
 	l->setFont(l->getFont().withHeight(12.0f));
+	l->setColour(Label::textColourId, colors.textColour);
 
 	// Keep pointers
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
@@ -289,6 +304,7 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	addAndMakeVisible(l);
 	l->setJustificationType(Justification::centred);
 	l->setFont(l->getFont().withHeight(12.0f));
+	l->setColour(Label::textColourId, colors.textColour);
 
 	// Keep pointers
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
@@ -325,7 +341,7 @@ void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
 	const auto lineW = 4;
 	const auto lineH = 2;
 
-	g.setColour(Colours::white);
+	g.setColour(colors.textColour);
 	g.drawRect(sliderArea.getRight() + 8, sliderArea.getY(), lineW, lineH);
 	g.drawRect(sliderArea.getRight() + 8, sliderArea.getCentreY() - (int)(lineH * 0.5f), lineW, lineH);
 	g.drawRect(sliderArea.getRight() + 8, sliderArea.getBottom() - lineH, lineW, lineH);
