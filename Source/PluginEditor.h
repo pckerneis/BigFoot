@@ -92,5 +92,10 @@ private:
 
 	SharedResourcePointer<TooltipWindow> tooltipWindow;
 
+	const int labelHeight = 20;
+	const int marginHeight = 8;
+	const int sliderHeight = 64;
+	const int headerHeight = 30;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessorEditor)
 };

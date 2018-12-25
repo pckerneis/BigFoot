@@ -24,7 +24,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	setLookAndFeel(lf);
 	LookAndFeel::setDefaultLookAndFeel(lf);
 
-	const auto bgColour = Colours::black.withBrightness(0.08f);
+	const auto bgColour = Colours::darkslategrey.withBrightness(0.09f).withSaturation(0.38f);
 	lf->setColour(ResizableWindow::backgroundColourId, bgColour);
 	lf->setColour(PopupMenu::backgroundColourId, bgColour);
 
@@ -75,9 +75,9 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 #endif
 
 #if PAWG_USE_MIDI_KEYBOARD
-	const int height = 300;
+	const int height = 290;
 #else
-	const int height = 230;
+	const int height = 220;
 #endif
 
 	setSize(width, height);
@@ -106,10 +106,6 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 {
 	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
-	const int labelHeight = 20;
-	const int marginHeight = 8;
-	const int sliderHeight = 70;
-	const int headerHeight = 30;
 	const int cellHeight = sliderHeight + labelHeight + (marginHeight * 0.5);
 
 	auto r = getLocalBounds().reduced(5).toFloat();
@@ -168,12 +164,7 @@ void BassGeneratorAudioProcessorEditor::resized()
 
 	if (sliders.isEmpty())
 		return;
-
-	const int marginHeight = 8;
-	const int sliderHeight = 70;
-	const int headerHeight = 30;
-	const int labelHeight = 20;
-
+	
 	auto r = getLocalBounds().reduced(5);
 	r.removeFromTop(headerHeight);
 
