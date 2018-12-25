@@ -337,8 +337,8 @@ void PresetBar::refreshPresetList()
 			if (xml->getStringAttribute("PluginManufacturer") != JucePlugin_Manufacturer
 				|| xml->getStringAttribute("PluginName") != JucePlugin_Name)
 			{
-				jassertfalse;
-				return;
+				// Ignore this file
+				continue;
 			}
 
 			presetList.add(new Preset({ xml->getStringAttribute("PresetName"), xml->getStringAttribute("PresetCategory"), f, *xml, false }));
@@ -552,6 +552,11 @@ void PresetBar::restoreFactoryPresets()
 	forEachXmlChildElement(*xml.get(), e)
 	{
 		auto f = userFolder.getChildFile(e->getStringAttribute("PresetName") + extension);
+
+		// Update attributes
+		e->setAttribute("PluginName", JucePlugin_Name);
+		e->setAttribute("PluginVersion", JucePlugin_VersionString);
+		e->setAttribute("PluginManufacturer", JucePlugin_Manufacturer);
 
 		FileOutputStream fos(f);
 
