@@ -83,6 +83,9 @@ private:
 				return firstCategory.compareNatural(secondCategory);
 		}
 	};
+
+	bool checkXml(XmlElement* xml, String& errorMsg) const;
+
 	//==============================================================================
 	/*	Creates a new preset file with the current combo box text and the current processor state. 
 		If the desired name is already taken, add suffix */

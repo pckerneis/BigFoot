@@ -23,7 +23,7 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
                      #endif
                        ),
 #endif
-	parameters (*this, nullptr, "BassGenParameters",
+	parameters (*this, nullptr, getProcessorStateIdentifier(),
 		{
 			std::make_unique<AudioParameterFloat>(ParameterIDs::drive, "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
 			std::make_unique<AudioParameterChoice>(ParameterIDs::driveType, "Drive type", defaultParameterValues.driveTypes, 0),

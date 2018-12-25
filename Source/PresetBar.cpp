@@ -168,6 +168,20 @@ void PresetBar::showSavePopupMenu()
 	}
 }
 
+#include "PluginProcessor.h"
+bool PresetBar::checkXml(XmlElement * xml, String & errorMsg) const
+{
+	if (auto editor = findParentComponentOfClass<AudioProcessorEditor>())
+	{
+		if (auto proc = dynamic_cast<BassGeneratorAudioProcessor*>(editor->getAudioProcessor()))
+			if (xml->getTagName() == proc->getProcessorStateIdentifier())
+				return true;
+	}
+
+	errorMsg = "Error trying to load a preset file!";
+	return false;
+}
+
 void PresetBar::saveAsNewPreset(String category)
 {
 	// Get file
@@ -247,6 +261,18 @@ void PresetBar::loadPresetFromFile()
 		xml.reset(doc.getDocumentElement());
 
 		const auto presetName = f.getFileNameWithoutExtension();
+
+		String errorMsg;
+
+		if (!checkXml(xml.get(), errorMsg))
+		{
+			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, "Error loading preset", errorMsg);
+#if PAWG_PRESET_DESIGNER
+#else
+			comboBox.setText(processorState.state.getProperty("presetNameEdited"));
+			return;
+#endif
+		}
 
 		processorState.replaceState(ValueTree::fromXml(*xml));
 		comboBox.setText(presetName);
@@ -463,6 +489,7 @@ void PresetBar::comboBoxChanged()
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
 		return;
 	}
+#if PAWG_PRESET_DESIGNER
 	else if (selectedId == savePresetSheetItemId)
 	{
 		savePresetSheet();
@@ -475,6 +502,7 @@ void PresetBar::comboBoxChanged()
 		comboBox.setText(processorState.state.getProperty("presetNameEdited"));
 		return;
 	}
+#endif
 
 	auto presetIndex = selectedId - 1;
 
@@ -646,7 +674,13 @@ void PresetBar::savePresetSheet()
 			XmlDocument doc(p->file);
 
 			if (auto element = doc.getDocumentElement())
+			{
+				element->setAttribute("PluginName",			JucePlugin_Name);
+				element->setAttribute("PluginVersion",		JucePlugin_VersionString);
+				element->setAttribute("PluginManufacturer", JucePlugin_Manufacturer);
+
 				xml->addChildElement(element);
+			}
 		}
 
 		destination.deleteFile();
