@@ -29,6 +29,8 @@ public:
 private:
     const int windowWidth = 300;
     const int windowHeight = 200;
+
+	Image backgroundImage;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AboutScreen)
 };

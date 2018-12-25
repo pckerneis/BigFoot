@@ -12,27 +12,37 @@
 AboutScreen::AboutScreen()
 {
     setSize (windowWidth, windowHeight);
+
+	backgroundImage = ImageCache::getFromMemory(BinaryData::bigfootprint_png, BinaryData::bigfootprint_pngSize);
 }
 
 void AboutScreen::paint (Graphics& g)
 {
     const auto bg = getLookAndFeel().findColour (ResizableWindow::backgroundColourId);
     g.fillAll (bg);
+
+	g.drawImageWithin(backgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
     
     g.setColour (bg);
     g.setOpacity (0.23f);
     
     const auto r = getLocalBounds().reduced (12);
 
-    g.setFont (22.0f);
-    g.setColour (bg.contrasting());
+    g.setFont (24.0f);
+    //g.setColour (bg.contrasting());
+    g.setColour (Colours::black);
     
-    g.drawFittedText ("Phat Ass Wave Generator", r, Justification::centred, 1, 1.0);
+    g.drawFittedText ("BigFoot by Bestiary", r, Justification::centred, 1, 1.0);
     
-    g.setFont (12.0f);
+    g.setFont (12.5f);
+
+	auto footer = r.withTrimmedTop(r.proportionOfHeight(0.84f));
     
-    const String authorString (CharPointer_UTF8 ("\xc2\xa9 2018 Pierre-Cl\xc3\xa9ment Kerne\xc3\xafs"));
-    g.drawFittedText (authorString, r, Justification::bottomLeft, 1, 1.0);
+	const String authorString(CharPointer_UTF8("Author: Pierre-Cl\xc3\xa9ment Kerne\xc3\xafs"));
+	g.drawFittedText(authorString, footer, Justification::topLeft, 1, 1.0);
+
+	const String copyright(CharPointer_UTF8("\xc2\xa9 2018 Bestiary"));
+    g.drawFittedText (copyright, footer, Justification::bottomLeft, 1, 1.0);
     
     auto version = JucePlugin_VersionString;
     g.drawFittedText (version, r, Justification::topLeft, 1, 1.0);

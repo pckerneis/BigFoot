@@ -23,6 +23,8 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	setLookAndFeel(lf);
 	LookAndFeel::setDefaultLookAndFeel(lf);
+	auto tf = Typeface::createSystemTypefaceFor(BinaryData::RobotoMedium_ttf, BinaryData::RobotoMedium_ttfSize);
+	lf->setDefaultSansSerifTypeface(tf);
 
 	const auto bgColour = Colours::darkslategrey.withBrightness(0.09f).withSaturation(0.38f);
 	lf->setColour(ResizableWindow::backgroundColourId, bgColour);
