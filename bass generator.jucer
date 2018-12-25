@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="RdFFRY" name="PAWG" projectType="audioplug" jucerVersion="5.4.1"
+<JUCERPROJECT id="RdFFRY" name="BigFoot" projectType="audioplug" jucerVersion="5.4.1"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              pluginName="PAWG" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
-              pluginManufacturer="pckerneis" pluginManufacturerCode="pcK" reportAppUsage="0"
-              displaySplashScreen="0" splashScreenColour="Dark" version="0.0.6"
+              pluginName="BigFoot" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3"
+              pluginManufacturer="Bestiary" pluginManufacturerCode="Bstr" reportAppUsage="0"
+              displaySplashScreen="0" splashScreenColour="Dark" version="1.0.0"
               buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
-              buildAAX="0" buildStandalone="1" enableIAA="0" pluginDesc="PAWG"
-              pluginCode="Rdff" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              buildAAX="0" buildStandalone="1" enableIAA="0" pluginDesc="Bass mono-synth"
+              pluginCode="Bstr" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
               pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
-              pluginAUExportPrefix="PAWGAU" pluginRTASCategory="" bundleIdentifier="com.pckerneis.PAWG"
-              aaxIdentifier="com.pckerneis.PAWG" pluginAAXCategory="2" includeBinaryInAppConfig="1">
-  <MAINGROUP id="VGAmmy" name="PAWG">
+              pluginAUExportPrefix="BIGFOOTAU" pluginRTASCategory="" bundleIdentifier="com.Bestiary.BigFoot"
+              aaxIdentifier="com.Bestiary.BigFoot" pluginAAXCategory="2" includeBinaryInAppConfig="1"
+              companyName="Bestiary" companyEmail="pc.kerneis@gmail.com">
+  <MAINGROUP id="VGAmmy" name="BigFoot">
     <GROUP id="{34B25619-CF49-73F7-94FA-2DAF811CB136}" name="Resources">
       <FILE id="Gg3ocP" name="preset_sheet.preset" compile="0" resource="1"
             file="Resources/preset_sheet.preset"/>
