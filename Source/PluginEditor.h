@@ -99,15 +99,17 @@ private:
 
 	struct UIColours
 	{
-		const Colour backgroundColour		= Colours::darkslategrey.withBrightness(0.08f);
-		const Colour textColour				= Colours::white;
-		const Colour bendSliderColour		= Colours::orange;
-		const Colour adsrSliderColour		= Colours::beige;
-		const Colour glideSliderColour		= Colours::gold;
-		const Colour driveSliderColour		= Colours::orangered;
-		const Colour filterSliderColour		= Colours::Colours::red.withMultipliedSaturation(0.9f);
-		const Colour masterSliderColour		= Colours::beige;
+		const Colour backgroundColour		= Colour::fromRGB(255,255,250);
+		const Colour textColour				= Colour::fromRGB(94, 84, 56);
 		const Colour lineColour				= Colours::grey;
+
+		const Colour bendSliderColour		= Colour::fromRGB(255, 242, 212);
+		const Colour adsrSliderColour		= Colour::fromRGB(232, 208, 169);
+		const Colour glideSliderColour		= Colour::fromRGB(255, 242, 212);
+		const Colour driveSliderColour		= Colour::fromRGB(255, 194, 124);
+		const Colour filterSliderColour		= Colour::fromRGB(232, 194, 165);
+		const Colour masterSliderColour		= Colour::fromRGB(255, 225, 211);
+
 		const Colour thumbColour			= Colours::black;
 	};
 

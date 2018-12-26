@@ -34,19 +34,6 @@ public:
 	void setCurrentPreset(int presetIndex);
 
 	//==============================================================================
-	/** ValueTree::Listener implementation */
-	/*
-	virtual void valueTreePropertyChanged(ValueTree&, const Identifier&) override
-	{
-		processorParametersMayHaveChanged();
-	}
-	virtual void valueTreeChildAdded(ValueTree&, ValueTree&) override {}
-	virtual void valueTreeChildRemoved(ValueTree&, ValueTree&, int) override {}
-	virtual void valueTreeChildOrderChanged(ValueTree&, int, int) override {}
-	virtual void valueTreeParentChanged(ValueTree& treeWhoseParentHasChanged) override {}
-	*/
-
-	//==============================================================================
 	/** AsyncUpdater implementation. Try to load first preset after the factory presets were
 	created for the first time */
 	void handleAsyncUpdate() override
@@ -103,24 +90,7 @@ private:
 	/* Creates a XmlElement with the current processor state and some info about the current preset. */
 	XmlElement* getCurrentPresetAsXml(String presetName, String category);
 
-	void showCategoryChooser(int& result, String& category)
-	{
-		// Category chooser
-		StringArray categories;
-
-		for (auto p : presetList)
-			categories.addIfNotAlreadyThere(p->category);
-
-		AlertWindow alert("Preset category", "Choose or create a preset category", AlertWindow::AlertIconType::QuestionIcon);
-		alert.addComboBox("Category", categories);
-		alert.addButton("Cancel", 0);
-		alert.addButton("Apply", KeyPress::backspaceKey);
-		alert.getComboBoxComponent("Category")->setEditableText(true);
-		alert.setColour(AlertWindow::backgroundColourId, findColour(ResizableWindow::backgroundColourId));
-
-		result = alert.runModalLoop();
-		category = alert.getComboBoxComponent("Category")->getText();
-	}
+	void showCategoryChooser(int& result, String& category);
 
 	//==============================================================================
 	/* Opens a FileChooser. If a suitable preset file is chosen, it will be loaded. */
@@ -176,6 +146,7 @@ private:
 
 	class CustomComboBox : public ComboBox
 	{
+	public:
 		void showPopup() override
 		{
 			if (auto bar = findParentComponentOfClass<PresetBar>())

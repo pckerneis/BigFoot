@@ -15,6 +15,82 @@
 //==============================================================================
 class CustomLookAndFeel : public LookAndFeel_V4
 {
+	int getAlertWindowButtonHeight() override
+	{
+		return 22;
+	}
+
+	void drawAlertBox(Graphics& g, AlertWindow& alert,
+		const Rectangle<int>& textArea, TextLayout& textLayout) override
+	{
+		g.setColour(alert.findColour(AlertWindow::outlineColourId));
+		g.drawRect(alert.getLocalBounds().toFloat());
+
+		auto bounds = alert.getLocalBounds().reduced(1);
+		g.reduceClipRegion(bounds);
+
+		g.setColour(alert.findColour(AlertWindow::backgroundColourId));
+		g.fillRect(bounds.toFloat());
+
+		auto iconSpaceUsed = 0;
+
+		auto iconWidth = 80;
+		auto iconSize = jmin(iconWidth + 50, bounds.getHeight() + 20);
+
+		if (alert.containsAnyExtraComponents() || alert.getNumButtons() > 2)
+			iconSize = jmin(iconSize, textArea.getHeight() + 50);
+
+		Rectangle<int> iconRect(iconSize / -10, iconSize / -10,
+			iconSize, iconSize);
+
+		if (alert.getAlertType() != AlertWindow::NoIcon)
+		{
+			Path icon;
+			char character;
+			uint32 colour;
+
+			if (alert.getAlertType() == AlertWindow::WarningIcon)
+			{
+				character = '!';
+
+				icon.addTriangle(iconRect.getX() + iconRect.getWidth() * 0.5f, (float)iconRect.getY(),
+					static_cast<float> (iconRect.getRight()), static_cast<float> (iconRect.getBottom()),
+					static_cast<float> (iconRect.getX()), static_cast<float> (iconRect.getBottom()));
+
+				icon = icon.createPathWithRoundedCorners(5.0f);
+				colour = 0x66ff2a00;
+			}
+			else
+			{
+				colour = Colour(0xff00b0b9).withAlpha(0.4f).getARGB();
+				character = alert.getAlertType() == AlertWindow::InfoIcon ? 'i' : '?';
+
+				icon.addEllipse(iconRect.toFloat());
+			}
+
+			GlyphArrangement ga;
+			ga.addFittedText({ iconRect.getHeight() * 0.9f, Font::bold },
+				String::charToString((juce_wchar)(uint8)character),
+				static_cast<float> (iconRect.getX()), static_cast<float> (iconRect.getY()),
+				static_cast<float> (iconRect.getWidth()), static_cast<float> (iconRect.getHeight()),
+				Justification::centred, false);
+			ga.createPath(icon);
+
+			icon.setUsingNonZeroWinding(false);
+			g.setColour(Colour(colour));
+			g.fillPath(icon);
+
+			iconSpaceUsed = iconWidth;
+		}
+
+		g.setColour(alert.findColour(AlertWindow::textColourId));
+
+		Rectangle<int> alertBounds(bounds.getX() + iconSpaceUsed, 30,
+			bounds.getWidth(), bounds.getHeight() - getAlertWindowButtonHeight() - 20);
+
+		textLayout.draw(g, alertBounds.toFloat());
+	}
+
 	void positionComboBoxText(ComboBox& box, Label& label) override
 	{
 		label.setBounds(1, 1, box.getWidth() - 22, box.getHeight() - 2);
@@ -47,11 +123,11 @@ class CustomLookAndFeel : public LookAndFeel_V4
 	Font getComboBoxFont(ComboBox& box)
 	{
 		Font f(jmin(15.0f, box.getHeight() * 0.85f));
-		f.setHorizontalScale(0.9f);
+		//f.setHorizontalScale(0.9f);
 
 		// (REALLY) DIRTY WAY TO HANDLE TEMP VALUES
-		if (box.findColour(ComboBox::textColourId) != Colours::white)
-			f = f.italicised();
+		//if (box.findColour(ComboBox::textColourId) != Colours::white)
+		//	f = f.italicised();
 
 		return f;
 	}
@@ -101,7 +177,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 	void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
 		const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider)
 	{
-		auto outline = slider.findColour(Slider::rotarySliderOutlineColourId);
+		auto outline = slider.findColour(ComboBox::outlineColourId);
 		auto fill = slider.findColour(Slider::rotarySliderFillColourId);
 
 		auto bounds = Rectangle<int>(x, y, width, height).toFloat().reduced(10);
@@ -189,8 +265,10 @@ class CustomLookAndFeel : public LookAndFeel_V4
 			Path backgroundTrack;
 			backgroundTrack.startNewSubPath(startPoint);
 			backgroundTrack.lineTo(endPoint);
-			g.setColour(slider.findColour(Slider::backgroundColourId));
+			g.setColour(slider.findColour(Slider::backgroundColourId).darker());
 			g.strokePath(backgroundTrack, { trackWidth, PathStrokeType::curved, PathStrokeType::rounded });
+			g.setColour(slider.findColour(Slider::backgroundColourId));
+			g.strokePath(backgroundTrack, { trackWidth - 2.0f, PathStrokeType::curved, PathStrokeType::rounded });
 
 			Path valueTrack;
 			Point<float> minPoint, maxPoint, thumbPoint;

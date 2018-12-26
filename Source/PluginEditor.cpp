@@ -26,24 +26,51 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	auto tf = Typeface::createSystemTypefaceFor(BinaryData::RobotoMedium_ttf, BinaryData::RobotoMedium_ttfSize);
 	lf->setDefaultSansSerifTypeface(tf);
 
+	/*
 	lf->setColour(ResizableWindow::backgroundColourId,	colors.backgroundColour);
+	lf->setColour(TooltipWindow::backgroundColourId,	colors.backgroundColour);
 	lf->setColour(PopupMenu::backgroundColourId,		colors.backgroundColour);
 	lf->setColour(TextButton::textColourOnId,			colors.textColour);
 	lf->setColour(TextButton::textColourOffId,			colors.textColour);
 	lf->setColour(ComboBox::textColourId,				colors.textColour);
 	lf->setColour(ComboBox::arrowColourId,				colors.textColour);
 	lf->setColour(PopupMenu::textColourId,				colors.textColour);
-	lf->setColour(TextEditor::textColourId,				colors.textColour); 
+	lf->setColour(TextEditor::textColourId,				colors.textColour);
+	lf->setColour(AlertWindow::textColourId,			colors.textColour);
+	lf->setColour(TooltipWindow::textColourId,			colors.textColour);
+
 	lf->setColour(Slider::rotarySliderOutlineColourId,	colors.textColour);	// Used for rotary slider graduations
 	lf->setColour(ComboBox::outlineColourId,			colors.lineColour);	// Used for buttons outline
 	lf->setColour(TextButton::buttonColourId,			Colours::transparentBlack);
 	lf->setColour(Slider::thumbColourId,				colors.thumbColour);
+
+	auto highlightColour = colors.backgroundColour.contrasting(0.6f);
+	auto highlightTextColour = colors.backgroundColour;
+
+	lf->setColour(PopupMenu::highlightedBackgroundColourId,		highlightColour);
+	lf->setColour(PopupMenu::highlightedTextColourId,			highlightTextColour);
+
+	lf->setColour(TextEditor::highlightColourId,				highlightColour);
+	lf->setColour(TextEditor::highlightedTextColourId,			highlightTextColour);
+	*/
 
 	// We'll also style the logo button here even if it's used in PresetBar
 	SharedResourcePointer<LogoButtonLF> logoLF;
 	logoLF->setColour(TextButton::textColourOnId,		colors.textColour);
 	logoLF->setColour(TextButton::textColourOffId,		colors.textColour);
 	logoLF->setColour(TextButton::buttonColourId,		Colours::transparentBlack);
+
+	lf->setColourScheme({
+		colors.backgroundColour,
+		colors.backgroundColour,
+		colors.backgroundColour,
+		colors.lineColour,
+		colors.textColour,
+		colors.textColour,
+		colors.backgroundColour,
+		colors.textColour,
+		colors.textColour
+	});
 
 	// Keyboard comp
 #if PAWG_USE_MIDI_KEYBOARD
@@ -203,7 +230,7 @@ void BassGeneratorAudioProcessorEditor::resized()
 			auto b = bounds.removeFromLeft(w);
 
 			if (paramId == ParameterIDs::driveType)
-				b = b.withTrimmedRight(b.proportionOfWidth(0.5f)).withSizeKeepingCentre(b.proportionOfWidth(0.35f), b.proportionOfHeight(0.56f));
+				b = b.withTrimmedRight(b.proportionOfWidth(0.5f)).withSizeKeepingCentre(b.proportionOfWidth(0.35f), b.proportionOfHeight(0.62f));
 
 			getSlider(paramId)->setBounds(b);
 
@@ -269,10 +296,15 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	auto attachment = new SliderAttachment(vts, paramName, *slider);
 
 	// Styling
+	auto bg = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+	auto txt = getLookAndFeel().findColour(Label::textColourId);
+
+	auto trackColour = bg.interpolatedWith(txt, 0.3f);
+
 	addAndMakeVisible(slider);
 	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	slider->setSliderStyle(Slider::SliderStyle::LinearVertical);
-	slider->setColour(Slider::backgroundColourId, Colours::grey);
+	slider->setColour(Slider::backgroundColourId, trackColour);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
