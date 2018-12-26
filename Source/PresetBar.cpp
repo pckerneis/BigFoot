@@ -226,7 +226,7 @@ bool PresetBar::canOverrideCurrentPreset()
 
 bool PresetBar::currentPresetChanged()
 {
-	return processorState.state.getProperty("presetChanged");
+	return false;// processorState.state.getProperty("presetChanged");
 }
 
 XmlElement * PresetBar::getCurrentPresetAsXml(String presetName, String category)
@@ -243,6 +243,27 @@ XmlElement * PresetBar::getCurrentPresetAsXml(String presetName, String category
 	xml->setAttribute("PresetCategory", category);
 
 	return xml.release();
+}
+
+void PresetBar::showCategoryChooser(int & result, String & category)
+{
+	// Category chooser
+	StringArray categories;
+
+	for (auto p : presetList)
+		categories.addIfNotAlreadyThere(p->category);
+
+	AlertWindow alert("Preset category", "Choose or create a preset category", AlertWindow::AlertIconType::QuestionIcon);
+	alert.addComboBox("Category", categories);
+	alert.addButton("Cancel", 0);
+	alert.addButton("Apply", KeyPress::backspaceKey);
+	alert.getComboBoxComponent("Category")->setEditableText(true);
+	alert.setLookAndFeel(&getLookAndFeel());
+	alert.getComboBoxComponent("Category")->setColour(TextEditor::backgroundColourId, Colours::transparentBlack);
+	alert.setColour(AlertWindow::backgroundColourId, findColour(ResizableWindow::backgroundColourId));
+
+	result = alert.runModalLoop();
+	category = alert.getComboBoxComponent("Category")->getText();
 }
 
 void PresetBar::loadPresetFromFile()
@@ -266,7 +287,7 @@ void PresetBar::loadPresetFromFile()
 
 		if (!checkXml(xml.get(), errorMsg))
 		{
-			AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, "Error loading preset", errorMsg);
+			NativeMessageBox::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon, "Error loading preset", errorMsg);
 #if PAWG_PRESET_DESIGNER
 #else
 			comboBox.setText(processorState.state.getProperty("presetNameEdited"));
@@ -454,6 +475,7 @@ void PresetBar::refreshComboBox()
 
 void PresetBar::comboBoxChanged()
 {
+	auto text = comboBox.getText();
 	auto selectedId = comboBox.getSelectedId();
 
 	if (selectedId == randomizeItemId)
@@ -504,9 +526,13 @@ void PresetBar::comboBoxChanged()
 	}
 #endif
 
-	auto presetIndex = selectedId - 1;
+	auto presetIndex = -1;
 
-	if (presetIndex >= 0 && presetIndex != presetList.indexOf(currentPreset))
+	for (auto p : presetList)
+		if (p->name == text)
+			presetIndex = presetList.indexOf(p);
+
+	if (presetIndex >= 0 && presetIndex != presetList.indexOf(currentPreset) && text == presetList[presetIndex]->name)
 		setCurrentPreset(presetIndex);
 
 	updateComboBoxTextColour();
@@ -518,8 +544,9 @@ void PresetBar::comboBoxChanged()
 
 void PresetBar::updateComboBoxTextColour()
 {
+	const auto defaultColour = getLookAndFeel().findColour(Label::textColourId);
 	auto presetIndex = comboBox.getSelectedId() - 1;
-	auto textColour = (currentPresetChanged() || presetIndex < 0) ? Colours::lightgrey : Colours::white;
+	auto textColour = (currentPresetChanged() || presetIndex < 0) ? defaultColour.withAlpha(0.75f) : defaultColour;
 	comboBox.setColour(ComboBox::textColourId, textColour);
 }
 
