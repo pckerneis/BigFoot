@@ -15,6 +15,35 @@
 //==============================================================================
 class CustomLookAndFeel : public LookAndFeel_V4
 {
+	static TextLayout layoutTooltipText(const String& text, Colour colour) noexcept
+	{
+		const float tooltipFontSize = 13.0f;
+		const int maxToolTipWidth = 400;
+
+		AttributedString s;
+		s.setJustification(Justification::centred);
+		s.append(text, Font(tooltipFontSize, Font::bold), colour);
+
+		TextLayout tl;
+		tl.createLayoutWithBalancedLineLengths(s, (float)maxToolTipWidth);
+		return tl;
+	}
+	
+	void drawTooltip(Graphics& g, const String& text, int width, int height) override
+	{
+		Rectangle<int> bounds(width, height);
+		auto cornerSize = 0.0f;
+
+		g.setColour(findColour(TooltipWindow::backgroundColourId));
+		g.fillRoundedRectangle(bounds.toFloat(), cornerSize);
+
+		g.setColour(findColour(TooltipWindow::outlineColourId));
+		g.drawRoundedRectangle(bounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
+
+		layoutTooltipText(text, findColour(TooltipWindow::textColourId))
+			.draw(g, { static_cast<float> (width), static_cast<float> (height) });
+	}
+
 	int getAlertWindowButtonHeight() override
 	{
 		return 22;
