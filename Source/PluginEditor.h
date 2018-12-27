@@ -99,7 +99,7 @@ private:
 
 	struct UIColours
 	{
-		const Colour backgroundColour		= Colour::fromRGB(255,255,250);
+		const Colour backgroundColour		= Colour::fromRGB(248,248,240);
 		const Colour textColour				= Colour::fromRGB(94, 84, 56);
 		const Colour lineColour				= Colours::grey;
 
