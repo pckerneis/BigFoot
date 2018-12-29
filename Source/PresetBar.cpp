@@ -25,8 +25,7 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 	addAndMakeVisible(aboutButton);
 
 	addAndMakeVisible(comboBox);
-	comboBox.setColour(ComboBox::backgroundColourId, Colours::white.withAlpha(0.008f));
-	comboBox.setColour(ComboBox::outlineColourId, Colours::darkgrey);
+	comboBox.setColour(ComboBox::backgroundColourId, Colours::white.withAlpha(0.01f));
 	comboBox.onChange = [this] { comboBoxChanged(); };
 	comboBox.setEditableText(true);
 	comboBox.setJustificationType(Justification::centred);
@@ -41,15 +40,6 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 	 
 	addAndMakeVisible(saveButton);
 	saveButton.onClick = [this] { showSavePopupMenu(); };
-
-	for (auto c : getChildren())
-	{
-		if (auto b = dynamic_cast<Button*>(c))
-		{
-			//b->setColour(TextButton::buttonColourId, Colours::transparentBlack);
-			//b->setColour(ComboBox::outlineColourId, Colours::darkgrey);
-		}
-	}
 
 	aboutButton.setLookAndFeel(logoLF);
 	aboutButton.setButtonText(JucePlugin_Name);

@@ -26,40 +26,6 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	auto tf = Typeface::createSystemTypefaceFor(BinaryData::RobotoMedium_ttf, BinaryData::RobotoMedium_ttfSize);
 	lf->setDefaultSansSerifTypeface(tf);
 
-	/*
-	lf->setColour(ResizableWindow::backgroundColourId,	colors.backgroundColour);
-	lf->setColour(TooltipWindow::backgroundColourId,	colors.backgroundColour);
-	lf->setColour(PopupMenu::backgroundColourId,		colors.backgroundColour);
-	lf->setColour(TextButton::textColourOnId,			colors.textColour);
-	lf->setColour(TextButton::textColourOffId,			colors.textColour);
-	lf->setColour(ComboBox::textColourId,				colors.textColour);
-	lf->setColour(ComboBox::arrowColourId,				colors.textColour);
-	lf->setColour(PopupMenu::textColourId,				colors.textColour);
-	lf->setColour(TextEditor::textColourId,				colors.textColour);
-	lf->setColour(AlertWindow::textColourId,			colors.textColour);
-	lf->setColour(TooltipWindow::textColourId,			colors.textColour);
-
-	lf->setColour(Slider::rotarySliderOutlineColourId,	colors.textColour);	// Used for rotary slider graduations
-	lf->setColour(ComboBox::outlineColourId,			colors.lineColour);	// Used for buttons outline
-	lf->setColour(TextButton::buttonColourId,			Colours::transparentBlack);
-	lf->setColour(Slider::thumbColourId,				colors.thumbColour);
-
-	auto highlightColour = colors.backgroundColour.contrasting(0.6f);
-	auto highlightTextColour = colors.backgroundColour;
-
-	lf->setColour(PopupMenu::highlightedBackgroundColourId,		highlightColour);
-	lf->setColour(PopupMenu::highlightedTextColourId,			highlightTextColour);
-
-	lf->setColour(TextEditor::highlightColourId,				highlightColour);
-	lf->setColour(TextEditor::highlightedTextColourId,			highlightTextColour);
-	*/
-
-	// We'll also style the logo button here even if it's used in PresetBar
-	SharedResourcePointer<LogoButtonLF> logoLF;
-	logoLF->setColour(TextButton::textColourOnId,		colors.textColour);
-	logoLF->setColour(TextButton::textColourOffId,		colors.textColour);
-	logoLF->setColour(TextButton::buttonColourId,		Colours::transparentBlack);
-
 	lf->setColourScheme({
 		colors.backgroundColour,
 		colors.backgroundColour,
@@ -71,6 +37,13 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 		colors.textColour,
 		colors.textColour
 	});
+
+	// We'll also style the logo button here even if it's used in PresetBar
+	SharedResourcePointer<LogoButtonLF> logoLF;
+	logoLF->setColour(TextButton::textColourOnId, colors.textColour);
+	logoLF->setColour(TextButton::textColourOffId, colors.textColour);
+	logoLF->setColour(TextButton::buttonColourId, Colours::transparentBlack);
+	logoLF->prepareFont();
 
 	// Keyboard comp
 #if PAWG_USE_MIDI_KEYBOARD
@@ -97,19 +70,9 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	addRotarySlider(valueTreeState, ParameterIDs::lpModDuration, colors.filterSliderColour);
 #endif
 
-
-	// More slider styling
-	for (auto c : getChildren())
-	{
-		if (auto s = dynamic_cast<Slider*>(c))
-		{
-			//s->setColour(Slider::rotarySliderOutlineColourId, Colours::black);
-		}
-	}
-
 	addAndMakeVisible(presetBar);
 
-    // Set editor size and start timer for the keyboard to grab focus
+    // Set editor size
 
 #if PAWG_ALLOW_LPF_MODULATION
 	const int width = 440;
@@ -131,7 +94,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	renderBackgroundImage(g);
 
 #if PAWG_USE_MIDI_KEYBOARD
-	startTimer(400);
+	startTimer(400);	// For keyboard to grab focus
 #endif
 }
 
@@ -149,6 +112,12 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 {
 	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
+	auto texture = ImageCache::getFromMemory(BinaryData::brushed_metal_texture_jpg,
+											 BinaryData::brushed_metal_texture_jpgSize);
+
+	g.setOpacity(0.08f);
+	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
+
 	const int cellHeight = sliderHeight + labelHeight + (marginHeight * 0.5);
 
 	auto r = getLocalBounds().reduced(5).toFloat();
@@ -159,7 +128,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 #endif
 
 	const float cornerSize = 6.0f;
-	const float lineThickness = 1.2f;
+	const float lineThickness = 1.0f;
 	const float margin = 2.0f;
 
 	g.setColour(colors.lineColour);
@@ -324,11 +293,15 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	auto slider = new Slider(paramName + "Slider");
 	auto attachment = new SliderAttachment(vts, paramName, *slider);
 
+	auto bg = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+	auto outline = bg.interpolatedWith(colour, 0.3f);
+
 	// Styling
 	addAndMakeVisible(slider);
 	slider->setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	slider->setColour(Slider::rotarySliderFillColourId, colour);
+	slider->setColour(Slider::rotarySliderOutlineColourId, outline);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label

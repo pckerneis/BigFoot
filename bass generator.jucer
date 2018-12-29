@@ -14,12 +14,21 @@
               companyName="Bestiary" companyEmail="pc.kerneis@gmail.com">
   <MAINGROUP id="VGAmmy" name="BigFoot">
     <GROUP id="{34B25619-CF49-73F7-94FA-2DAF811CB136}" name="Resources">
-      <FILE id="b9l3YQ" name="bigfootprint.png" compile="0" resource="1"
+      <FILE id="FfGLb4" name="bigfootprint.png" compile="0" resource="1"
             file="Resources/bigfootprint.png"/>
       <FILE id="Gg3ocP" name="preset_sheet.preset" compile="0" resource="1"
             file="Resources/preset_sheet.preset"/>
+      <FILE id="dvndqA" name="brushed_metal_texture.jpg" compile="0" resource="1"
+            file="Resources/brushed_metal_texture.jpg"/>
       <FILE id="tC3RXo" name="Roboto-Medium.ttf" compile="0" resource="1"
             file="Resources/Roboto-Medium.ttf"/>
+      <FILE id="qPVAEj" name="mrsmonsterexpand.ttf" compile="0" resource="1"
+            file="Resources/mrsmonsterexpand.ttf"/>
+      <FILE id="Vufg0H" name="mrsmonsteracad.ttf" compile="0" resource="1"
+            file="Resources/mrsmonsteracad.ttf"/>
+      <FILE id="TgYF51" name="mrsmonster.ttf" compile="0" resource="1" file="Resources/mrsmonster.ttf"/>
+      <FILE id="Q2srMy" name="mrsmonster3d.ttf" compile="0" resource="1"
+            file="Resources/mrsmonster3d.ttf"/>
     </GROUP>
     <GROUP id="{4597911F-BD20-A52B-995B-2D0D0CA045FF}" name="Source">
       <GROUP id="{31722F44-49F6-53E6-FE33-01E19B0C985E}" name="Audio">

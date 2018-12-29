@@ -135,7 +135,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		g.setColour(box.findColour(ComboBox::backgroundColourId));
 		g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
 
-		g.setColour(box.findColour(ComboBox::outlineColourId));
+		g.setColour(findColour(ComboBox::outlineColourId));
 		//g.drawRoundedRectangle(boxBounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
 		g.drawRect(boxBounds.toFloat(), 1.0f);
 
@@ -214,7 +214,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		bounds = bounds.withSizeKeepingCentre(size, size);
 
 		auto gradRadius = size / 2.0f;
-		auto radius = size / 3.0f;
+		auto radius = size / 2.6f;
 		auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 		auto lineW = jmin(8.0f, radius * 0.5f);
 
@@ -249,11 +249,12 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		}
 
 		// knob
-		auto knobBounds = bounds.reduced(size * 0.15f);
-		g.setColour(fill);
+		auto knobBounds = bounds.reduced(size * 0.08f);
+		ColourGradient grad (fill, bounds.getTopLeft(), fill.darker(0.8f), knobBounds.getBottomRight(), true);
+		g.setGradientFill(grad);
 		g.fillEllipse(knobBounds);
-		g.setColour(slider.findColour(Slider::thumbColourId).interpolatedWith(fill, 0.7f));
-		g.drawEllipse(knobBounds, 2.2f);
+		g.setColour(slider.findColour(ResizableWindow::backgroundColourId));
+		g.drawEllipse(knobBounds, 1.5f);
 
 		// thumb
 		auto thumbDist = radius * 0.77f;
@@ -323,7 +324,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 				maxPoint = { kx, ky };
 			}
 
-			auto thumbWidth = getSliderThumbRadius(slider);
+			auto thumbWidth = getSliderThumbRadius(slider) * 0.9f;
 
 			if (!isTwoVal)
 			{
@@ -363,6 +364,39 @@ class CustomLookAndFeel : public LookAndFeel_V4
 //==============================================================================
 class LogoButtonLF : public CustomLookAndFeel
 {
+	Font font;
+
+public:
+	void prepareFont()
+	{
+		auto monster = Typeface::createSystemTypefaceFor(BinaryData::mrsmonster_ttf, BinaryData::mrsmonster_ttfSize);
+		font = Font(monster);
+	}
+
+private:
+	void drawButtonText(Graphics& g, TextButton& button,
+		bool shouldDrawButtonAsHighlighted, bool /*shouldDrawButtonAsDown*/)
+	{
+		font.setHeight(button.getHeight() * 0.7f);
+		g.setFont(font);
+		g.setColour(button.findColour(button.getToggleState() ? TextButton::textColourOnId
+			: TextButton::textColourOffId)
+			.withMultipliedAlpha(shouldDrawButtonAsHighlighted ? 1.0f : 0.85f));
+
+		const int yIndent = jmin(4, button.proportionOfHeight(0.3f));
+		const int cornerSize = jmin(button.getHeight(), button.getWidth()) / 2;
+
+		const int fontHeight = roundToInt(font.getHeight() * 0.6f);
+		const int leftIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnLeft() ? 4 : 2));
+		const int rightIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
+		const int textWidth = button.getWidth() - leftIndent - rightIndent;
+
+		if (textWidth > 0)
+			g.drawFittedText(button.getButtonText(),
+				leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
+				Justification::centred, 2);
+	}
+
 	void drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour, bool, bool)
 	{
 		auto cornerSize = 0.0f;

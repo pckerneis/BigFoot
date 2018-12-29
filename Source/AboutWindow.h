@@ -30,7 +30,8 @@ private:
     const int windowWidth = 300;
     const int windowHeight = 200;
 
-	Image backgroundImage;
+	Image backgroundImage; 
+	Font monsterFont;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AboutScreen)
 };
