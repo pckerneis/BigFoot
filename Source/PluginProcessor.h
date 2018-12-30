@@ -109,7 +109,7 @@ public:
 		}
 	}
 
-	virtual void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override 
+	virtual void parameterGestureChanged(int, bool) override 
 	{
 		parameters.state.setProperty("presetChanged", true, nullptr);
 	}

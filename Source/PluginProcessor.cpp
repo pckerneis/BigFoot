@@ -155,16 +155,16 @@ int BassGeneratorAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void BassGeneratorAudioProcessor::setCurrentProgram (int index)
+void BassGeneratorAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String BassGeneratorAudioProcessor::getProgramName (int index)
+const String BassGeneratorAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void BassGeneratorAudioProcessor::changeProgramName (int index, const String& newName)
+void BassGeneratorAudioProcessor::changeProgramName (int /*index*/, const String&)
 {
 }
 

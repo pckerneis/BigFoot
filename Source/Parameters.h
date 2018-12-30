@@ -104,17 +104,17 @@ struct DefaultParameterValues
 	float minBendAmount = -24.0f;
 	float maxBendAmount = 24.0f;
 
-	float minAttack = 0.001;
+	float minAttack = 0.001f;
 	float maxAttack = 2.0f;
 	float attack = 0.001f;
 
-	float minDecay = 0.001;
+	float minDecay = 0.001f;
 	float maxDecay = 8.0f;
 	float decay = 0.001f;
 
 	float sustain = 1.0f;
 
-	float minRelease = 0.001;
+	float minRelease = 0.001f;
 	float maxRelease = 8.0f;
 	float release = 0.001f;
 

@@ -239,7 +239,6 @@ class CustomLookAndFeel : public LookAndFeel_V4
 			else
 				gradWidth = lineW * 0.3f;
 
-			auto thumbWidth = lineW;
 			auto angle = rotaryStartAngle + ((float)i / (float)numGrad) * (rotaryEndAngle - rotaryStartAngle);
 
 			Point<float> thumbPoint(bounds.getCentreX() + gradRadius * std::cos(angle - MathConstants<float>::halfPi),

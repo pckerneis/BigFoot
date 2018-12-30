@@ -141,11 +141,11 @@ void PresetBar::showSavePopupMenu()
 	else if (result == 2)
 	{
 		String category;
-		int result;
+		int chosenIndex;
 
-		showCategoryChooser(result, category);
+		showCategoryChooser(chosenIndex, category);
 
-		if (result == 0)
+		if (chosenIndex == 0)
 			return;
 
 		// Save as

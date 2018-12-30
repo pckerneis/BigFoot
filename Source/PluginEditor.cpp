@@ -118,7 +118,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 	g.setOpacity(0.08f);
 	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
 
-	const int cellHeight = sliderHeight + labelHeight + (marginHeight * 0.5);
+	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
 
 	auto r = getLocalBounds().reduced(5).toFloat();
 #if PAWG_ALLOW_LPF_MODULATION
@@ -133,7 +133,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 
 	g.setColour(colors.lineColour);
 	
-	r.removeFromTop(headerHeight);
+	r.removeFromTop((float)headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
 
 	Array<int> topCells;
