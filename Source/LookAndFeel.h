@@ -127,7 +127,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 	}
 
 	void drawComboBox(Graphics& g, int width, int height, bool,
-		int, int, int, int, ComboBox& box)
+		int, int, int, int, ComboBox& box) override
 	{
 		auto cornerSize = 0.0f;
 		Rectangle<int> boxBounds(0, 0, width, height);
@@ -149,7 +149,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		g.strokePath(path, PathStrokeType(1.6f));
 	}
 
-	Font getComboBoxFont(ComboBox& box)
+	Font getComboBoxFont(ComboBox& box) override
 	{
 		Font f(jmin(15.0f, box.getHeight() * 0.85f));
 		//f.setHorizontalScale(0.9f);
@@ -165,7 +165,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		Button& button,
 		const Colour& backgroundColour,
 		bool shouldDrawButtonAsHighlighted,
-		bool shouldDrawButtonAsDown)
+		bool shouldDrawButtonAsDown) override
 	{
 		auto cornerSize = 0.0f;
 		auto bounds = button.getLocalBounds().toFloat().reduced(0.5f, 0.5f);
@@ -204,7 +204,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 	}
 
 	void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
-		const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider)
+		const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
 	{
 		auto outline = slider.findColour(ComboBox::outlineColourId);
 		auto fill = slider.findColour(Slider::rotarySliderFillColourId);
@@ -270,7 +270,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		float sliderPos,
 		float minSliderPos,
 		float maxSliderPos,
-		const Slider::SliderStyle style, Slider& slider)
+		const Slider::SliderStyle style, Slider& slider) override
 	{
 		if (slider.isBar())
 		{
