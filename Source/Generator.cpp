@@ -56,13 +56,13 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 	{
 		// Glide to the target note without bending
 		noteRamp.reset(sampleRate, *values.glide);
-		noteRamp.setValue(midiNoteNumber);
+		noteRamp.setValue((float)midiNoteNumber);
 		bendRamp.setValue(0.0f);
 	}
 	else
 	{
 		// Else just set the note (force)
-		noteRamp.setValue(midiNoteNumber, true);
+		noteRamp.setValue((float)midiNoteNumber, true);
 
 		// .. prepare bend ramp
 		bendRamp.reset(sampleRate, *values.bendDuration);
@@ -226,6 +226,7 @@ void SynthAudioSource::setUsingSineWaveSound()
 void SynthAudioSource::prepareToPlay(int /*samplesPerBlockExpected*/, double sampleRate)
 {
 	synth.setCurrentPlaybackSampleRate(sampleRate);
+	synth.clearPendingNotes();
 
 	adsr.prepare(sampleRate);
 

@@ -89,6 +89,81 @@ private:
 
 //==============================================================================
 
+class MonoLegatoSynth : public Synthesiser
+{
+public:
+	MonoLegatoSynth(bool triller = true) : trillerMode(triller)
+	{}
+
+	void setTrillerMode(bool shouldBeOn)
+	{
+		if (trillerMode == shouldBeOn)
+			return;
+
+		trillerMode = shouldBeOn;
+
+		currentNotes.clear();
+	}
+
+	void clearPendingNotes()
+	{
+		currentNotes.clear();
+	}
+
+	void noteOn(int midiChannel, int midiNoteNumber, float velocity) override
+	{
+		Synthesiser::noteOn(midiChannel, midiNoteNumber, velocity);
+
+		if (trillerMode)
+			currentNotes.addIfNotAlreadyThere(PendingNote(midiNoteNumber, velocity));
+	}
+
+	void noteOff(int midiChannel, int midiNoteNumber, float velocity, bool allowTailOff) override
+	{
+		if (!trillerMode)
+		{
+			Synthesiser::noteOff(midiChannel, midiNoteNumber, velocity, allowTailOff);
+		}
+		else
+		{
+			auto latestNotePressed = currentNotes.getLast().noteNumber;
+			currentNotes.removeFirstMatchingValue(PendingNote(midiNoteNumber, velocity));
+
+			if (latestNotePressed == midiNoteNumber && !currentNotes.isEmpty())
+			{
+				auto note = currentNotes.getLast();
+
+				// Retrigger previous note
+				if (note.noteNumber >= 0)
+					noteOn(midiChannel, note.noteNumber, note.velocity);
+			}
+			else
+				Synthesiser::noteOff(midiChannel, midiNoteNumber, velocity, allowTailOff);
+		}
+	}
+
+private:
+	bool trillerMode;
+
+	struct PendingNote
+	{
+		PendingNote() : noteNumber(-1), velocity(0.0f) {}
+		PendingNote(int n, float v) : noteNumber(n), velocity(v) {}
+
+		const int noteNumber;
+		const float velocity;
+
+		bool operator== (const PendingNote& other) const
+		{
+			return (noteNumber == other.noteNumber);
+		}
+	};
+
+	Array<PendingNote> currentNotes;
+};
+
+//==============================================================================
+
 class SynthAudioSource : public AudioSource
 {
 public:
@@ -102,7 +177,7 @@ public:
 	void process(const AudioSourceChannelInfo& bufferToFill, MidiBuffer& midiBuffer);
 
 	// NOT USED !! See process() which handles incoming midi
-	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override {}
+	void getNextAudioBlock(const AudioSourceChannelInfo& /*bufferToFill*/) override {}
 
 	SineWaveVoice* getVoice(int index)
 	{
@@ -111,7 +186,7 @@ public:
 
 private:
 	MidiKeyboardState & keyboardState;
-	Synthesiser synth;
+	MonoLegatoSynth synth;
 
 	ADSREnvelope& adsr;
 
