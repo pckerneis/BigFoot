@@ -15,6 +15,8 @@ AboutScreen::AboutScreen()
 
 	backgroundImage = ImageCache::getFromMemory(BinaryData::bigfootprint_png, BinaryData::bigfootprint_pngSize);
 
+    logoImage = ImageCache::getFromMemory(BinaryData::bestiary_logo_white_png, BinaryData::bestiary_logo_white_pngSize);
+    
 	auto monster = Typeface::createSystemTypefaceFor(BinaryData::mrsmonster_ttf, BinaryData::mrsmonster_ttfSize);
 	monsterFont = Font(monster);
 }
@@ -51,6 +53,11 @@ void AboutScreen::paint (Graphics& g)
 
 	g.setFont(monsterFont.withHeight(36.0f));
 	g.drawFittedText(JucePlugin_Name, pluginNameArea, Justification::centred, 1, 1.0);
+    
+    const auto logoSize = 36.0f;
+    auto pluginArea = Rectangle<float>((float)getWidth() - ((float)logoSize * 1.5f), (float)getHeight() - logoSize, logoSize, logoSize);
+    g.setOpacity(0.95f);
+    g.drawImage(logoImage, pluginArea, RectanglePlacement::fillDestination);
 }
 
 void AboutScreen::mouseDown (const MouseEvent&)
