@@ -175,7 +175,7 @@ private:
 		loadPresetSheetItemId = 1005
 	};
 
-	String extension = ".preset";
+	String extension = ".bstpst";
 
 	RandomPresetNameGenerator nameGenerator;
 

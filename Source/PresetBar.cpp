@@ -556,7 +556,7 @@ File PresetBar::getUserPresetsFolder()
 
 void PresetBar::restoreFactoryPresets()
 {
-	auto s = String::createStringFromData(BinaryData::preset_sheet_preset, BinaryData::preset_sheet_presetSize);
+	auto s = String::createStringFromData(BinaryData::presets_preset, BinaryData::presets_presetSize);
 	std::unique_ptr<XmlElement> xml(XmlDocument::parse(s));
 
 	if (xml == nullptr || xml->getTagName() != "PRESET_SHEET")
