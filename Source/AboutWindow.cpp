@@ -15,7 +15,7 @@ AboutScreen::AboutScreen()
 
 	backgroundImage = ImageCache::getFromMemory(BinaryData::bigfootprint_png, BinaryData::bigfootprint_pngSize);
 
-    logoImage = ImageCache::getFromMemory(BinaryData::bestiary_logo_white_png, BinaryData::bestiary_logo_white_pngSize);
+    logoImage = ImageCache::getFromMemory(BinaryData::bestiary_logo_white_sm2_png, BinaryData::bestiary_logo_white_sm2_pngSize);
     
 	auto monster = Typeface::createSystemTypefaceFor(BinaryData::mrsmonster_ttf, BinaryData::mrsmonster_ttfSize);
 	monsterFont = Font(monster);
@@ -33,14 +33,9 @@ void AboutScreen::paint (Graphics& g)
         
     const auto r = getLocalBounds().reduced (12);
 	auto center = r.withSizeKeepingCentre(r.getWidth(), r.proportionOfHeight(0.34f));
-	auto pluginNameArea = center;//.removeFromTop(center.proportionOfHeight(0.6f));
 	auto footer = r.withTrimmedTop(r.proportionOfHeight(0.84f));
 
 	g.setColour(getLookAndFeel().findColour(Label::textColourId));
-
-	//g.setFont(18.0f);
-	//g.drawFittedText(JucePlugin_Manufacturer, center, Justification::centred, 1, 1.0);
-
 	g.setFont(12.5f);
 	const String authorString(CharPointer_UTF8("Author: Pierre-Cl\xc3\xa9ment Kerne\xc3\xafs"));
 	g.drawFittedText(authorString, footer, Justification::topLeft, 1, 1.0);
@@ -52,10 +47,10 @@ void AboutScreen::paint (Graphics& g)
     g.drawFittedText (version, r, Justification::topLeft, 1, 1.0);
 
 	g.setFont(monsterFont.withHeight(36.0f));
-	g.drawFittedText(JucePlugin_Name, pluginNameArea, Justification::centred, 1, 1.0);
+	g.drawFittedText(JucePlugin_Name, center, Justification::centred, 1, 1.0);
     
-    const auto logoSize = 36.0f;
-    auto pluginArea = Rectangle<float>((float)getWidth() - ((float)logoSize * 1.5f), (float)getHeight() - logoSize, logoSize, logoSize);
+    const auto logoSize = 30.0f;
+    auto pluginArea = Rectangle<float>((float)getWidth() - ((float)logoSize * 1.3f), (float)getHeight() - logoSize * 1.3f, logoSize, logoSize);
     g.setOpacity(0.95f);
     g.drawImage(logoImage, pluginArea, RectanglePlacement::fillDestination);
 }

@@ -14,17 +14,18 @@
               companyName="Bestiary" companyEmail="pc.kerneis@gmail.com">
   <MAINGROUP id="VGAmmy" name="BigFoot">
     <GROUP id="{34B25619-CF49-73F7-94FA-2DAF811CB136}" name="Resources">
+      <FILE id="aqtCCb" name="bestiary_logo_white_sm2.png" compile="0" resource="1"
+            file="Resources/bestiary_logo_white_sm2.png"/>
       <FILE id="TMCUWi" name="bestiary_logo_white.png" compile="0" resource="1"
             file="Resources/bestiary_logo_white.png"/>
       <FILE id="FfGLb4" name="bigfootprint.png" compile="0" resource="1"
             file="Resources/bigfootprint.png"/>
-      <FILE id="Gg3ocP" name="preset_sheet.preset" compile="0" resource="1"
-            file="Resources/preset_sheet.preset"/>
       <FILE id="dvndqA" name="brushed_metal_texture.jpg" compile="0" resource="1"
             file="Resources/brushed_metal_texture.jpg"/>
       <FILE id="tC3RXo" name="Roboto-Medium.ttf" compile="0" resource="1"
             file="Resources/Roboto-Medium.ttf"/>
       <FILE id="TgYF51" name="mrsmonster.ttf" compile="0" resource="1" file="Resources/mrsmonster.ttf"/>
+      <FILE id="I7ypxw" name="presets.preset" compile="0" resource="1" file="Resources/presets.preset"/>
     </GROUP>
     <GROUP id="{4597911F-BD20-A52B-995B-2D0D0CA045FF}" name="Source">
       <GROUP id="{31722F44-49F6-53E6-FE33-01E19B0C985E}" name="Audio">
@@ -58,7 +59,7 @@
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\DebugVST"
                        winWarningLevel="4" generateManifest="1" winArchitecture="x64"/>
-        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="4" generateManifest="1"
+        <CONFIGURATION isDebug="1" name="Release" winWarningLevel="4" generateManifest="1"
                        winArchitecture="x64" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST"
                        vst3BinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST"/>
       </CONFIGURATIONS>
