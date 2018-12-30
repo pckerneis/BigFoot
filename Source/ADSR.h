@@ -68,7 +68,7 @@ public:
 
 		auto processOutput = [this](bool exponentialRamp)
 		{
-			auto v = exponentialAttack ? envelopeLUT(ramp.getNextValue()) : ramp.getNextValue();
+			auto v = exponentialRamp ? envelopeLUT(ramp.getNextValue()) : ramp.getNextValue();
 			return rampStart + ((rampEnd - rampStart) * v);
 		};
 
@@ -151,7 +151,7 @@ public:
 		ramp.setValue(0.0f, true);
 		ramp.setValue(1.0f, false);
 
-		numSamplesBeforeDecay = *attack * sampleRate;
+		numSamplesBeforeDecay = static_cast<int>(*attack * sampleRate);
 		numSamplesBeforeReleaseEnd = -1;
 
 		rampStart = lastOutput;
@@ -175,7 +175,7 @@ public:
 		ramp.setValue(1.0f, false);
 
 		numSamplesBeforeDecay = -1;
-		numSamplesBeforeReleaseEnd = *release * sampleRate;
+		numSamplesBeforeReleaseEnd = static_cast<int>(*release * sampleRate);
 
 		rampStart = lastOutput;
 		rampEnd = 0.0f;
