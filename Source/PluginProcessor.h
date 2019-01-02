@@ -66,7 +66,7 @@ public:
 	MidiKeyboardState& getKeyboardState() { return keyboardState; }
 	
 	//==============================================================================
-	static String getProcessorStateIdentifier() { return JucePlugin_Name + String("State"); }
+	static String getProcessorStateIdentifier() { return JucePlugin_Name + String("Parameters"); }
 
 	DefaultParameterValues getDefaultParameterValues()
 	{

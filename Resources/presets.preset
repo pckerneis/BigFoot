@@ -2,7 +2,7 @@
 
 <PRESET_SHEET PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
               Creation="30 Dec 2018 2:18:38pm">
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="BBW" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.65600001811981201172"/>
     <PARAM id="driveType" value="2.0"/>
@@ -16,8 +16,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="4.80999994277954101563"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Dark thoughts" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.73000001907348632813"/>
     <PARAM id="driveType" value="2.0"/>
@@ -31,8 +31,8 @@
     <PARAM id="glide" value="0.10000000149011611938"/>
     <PARAM id="master" value="5.1700000762939453125"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Dark times" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.56000000238418579102"/>
     <PARAM id="driveType" value="2.0"/>
@@ -46,8 +46,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="5.0"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Futurism" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:30:41am"
                      presetChanged="0" presetName="Futurism" presetNameEdited="Futurism">
     <PARAM id="drive" value="0.52999997138977050781"/>
@@ -64,8 +64,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Hit &amp; hold" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.40000000596046447754"/>
     <PARAM id="driveType" value="1.0"/>
@@ -79,8 +79,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="2.45000004768371582031"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Hollow" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.56000000238418579102"/>
     <PARAM id="driveType" value="2.0"/>
@@ -94,8 +94,8 @@
     <PARAM id="glide" value="0.10000000149011611938"/>
     <PARAM id="master" value="6.0"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="PAWG" PresetCategory="01. Bass" PresetCreation="28 Dec 2018 5:01:11pm"
                      presetChanged="1" presetName="PAWG" presetNameEdited="PAWG">
     <PARAM id="drive" value="0.5"/>
@@ -112,8 +112,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Squarish" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="1.0"/>
     <PARAM id="driveType" value="1.0"/>
@@ -127,8 +127,8 @@
     <PARAM id="glide" value="0.27000001072883605957"/>
     <PARAM id="master" value="6.57000017166137695313"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Stomper" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.69999998807907104492"/>
     <PARAM id="driveType" value="1.0"/>
@@ -142,8 +142,8 @@
     <PARAM id="glide" value="0.07999999821186065674"/>
     <PARAM id="master" value="4.80000019073486328125"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="WOAW" PresetCategory="01. Bass" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.82999998331069946289"/>
     <PARAM id="driveType" value="2.0"/>
@@ -157,8 +157,8 @@
     <PARAM id="glide" value="0.09000000357627868652"/>
     <PARAM id="master" value="6.44999980926513671875"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Attack sin" PresetCategory="02. Sub" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.0"/>
     <PARAM id="driveType" value="0.0"/>
@@ -172,8 +172,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="6.78999996185302734375"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Deep sin" PresetCategory="02. Sub" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.30000001192092895508"/>
     <PARAM id="driveType" value="1.0"/>
@@ -187,8 +187,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="3.33999991416931152344"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Driven sub" PresetCategory="02. Sub" PresetCreation="24 Dec 2018 1:44:11am"
                      presetChanged="0" presetName="Bright sub" presetNameEdited="Driven sub">
     <PARAM id="drive" value="0.70800000429153442383"/>
@@ -205,8 +205,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Glide sin" PresetCategory="02. Sub" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.0"/>
     <PARAM id="driveType" value="0.0"/>
@@ -220,8 +220,8 @@
     <PARAM id="glide" value="0.07999999821186065674"/>
     <PARAM id="master" value="6.78999996185302734375"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Nasty sub" PresetCategory="02. Sub" PresetCreation="24 Dec 2018 1:52:43am"
                      presetChanged="0" presetName="Nasty sub" presetNameEdited="Nasty sub">
     <PARAM id="drive" value="0.54400002956390380859"/>
@@ -238,8 +238,8 @@
     <PARAM id="lpReso" value="2.43179988861083984375"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Kick" PresetCategory="03. Kick" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.0"/>
     <PARAM id="driveType" value="0.0"/>
@@ -253,8 +253,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="7.59999990463256835938"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Kick harder" PresetCategory="03. Kick" PresetCreation="28 Dec 2018 5:03:38pm"
                      presetChanged="1" presetName="Kick harder" presetNameEdited="Kick harder">
     <PARAM id="drive" value="0.28800001740455627441"/>
@@ -271,8 +271,8 @@
     <PARAM id="lpReso" value="2.88260006904602050781"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Kick longer" PresetCategory="03. Kick" PresetCreation="28 Dec 2018 5:04:14pm"
                      presetChanged="1" presetName="Kick longer" presetNameEdited="Kick longer">
     <PARAM id="drive" value="0.0"/>
@@ -289,8 +289,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Kick tek" PresetCategory="03. Kick" PresetCreation="28 Dec 2018 5:03:48pm"
                      presetChanged="1" presetName="Kick tek" presetNameEdited="Kick tek">
     <PARAM id="drive" value="0.56000000238418579102"/>
@@ -307,8 +307,8 @@
     <PARAM id="lpReso" value="3.61999988555908203125"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Kick tighter" PresetCategory="03. Kick" PresetCreation="28 Dec 2018 5:02:59pm"
                      presetChanged="1" presetName="Kick tighter" presetNameEdited="Kick tighter">
     <PARAM id="drive" value="0.2939999997615814209"/>
@@ -325,8 +325,8 @@
     <PARAM id="lpReso" value="1.62820005416870117188"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Mystic dive" PresetCategory="04. Drop" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.89999997615814208984"/>
     <PARAM id="driveType" value="2.0"/>
@@ -340,8 +340,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="5.409999847412109375"/>
     <PARAM id="lpReso" value="3.15700006484985351563"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="SciFi drop" PresetCategory="04. Drop" PresetCreation="28 Dec 2018 5:04:34pm"
                      presetChanged="1" presetName="SciFi drop" presetNameEdited="SciFi drop">
     <PARAM id="drive" value="1.0"/>
@@ -358,8 +358,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Sub drop" PresetCategory="04. Drop" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.76999998092651367188"/>
     <PARAM id="driveType" value="0.0"/>
@@ -373,8 +373,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="7.76999998092651367188"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="This is war" PresetCategory="04. Drop" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.88999998569488525391"/>
     <PARAM id="driveType" value="1.0"/>
@@ -388,8 +388,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="5.409999847412109375"/>
     <PARAM id="lpReso" value="2.01999998092651367188"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Chunky toy" PresetCategory="05. Other" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.75"/>
     <PARAM id="driveType" value="1.0"/>
@@ -403,8 +403,8 @@
     <PARAM id="glide" value="0.00200000009499490261"/>
     <PARAM id="master" value="0.0"/>
     <PARAM id="lpReso" value="3.06999993324279785156"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Freaky" PresetCategory="05. Other" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.98000001907348632813"/>
     <PARAM id="driveType" value="2.0"/>
@@ -418,8 +418,8 @@
     <PARAM id="glide" value="0.17000000178813934326"/>
     <PARAM id="master" value="0.0"/>
     <PARAM id="lpReso" value="2.70000004768371582031"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Lunatic thingy" PresetCategory="05. Other" PresetCreation="24 Dec 2018 1:11:43am"
                      presetChanged="1" presetName="Lunatic thingy" presetNameEdited="Lunatic thingy">
     <PARAM id="drive" value="0.02279295772314071655"/>
@@ -436,8 +436,8 @@
     <PARAM id="lpReso" value="0.70700001716613769531"/>
     <PARAM id="lpModAmount"/>
     <PARAM id="lpModDuration"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Simple sinus" PresetCategory="05. Other" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.0"/>
     <PARAM id="driveType" value="0.0"/>
@@ -451,8 +451,8 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="0.0"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
-  <BassGenParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
+  </BigFootParameters>
+  <BigFootParameters PluginName="BigFoot" PluginVersion="1.0.0" PluginManufacturer="Bestiary"
                      PresetName="Sin to square" PresetCategory="05. Other" PresetCreation="24 Dec 2018 1:06:37am">
     <PARAM id="drive" value="0.5"/>
     <PARAM id="driveType" value="0.0"/>
@@ -466,5 +466,5 @@
     <PARAM id="glide" value="0.0"/>
     <PARAM id="master" value="0.0"/>
     <PARAM id="lpReso" value="0.70700001716613769531"/>
-  </BassGenParameters>
+  </BigFootParameters>
 </PRESET_SHEET>

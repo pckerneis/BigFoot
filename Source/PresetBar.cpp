@@ -570,6 +570,8 @@ void PresetBar::restoreFactoryPresets()
 	{
 		auto f = userFolder.getChildFile(e->getStringAttribute("PresetName") + extension);
 
+		e->setTagName(BassGeneratorAudioProcessor::getProcessorStateIdentifier());
+
 		// Update attributes
 		e->setAttribute("PluginName", JucePlugin_Name);
 		e->setAttribute("PluginVersion", JucePlugin_VersionString);
