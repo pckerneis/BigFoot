@@ -11,13 +11,11 @@
               pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="BIGFOOTAU" pluginRTASCategory="" bundleIdentifier="com.Bestiary.BigFoot"
               aaxIdentifier="com.Bestiary.BigFoot" pluginAAXCategory="2" includeBinaryInAppConfig="1"
-              companyName="Bestiary" companyEmail="pc.kerneis@gmail.com">
+              companyName="Bestiary" companyEmail="pc.kerneis@gmail.com" companyCopyright="2019 Bestiary">
   <MAINGROUP id="VGAmmy" name="BigFoot">
     <GROUP id="{34B25619-CF49-73F7-94FA-2DAF811CB136}" name="Resources">
       <FILE id="aqtCCb" name="bestiary_logo_white_sm2.png" compile="0" resource="1"
             file="Resources/bestiary_logo_white_sm2.png"/>
-      <FILE id="TMCUWi" name="bestiary_logo_white.png" compile="0" resource="1"
-            file="Resources/bestiary_logo_white.png"/>
       <FILE id="FfGLb4" name="bigfootprint.png" compile="0" resource="1"
             file="Resources/bigfootprint.png"/>
       <FILE id="dvndqA" name="brushed_metal_texture.jpg" compile="0" resource="1"
