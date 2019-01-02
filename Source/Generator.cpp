@@ -69,11 +69,13 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		bendRamp.setValue(*values.bendAmount, true);
 		bendRamp.setValue(0.0f);
 
+
+#if PAWG_ALLOW_LPF_MODULATION
 		// .. prepare filter ramp
 		filterRamp.reset(sampleRate, *values.lpModDuration);
 		filterRamp.setValue(*values.lpModAmount, true);
 		filterRamp.setValue(0.0f);
-
+#endif
 		// Stop the current note to avoid legato mode
 		adsr.noteOff();
 	}

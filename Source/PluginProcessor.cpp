@@ -64,18 +64,19 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
 												  defaultParameterValues.master),
 
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter resonance",
+												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
+												  defaultParameterValues.lpReso),
+
+#if PAWG_ALLOW_LPF_MODULATION
 			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModAmount, "Filter modulation amount",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
 												  defaultParameterValues.filterModAmount),
 
 			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "Filter modulation duration",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
-												  defaultParameterValues.filterModDuration),
-
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter resonance",
-												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
-												  defaultParameterValues.lpReso)
-
+												  defaultParameterValues.filterModDuration)
+#endif
 		})
 {
 	values.drive				= parameters.getRawParameterValue(ParameterIDs::drive);
@@ -89,9 +90,11 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	values.release				= parameters.getRawParameterValue(ParameterIDs::release);
 	values.glide				= parameters.getRawParameterValue(ParameterIDs::glide);
 	values.master				= parameters.getRawParameterValue(ParameterIDs::master);
-	values.lpModAmount			= parameters.getRawParameterValue(ParameterIDs::lpModAmount);
-	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);;
 	values.lpReso				= parameters.getRawParameterValue(ParameterIDs::lpReso);
+#if PAWG_ALLOW_LPF_MODULATION
+	values.lpModAmount			= parameters.getRawParameterValue(ParameterIDs::lpModAmount);
+	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);
+#endif
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
 	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));

@@ -630,8 +630,12 @@ void PresetBar::setDefaultValues()
 	setDefaultValue(ParameterIDs::bendAmount);
 	setDefaultValue(ParameterIDs::bendDuration);
 	setDefaultValue(ParameterIDs::lpFreq);
+
+#if PAWG_ALLOW_LPF_MODULATION
 	setDefaultValue(ParameterIDs::lpModAmount);
 	setDefaultValue(ParameterIDs::lpModDuration);
+#endif
+
 	setDefaultValue(ParameterIDs::glide);
 	setDefaultValue(ParameterIDs::master);
 }
