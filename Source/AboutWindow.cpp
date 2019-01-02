@@ -40,10 +40,11 @@ void AboutScreen::paint (Graphics& g)
 	const String authorString(CharPointer_UTF8("Author: Pierre-Cl\xc3\xa9ment Kerne\xc3\xafs"));
 	g.drawFittedText(authorString, footer, Justification::topLeft, 1, 1.0);
 
-	const String copyright(CharPointer_UTF8("\xc2\xa9 2018 Bestiary"));
+	const String copyright(CharPointer_UTF8("\xc2\xa9 2019 Bestiary"));
     g.drawFittedText (copyright, footer, Justification::bottomLeft, 1, 1.0);
     
-    auto version = JucePlugin_VersionString;
+	auto compilationTime = Time::getCompilationDate().toString(true, true, false);
+    auto version = JucePlugin_VersionString + String(" (") + compilationTime + ")";
     g.drawFittedText (version, r, Justification::topLeft, 1, 1.0);
 
 	g.setFont(monsterFont.withHeight(36.0f));
