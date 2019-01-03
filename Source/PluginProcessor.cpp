@@ -25,58 +25,58 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 #endif
 	parameters (*this, nullptr, getProcessorStateIdentifier(),
 		{
-			std::make_unique<AudioParameterFloat>(ParameterIDs::drive, "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
-			std::make_unique<AudioParameterChoice>(ParameterIDs::driveType, "Drive type", defaultParameterValues.driveTypes, 0),
-
 			std::make_unique<AudioParameterFloat>(ParameterIDs::bendAmount, "Bend amount",
 												  NormalisableRange<float>(defaultParameterValues.minBendAmount, defaultParameterValues.maxBendAmount),
-												  defaultParameterValues.bendAmount),
+												  defaultParameterValues.bendAmount, " semi"),
 				
 			std::make_unique<AudioParameterFloat>(ParameterIDs::bendDuration, "Bend duration",
 												  NormalisableRange<float>(defaultParameterValues.minBendDuration, defaultParameterValues.maxBendDuration, 0.0001f, 0.4f),
-												  defaultParameterValues.bendDuration),
-												  
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpFreq, "Low-pass frequency",
-												  NormalisableRange<float>(defaultParameterValues.minLpFreq, defaultParameterValues.maxLpFreq, 0.0001f, 0.25f),
-												  defaultParameterValues.lpFreq),
-													  
-			std::make_unique<AudioParameterFloat>(ParameterIDs::attack, "Attack",
-												  NormalisableRange<float>(defaultParameterValues.minAttack, defaultParameterValues.maxAttack, 0.0001f, 0.25f),
-												  defaultParameterValues.attack),
-
-			std::make_unique<AudioParameterFloat>(ParameterIDs::decay, "Decay",
-												  NormalisableRange<float>(defaultParameterValues.minDecay, defaultParameterValues.maxDecay, 0.0001f, 0.25f),
-												  defaultParameterValues.decay),
-
-			std::make_unique<AudioParameterFloat>(ParameterIDs::sustain, "Sustain",
-												  0.0f, 1.0f,
-												  defaultParameterValues.sustain),
-
-			std::make_unique<AudioParameterFloat>(ParameterIDs::release, "Release",
-												  NormalisableRange<float>(defaultParameterValues.minRelease, defaultParameterValues.maxRelease, 0.0001f, 0.25f),
-												  defaultParameterValues.release),
+												  defaultParameterValues.bendDuration, " s"),
 												   
 			std::make_unique<AudioParameterFloat>(ParameterIDs::glide, "Glide",
 												  NormalisableRange<float>(0.0f, defaultParameterValues.maxGlide, 0.0001f, 0.4f),
-												  defaultParameterValues.glide),
+												  defaultParameterValues.glide, " s"),
 
-			std::make_unique<AudioParameterFloat>(ParameterIDs::master, "Output gain",
-												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
-												  defaultParameterValues.master),
+			std::make_unique<AudioParameterFloat>(ParameterIDs::attack, "Attack",
+												  NormalisableRange<float>(defaultParameterValues.minAttack, defaultParameterValues.maxAttack, 0.0001f, 0.25f),
+												  defaultParameterValues.attack, " s"),
 
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "Filter resonance",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::decay, "Decay",
+												  NormalisableRange<float>(defaultParameterValues.minDecay, defaultParameterValues.maxDecay, 0.0001f, 0.25f),
+												  defaultParameterValues.decay, " s"),
+
+			std::make_unique<AudioParameterFloat>(ParameterIDs::sustain, "Sustain",
+												  NormalisableRange<float>(0.0f, 1.0f),
+												  defaultParameterValues.sustain, " s"),
+
+			std::make_unique<AudioParameterFloat>(ParameterIDs::release, "Release",
+												  NormalisableRange<float>(defaultParameterValues.minRelease, defaultParameterValues.maxRelease, 0.0001f, 0.25f),
+												  defaultParameterValues.release, " s"),
+
+			std::make_unique<AudioParameterFloat>(ParameterIDs::drive, "Drive", 0.0f, 1.0f, defaultParameterValues.drive),
+			std::make_unique<AudioParameterChoice>(ParameterIDs::driveType, "Drive type", defaultParameterValues.driveTypes, 0),
+															  
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpFreq, "LPF frequency",
+												  NormalisableRange<float>(defaultParameterValues.minLpFreq, defaultParameterValues.maxLpFreq, 0.0001f, 0.25f),
+												  defaultParameterValues.lpFreq, " Hz"),
+
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "LPF resonance",
 												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
 												  defaultParameterValues.lpReso),
 
 #if PAWG_ALLOW_LPF_MODULATION
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModAmount, "Filter modulation amount",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModAmount, "LPF mod amount",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
 												  defaultParameterValues.filterModAmount),
 
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "Filter modulation duration",
+			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "LPF mod duration",
 												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
-												  defaultParameterValues.filterModDuration)
+												  defaultParameterValues.filterModDuration),
 #endif
+													  
+			std::make_unique<AudioParameterFloat>(ParameterIDs::master, "Output gain",
+												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
+												  defaultParameterValues.master)
 		})
 {
 	values.drive				= parameters.getRawParameterValue(ParameterIDs::drive);

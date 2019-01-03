@@ -118,20 +118,22 @@ private:
 	//==============================================================================
 	enum
 	{
-		driveParam,
-		driveTypeParam,
 		bendAmountParam,
 		bendDurationParam,
-		lpFreqParam,
+		glideParam,
 		attackParam,
 		decayParam,
 		sustainParam,
 		releaseParam,
-		glideParam,
-		masterParam,
+		driveParam,
+		driveTypeParam,
+		lpFreqParam,
+		lpResoParam,
+#if PAWG_ALLOW_LPF_MODULATION
 		lpModAmountParam,
 		lpModDurationParam,
-		lpResoParam
+#endif
+		masterParam
 	};
     //==============================================================================
 
