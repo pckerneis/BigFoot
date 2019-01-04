@@ -60,6 +60,9 @@
         <CONFIGURATION isDebug="1" name="Release" winWarningLevel="4" generateManifest="1"
                        winArchitecture="x64" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST"
                        vst3BinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST"/>
+        <CONFIGURATION isDebug="1" name="Release win32" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="Win32" enablePluginBinaryCopyStep="1" vstBinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST\win32"
+                       vst3BinaryLocation="D:\Developer\JUCE Projects\bass generator\ReleaseVST\win32"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
