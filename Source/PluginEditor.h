@@ -29,7 +29,7 @@ public:
 //==============================================================================
 /**
 */
-class BassGeneratorAudioProcessorEditor  : public AudioProcessorEditor, private Timer
+class BassGeneratorAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
     BassGeneratorAudioProcessorEditor (BassGeneratorAudioProcessor&, AudioProcessorValueTreeState&);
@@ -51,22 +51,9 @@ private:
 	void drawDriveTypeSymbols(Graphics& g);
 
 	//==========================================================================
-	void timerCallback() override
-	{
-#if PAWG_USE_MIDI_KEYBOARD
-		keyboardComponent.grabKeyboardFocus();
-#endif
-		stopTimer();
-	}
-
-	//==========================================================================
 	BassGeneratorAudioProcessor& processor;
 
 	//==========================================================================
-#if PAWG_USE_MIDI_KEYBOARD
-	MidiKeyboardComponent keyboardComponent;
-#endif
-
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
 	struct AttachedSlider

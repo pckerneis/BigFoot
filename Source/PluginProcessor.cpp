@@ -63,16 +63,6 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 			std::make_unique<AudioParameterFloat>(ParameterIDs::lpReso, "LPF resonance",
 												  NormalisableRange<float>(defaultParameterValues.minLpReso, defaultParameterValues.maxLpReso),
 												  defaultParameterValues.lpReso),
-
-#if PAWG_ALLOW_LPF_MODULATION
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModAmount, "LPF mod amount",
-												  NormalisableRange<float>(defaultParameterValues.minFilterModAmount, defaultParameterValues.maxFilterModAmount),
-												  defaultParameterValues.filterModAmount),
-
-			std::make_unique<AudioParameterFloat>(ParameterIDs::lpModDuration, "LPF mod duration",
-												  NormalisableRange<float>(defaultParameterValues.minFilterModDuration, defaultParameterValues.maxFilterModDuration, 0.0001f, 0.4f),
-												  defaultParameterValues.filterModDuration),
-#endif
 													  
 			std::make_unique<AudioParameterFloat>(ParameterIDs::master, "Output gain",
 												  NormalisableRange<float>(defaultParameterValues.minOutputGain, defaultParameterValues.maxOutputGain, 0.0001f, defaultParameterValues.computeSkewForMasterSlider()),
@@ -91,10 +81,6 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	values.glide				= parameters.getRawParameterValue(ParameterIDs::glide);
 	values.master				= parameters.getRawParameterValue(ParameterIDs::master);
 	values.lpReso				= parameters.getRawParameterValue(ParameterIDs::lpReso);
-#if PAWG_ALLOW_LPF_MODULATION
-	values.lpModAmount			= parameters.getRawParameterValue(ParameterIDs::lpModAmount);
-	values.lpModDuration		= parameters.getRawParameterValue(ParameterIDs::lpModDuration);
-#endif
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
 	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));

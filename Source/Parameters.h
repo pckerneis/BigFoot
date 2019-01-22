@@ -31,11 +31,6 @@ namespace ParameterIDs
 	DECLARE_ID(lpFreq)
 	DECLARE_ID(lpReso)
 
-#if PAWG_ALLOW_LPF_MODULATION
-	DECLARE_ID(lpModAmount)
-	DECLARE_ID(lpModDuration)
-#endif
-
 	DECLARE_ID(master)
 
 
@@ -58,10 +53,6 @@ String ParameterIDs::getLabel(String type)
 	else if (type == sustain)				name = "Sustain";
 	else if (type == release)               name = "Release";
 	else if (type == lpFreq)                name = "Freq";
-#if PAWG_ALLOW_LPF_MODULATION
-	else if (type == lpModAmount)			name = "Mod amt";
-	else if (type == lpModDuration)			name = "mod time";
-#endif
 	else if (type == lpReso)				name = "Reso";
 	else if (type == master)                name = "Output";
 
@@ -137,16 +128,6 @@ struct DefaultParameterValues
 	float lpReso = 1.0f / sqrt(2.0f);
 	float minLpReso = 0.1f;
 	float maxLpReso = 5.0f;
-
-#if PAWG_ALLOW_LPF_MODULATION
-	float filterModAmount = 0.0f;
-	float minFilterModAmount = -8.0f;
-	float maxFilterModAmount = 8.0f;
-
-	float filterModDuration = 0.1f;
-	float minFilterModDuration = 0.001f;
-	float maxFilterModDuration = 2.0f;
-#endif
 
 	float computeSkewForMasterSlider()
 	{

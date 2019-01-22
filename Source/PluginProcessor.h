@@ -129,10 +129,6 @@ private:
 		driveTypeParam,
 		lpFreqParam,
 		lpResoParam,
-#if PAWG_ALLOW_LPF_MODULATION
-		lpModAmountParam,
-		lpModDurationParam,
-#endif
 		masterParam
 	};
     //==============================================================================
