@@ -83,7 +83,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 #if PAWG_USE_MIDI_KEYBOARD
 	const int height = 290;
 #else
-	const int height = 220;
+	const int height = 240;
 #endif
 
 	setSize(width, height);
@@ -128,7 +128,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 #endif
 
 	const float cornerSize = 6.0f;
-	const float lineThickness = 1.0f;
+	const float lineThickness = 0.6f;
 	const float margin = 2.0f;
 
 	g.setColour(colors.lineColour);
@@ -299,8 +299,11 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	// Styling
 	addAndMakeVisible(slider);
 	slider->setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	//slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+	slider->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
 	slider->setColour(Slider::rotarySliderFillColourId, colour);
+	slider->setColour(Slider::textBoxOutlineColourId, Colours::black.withAlpha(0.4f));
+	slider->setColour(Slider::textBoxBackgroundColourId, Colours::black.withAlpha(0.2f));
 	slider->setColour(Slider::rotarySliderOutlineColourId, outline);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 

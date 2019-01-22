@@ -94,7 +94,7 @@ private:
 
 	const int labelHeight = 20;
 	const int marginHeight = 8;
-	const int sliderHeight = 64;
+	const int sliderHeight = 72;
 	const int headerHeight = 30;
 
 	struct UIColours
