@@ -13,7 +13,7 @@
 #include "AboutWindow.h"
 
 //==============================================================================
-PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
+PresetBar::PresetBar(AudioProcessorValueTreeState& ps, Colour highlightColour) :
 	currentPreset(nullptr),
 	aboutButton(""),
 	previousButton("<"), 
@@ -44,6 +44,7 @@ PresetBar::PresetBar(AudioProcessorValueTreeState& ps) :
 	aboutButton.setLookAndFeel(logoLF);
 	aboutButton.setButtonText(JucePlugin_Name);
 	aboutButton.setColour(ComboBox::outlineColourId, Colours::transparentBlack);
+	aboutButton.setColour(TextButton::buttonOnColourId, highlightColour);
 	aboutButton.onClick = [] { AboutScreen::showOrHideIfShowing(); };
 
 	refreshPresetList();

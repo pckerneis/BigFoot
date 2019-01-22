@@ -86,8 +86,6 @@ private:
 
 	OwnedArray<AttachedSlider> sliders;
 
-	PresetBar presetBar;
-
 	std::unique_ptr<Image> backgroundImage;
 
 	SharedResourcePointer<TooltipWindow> tooltipWindow;
@@ -102,7 +100,7 @@ private:
 		const Colour backgroundColour		= Colour::fromRGB(17, 17, 19);
 		const Colour textColour				= Colour::fromRGB(240, 240, 245);
 		const Colour lineColour				= Colour::fromRGB(220, 205, 227).darker();
-		const Colour highlightColour		= Colours::orange;
+		const Colour highlightColour		= Colours::sandybrown;
 
 		const Colour sliderColour			= Colour::fromRGB(92, 90, 91);
 
@@ -117,6 +115,8 @@ private:
 	};
 
 	UIColours colors;
+
+	PresetBar presetBar;	// Use 'colors' at instantiation
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessorEditor)
 };

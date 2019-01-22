@@ -19,7 +19,7 @@
 class PresetBar    : public Component,/* ValueTree::Listener,*/ public AsyncUpdater
 {
 public:
-    PresetBar(AudioProcessorValueTreeState& vts);
+    PresetBar(AudioProcessorValueTreeState& vts, Colour highlightColour);
     ~PresetBar();
 
     void paint (Graphics&) override;

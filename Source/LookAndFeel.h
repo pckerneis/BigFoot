@@ -401,9 +401,13 @@ private:
 	{
 		font.setHeight(button.getHeight() * 0.7f);
 		g.setFont(font);
-		g.setColour(button.findColour(button.getToggleState() ? TextButton::textColourOnId
-			: TextButton::textColourOffId)
-			.withMultipliedAlpha(shouldDrawButtonAsHighlighted ? 1.0f : 0.85f));
+
+		auto defaultColour = button.findColour(button.getToggleState() ? TextButton::textColourOnId : TextButton::textColourOffId)
+			.withMultipliedAlpha(shouldDrawButtonAsHighlighted ? 1.0f : 0.85f);
+
+		auto highlightColour = button.findColour(TextButton::buttonOnColourId);
+
+		g.setColour(shouldDrawButtonAsHighlighted ? highlightColour : defaultColour);
 
 		const int yIndent = jmin(4, button.proportionOfHeight(0.3f));
 		const int cornerSize = jmin(button.getHeight(), button.getWidth()) / 2;

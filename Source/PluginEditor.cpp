@@ -18,7 +18,7 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 #if PAWG_USE_MIDI_KEYBOARD
 		keyboardComponent(p.getKeyboardState(), MidiKeyboardComponent::horizontalKeyboard),
 #endif
-		presetBar(p.getValueTreeState())
+		presetBar(p.getValueTreeState(), colors.highlightColour)
 {
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	setLookAndFeel(lf);
@@ -27,15 +27,15 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	lf->setDefaultSansSerifTypeface(tf);
 
 	lf->setColourScheme({
-		colors.backgroundColour,
-		colors.backgroundColour,
-		colors.backgroundColour,
-		colors.lineColour,
-		colors.textColour,
-		colors.textColour,
-		colors.backgroundColour,
-		colors.textColour,
-		colors.textColour
+		colors.backgroundColour,			// windowBackground
+		colors.backgroundColour,			// widgetBackground
+		colors.backgroundColour,			// menuBackground
+		colors.lineColour,					// outline
+		colors.textColour,					// defaultText
+		colors.textColour,					// defaultFill
+		colors.backgroundColour,			// highlightedText
+		colors.highlightColour,				// highlightedFill
+		colors.textColour					// menuText
 	});
 
 	// We'll also style the logo button here even if it's used in PresetBar
