@@ -94,7 +94,7 @@ private:
 
 	const int labelHeight = 20;
 	const int marginHeight = 8;
-	const int sliderHeight = 72;
+	const int sliderHeight = 74;
 	const int headerHeight = 30;
 
 	struct UIColours
@@ -102,6 +102,9 @@ private:
 		const Colour backgroundColour		= Colour::fromRGB(17, 17, 19);
 		const Colour textColour				= Colour::fromRGB(240, 240, 245);
 		const Colour lineColour				= Colour::fromRGB(220, 205, 227).darker();
+		const Colour highlightColour		= Colours::orange;
+
+		const Colour sliderColour			= Colour::fromRGB(92, 90, 91);
 
 		const Colour bendSliderColour		= Colour::fromRGB(92, 90, 91);
 		const Colour adsrSliderColour		= Colour::fromRGB(92, 90, 91);

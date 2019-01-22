@@ -116,7 +116,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 											 BinaryData::brushed_metal_texture_jpgSize);
 
 	g.setOpacity(0.08f);
-	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
+	//g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
 
 	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
 
@@ -274,6 +274,7 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
 	slider->setSliderStyle(Slider::SliderStyle::LinearVertical);
 	slider->setColour(Slider::backgroundColourId, trackColour);
+	slider->setColour(Slider::textBoxHighlightColourId, colors.highlightColour);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
@@ -304,6 +305,7 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	slider->setColour(Slider::rotarySliderFillColourId, colour);
 	slider->setColour(Slider::textBoxOutlineColourId, Colours::black.withAlpha(0.4f));
 	slider->setColour(Slider::textBoxBackgroundColourId, Colours::black.withAlpha(0.2f));
+	slider->setColour(Slider::textBoxHighlightColourId, colors.highlightColour);
 	slider->setColour(Slider::rotarySliderOutlineColourId, outline);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 

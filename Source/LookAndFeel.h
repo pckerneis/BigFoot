@@ -206,6 +206,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 	void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
 		const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
 	{
+		auto highlight = slider.findColour(Slider::textBoxHighlightColourId);
 		auto outline = slider.findColour(ComboBox::outlineColourId);
 		auto fill = slider.findColour(Slider::rotarySliderFillColourId);
 
@@ -225,6 +226,7 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		{
 			float gradWidth;
 
+			// These sliders have their bigger graduation at mid range (position for 0)
 			if (slider.getName() == "bendAmountSlider" || slider.getName() == "masterSlider")
 			{
 				if (i == 5)
@@ -232,16 +234,31 @@ class CustomLookAndFeel : public LookAndFeel_V4
 				else
 					gradWidth = lineW * 0.3f;
 			}
-			else if (i == 0 || i == 10)
+			else if (i == 0 || i == 10)	// Other sliders have a bigger graduation for min and max positions
 				gradWidth = lineW * 0.5f;
 			else
 				gradWidth = lineW * 0.3f;
 
 			auto angle = rotaryStartAngle + ((float)i / (float)numGrad) * (rotaryEndAngle - rotaryStartAngle);
 
-			auto valueReached = angle < toAngle;
+			// Determine if the value has been reached
+			bool valueReached = false;
 
-			g.setColour(valueReached ? outline.withMultipliedBrightness(2.2f) : outline);
+			// Highlight colour, based on mouse interaction with slider
+			auto highlightColour = slider.isMouseOverOrDragging() ? highlight : outline.withMultipliedBrightness(2.0f);
+
+			// Special case for sliders with 0 at mid range (we want to enhance the distance from 0)
+			if (slider.getName() == "bendAmountSlider" || slider.getName() == "masterSlider")
+			{
+				auto centerAngle = ((rotaryEndAngle - rotaryStartAngle) * 0.5f) + rotaryStartAngle;
+				bool positiveValue = toAngle > centerAngle;
+				valueReached = positiveValue ? (angle <= toAngle) && (angle >= centerAngle) 
+											 : (angle >= toAngle) && (angle <= centerAngle);
+			}
+			else
+				valueReached = angle <= toAngle;
+			
+			g.setColour(valueReached ? highlightColour : outline);
 
 			Point<float> thumbPoint(bounds.getCentreX() + gradRadius * std::cos(angle - MathConstants<float>::halfPi),
 				bounds.getCentreY() + gradRadius * std::sin(angle - MathConstants<float>::halfPi));
@@ -259,11 +276,12 @@ class CustomLookAndFeel : public LookAndFeel_V4
 
 		// thumb
 		auto thumbDist = radius * 0.77f;
-		auto thumbWidth = lineW * 0.7f;
+		auto thumbWidth = lineW * 0.6f;
 		Point<float> thumbPoint(bounds.getCentreX() + thumbDist * std::cos(toAngle - MathConstants<float>::halfPi),
 			bounds.getCentreY() + thumbDist * std::sin(toAngle - MathConstants<float>::halfPi));
 
-		g.setColour(slider.findColour(Slider::thumbColourId).interpolatedWith(fill, 0.3f));
+		auto thumbColour = slider.findColour(Slider::thumbColourId).interpolatedWith(fill, 0.3f);
+		g.setColour(slider.isMouseOverOrDragging() ? highlight : thumbColour);
 		g.fillEllipse(Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
 	}
 
@@ -329,7 +347,10 @@ class CustomLookAndFeel : public LookAndFeel_V4
 
 			if (!isTwoVal)
 			{
-				g.setColour(slider.findColour(Slider::thumbColourId));
+				auto highlight = slider.findColour(Slider::textBoxHighlightColourId);
+				g.setColour(slider.isMouseOverOrDragging() ? highlight : slider.findColour(Slider::thumbColourId));
+
+				//g.setColour(slider.findColour(Slider::thumbColourId));
 				g.fillEllipse(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre(isThreeVal ? thumbPoint : maxPoint));
 			}
 
