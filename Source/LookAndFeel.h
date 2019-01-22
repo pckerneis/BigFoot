@@ -221,8 +221,6 @@ class CustomLookAndFeel : public LookAndFeel_V4
 		// graduations
 		int numGrad = 10;
 
-		g.setColour(outline);
-
 		for (int i = 0; i < numGrad + 1; ++i)
 		{
 			float gradWidth;
@@ -240,6 +238,10 @@ class CustomLookAndFeel : public LookAndFeel_V4
 				gradWidth = lineW * 0.3f;
 
 			auto angle = rotaryStartAngle + ((float)i / (float)numGrad) * (rotaryEndAngle - rotaryStartAngle);
+
+			auto valueReached = angle < toAngle;
+
+			g.setColour(valueReached ? outline.withMultipliedBrightness(2.2f) : outline);
 
 			Point<float> thumbPoint(bounds.getCentreX() + gradRadius * std::cos(angle - MathConstants<float>::halfPi),
 				bounds.getCentreY() + gradRadius * std::sin(angle - MathConstants<float>::halfPi));
