@@ -191,5 +191,4 @@ private:
 	ADSREnvelope& adsr;
 
 	Array<SineWaveVoice*> voices;
-	MidiMessageCollector midiCollector;
 };

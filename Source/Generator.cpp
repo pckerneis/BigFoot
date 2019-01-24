@@ -234,8 +234,6 @@ void SynthAudioSource::prepareToPlay(int /*samplesPerBlockExpected*/, double sam
 
 	for (auto v : voices)
 		v->prepare(sampleRate);
-
-	midiCollector.reset(sampleRate);
 }
 
 void SynthAudioSource::releaseResources()
