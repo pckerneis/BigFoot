@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 #include "LookAndFeel.h"
 //==============================================================================
-BigFootAudioProcessorEditor::BigFootAudioProcessorEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
+BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
     :	AudioProcessorEditor (&p), 
 		processor (p),
 		presetBar(p.getValueTreeState(), colors.highlightColour)
@@ -69,17 +69,17 @@ BigFootAudioProcessorEditor::BigFootAudioProcessorEditor (BigFootAudioProcessor&
 	renderBackgroundImage(g);
 }
 
-BigFootAudioProcessorEditor::~BigFootAudioProcessorEditor()
+BigFootEditor::~BigFootEditor()
 {
 }
 
 //==============================================================================
-void BigFootAudioProcessorEditor::paint(Graphics& g)
+void BigFootEditor::paint(Graphics& g)
 {
 	g.drawImage(*backgroundImage, getLocalBounds().toFloat());
 }
 
-void BigFootAudioProcessorEditor::renderBackgroundImage(Graphics& g)
+void BigFootEditor::renderBackgroundImage(Graphics& g)
 {
 	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
@@ -125,7 +125,7 @@ void BigFootAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 	drawDriveTypeSymbols(g);
 }
 
-void BigFootAudioProcessorEditor::resized()
+void BigFootEditor::resized()
 {
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
@@ -186,7 +186,7 @@ void BigFootAudioProcessorEditor::resized()
 	layoutSliders(bottomRow, r.removeFromTop(sliderHeight));
 }
 
-void BigFootAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
+void BigFootEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
 {
 	// Create slider and attachment
 	auto slider = reversed ? new ReversedSlider(paramName + "Slider") : new Slider(paramName + "Slider");
@@ -216,7 +216,7 @@ void BigFootAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeState &
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
-void BigFootAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
+void BigFootEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
 {
 	// Create slider and attachment
 	auto slider = new Slider(paramName + "Slider");
@@ -248,7 +248,7 @@ void BigFootAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& 
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
-Slider * BigFootAudioProcessorEditor::getSlider(String param)
+Slider * BigFootEditor::getSlider(String param)
 {
 	for (auto s : sliders)
 		if (s->paramId == param)
@@ -259,7 +259,7 @@ Slider * BigFootAudioProcessorEditor::getSlider(String param)
 	return nullptr;
 }
 
-Label * BigFootAudioProcessorEditor::getLabel(String param)
+Label * BigFootEditor::getLabel(String param)
 {
 	for (auto s : sliders)
 		if (s->paramId == param)
@@ -270,7 +270,7 @@ Label * BigFootAudioProcessorEditor::getLabel(String param)
 	return nullptr;
 }
 
-void BigFootAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
+void BigFootEditor::drawDriveTypeSymbols(Graphics &g)
 {
 	auto slider = getSlider("driveType");
 	const auto sliderArea = slider->getBounds().reduced(10, 6);

@@ -219,7 +219,7 @@ bool BigFootAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* BigFootAudioProcessor::createEditor()
 {
-	return new BigFootAudioProcessorEditor(*this, parameters);
+	return new BigFootEditor(*this, parameters);
 }
 
 //==============================================================================

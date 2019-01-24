@@ -29,11 +29,11 @@ public:
 //==============================================================================
 /**
 */
-class BigFootAudioProcessorEditor  : public AudioProcessorEditor
+class BigFootEditor  : public AudioProcessorEditor
 {
 public:
-    BigFootAudioProcessorEditor (BigFootAudioProcessor&, AudioProcessorValueTreeState&);
-    ~BigFootAudioProcessorEditor();
+    BigFootEditor (BigFootAudioProcessor&, AudioProcessorValueTreeState&);
+    ~BigFootEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
@@ -105,5 +105,5 @@ private:
 
 	PresetBar presetBar;	// Use 'colors' at instantiation
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootEditor)
 };
