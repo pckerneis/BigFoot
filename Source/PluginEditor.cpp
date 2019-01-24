@@ -100,7 +100,7 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	auto texture = ImageCache::getFromMemory(BinaryData::brushed_metal_texture_jpg,
 											 BinaryData::brushed_metal_texture_jpgSize);
 
-	g.setOpacity(0.08f);
+	g.setOpacity(0.05f);
 	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
 
 	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
@@ -148,7 +148,7 @@ void BigFootEditor::resized()
 	if (sliders.isEmpty() || sliderZone.isEmpty())
 		return;
 	
-	auto r = sliderZone;
+	auto r = sliderZone.translated(0, -2);
 
 	auto layoutLabels = [this](StringArray ids, Rectangle<int> bounds)
 	{
@@ -229,10 +229,10 @@ void BigFootEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String p
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
-	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
+	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName));
 	addAndMakeVisible(l);
 	l->setJustificationType(Justification::centred);
-	l->setFont(l->getFont().withHeight(12.0f));
+	l->setFont(l->getFont().withHeight(13.0f));
 	l->setColour(Label::textColourId, colors.textColour);
 
 	// Keep pointers
@@ -261,10 +261,10 @@ void BigFootEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String pa
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
 
 	// Create and style label
-	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName).toUpperCase());
+	auto l = new Label(paramName + "Label", ParameterIDs::getLabel(paramName));
 	addAndMakeVisible(l);
 	l->setJustificationType(Justification::centred);
-	l->setFont(l->getFont().withHeight(12.0f));
+	l->setFont(l->getFont().withHeight(13.0f));
 	l->setColour(Label::textColourId, colors.textColour);
 
 	// Keep pointers

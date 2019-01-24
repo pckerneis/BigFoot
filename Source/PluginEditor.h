@@ -80,9 +80,9 @@ private:
 
 	SharedResourcePointer<TooltipWindow> tooltipWindow;
 
-	const int labelHeight = 18;
+	const int labelHeight = 22;
 	const int marginHeight = 8;
-	const int sliderHeight = 72;
+	const int sliderHeight = 70;
 	const int headerHeight = 30;
 
 	struct UIColours
