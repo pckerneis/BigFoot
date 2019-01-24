@@ -29,11 +29,11 @@ public:
 //==============================================================================
 /**
 */
-class BassGeneratorAudioProcessorEditor  : public AudioProcessorEditor
+class BigFootAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
-    BassGeneratorAudioProcessorEditor (BassGeneratorAudioProcessor&, AudioProcessorValueTreeState&);
-    ~BassGeneratorAudioProcessorEditor();
+    BigFootAudioProcessorEditor (BigFootAudioProcessor&, AudioProcessorValueTreeState&);
+    ~BigFootAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
@@ -51,7 +51,7 @@ private:
 	void drawDriveTypeSymbols(Graphics& g);
 
 	//==========================================================================
-	BassGeneratorAudioProcessor& processor;
+	BigFootAudioProcessor& processor;
 
 	//==========================================================================
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
@@ -105,5 +105,5 @@ private:
 
 	PresetBar presetBar;	// Use 'colors' at instantiation
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootAudioProcessorEditor)
 };

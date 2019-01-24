@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
+BigFootAudioProcessor::BigFootAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -91,17 +91,17 @@ BassGeneratorAudioProcessor::BassGeneratorAudioProcessor()
 	parameters.getParameter(ParameterIDs::master)->addListener(this);
 }
 
-BassGeneratorAudioProcessor::~BassGeneratorAudioProcessor()
+BigFootAudioProcessor::~BigFootAudioProcessor()
 {
 }
 
 //==============================================================================
-const String BassGeneratorAudioProcessor::getName() const
+const String BigFootAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool BassGeneratorAudioProcessor::acceptsMidi() const
+bool BigFootAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -110,7 +110,7 @@ bool BassGeneratorAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool BassGeneratorAudioProcessor::producesMidi() const
+bool BigFootAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -119,7 +119,7 @@ bool BassGeneratorAudioProcessor::producesMidi() const
    #endif
 }
 
-bool BassGeneratorAudioProcessor::isMidiEffect() const
+bool BigFootAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -128,49 +128,49 @@ bool BassGeneratorAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double BassGeneratorAudioProcessor::getTailLengthSeconds() const
+double BigFootAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int BassGeneratorAudioProcessor::getNumPrograms()
+int BigFootAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int BassGeneratorAudioProcessor::getCurrentProgram()
+int BigFootAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void BassGeneratorAudioProcessor::setCurrentProgram (int /*index*/)
+void BigFootAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String BassGeneratorAudioProcessor::getProgramName (int /*index*/)
+const String BigFootAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void BassGeneratorAudioProcessor::changeProgramName (int /*index*/, const String&)
+void BigFootAudioProcessor::changeProgramName (int /*index*/, const String&)
 {
 }
 
 //==============================================================================
-void BassGeneratorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void BigFootAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	synthAudioSource->prepareToPlay(samplesPerBlock, sampleRate);
 	adsr->prepare(sampleRate);
 }
 
-void BassGeneratorAudioProcessor::releaseResources()
+void BigFootAudioProcessor::releaseResources()
 {
 	synthAudioSource->releaseResources();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool BassGeneratorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool BigFootAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -193,7 +193,7 @@ bool BassGeneratorAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void BassGeneratorAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void BigFootAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -212,25 +212,25 @@ void BassGeneratorAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
 }
 
 //==============================================================================
-bool BassGeneratorAudioProcessor::hasEditor() const
+bool BigFootAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* BassGeneratorAudioProcessor::createEditor()
+AudioProcessorEditor* BigFootAudioProcessor::createEditor()
 {
-	return new BassGeneratorAudioProcessorEditor(*this, parameters);
+	return new BigFootAudioProcessorEditor(*this, parameters);
 }
 
 //==============================================================================
-void BassGeneratorAudioProcessor::getStateInformation (MemoryBlock& destData)
+void BigFootAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
 	auto state = parameters.copyState();
 	std::unique_ptr<XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void BassGeneratorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void BigFootAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -243,5 +243,5 @@ void BassGeneratorAudioProcessor::setStateInformation (const void* data, int siz
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new BassGeneratorAudioProcessor();
+    return new BigFootAudioProcessor();
 }

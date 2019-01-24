@@ -21,12 +21,12 @@
 
 /**
 */
-class BassGeneratorAudioProcessor  : public AudioProcessor, public AudioProcessorParameter::Listener
+class BigFootAudioProcessor  : public AudioProcessor, public AudioProcessorParameter::Listener
 {
 public:
     //==============================================================================
-    BassGeneratorAudioProcessor();
-    ~BassGeneratorAudioProcessor();
+    BigFootAudioProcessor();
+    ~BigFootAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -150,5 +150,5 @@ private:
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	SharedResourcePointer<LogoButtonLF> logoLF;
 	
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassGeneratorAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootAudioProcessor)
 };

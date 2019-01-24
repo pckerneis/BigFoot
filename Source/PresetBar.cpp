@@ -164,7 +164,7 @@ bool PresetBar::checkXml(XmlElement * xml, String & errorMsg) const
 {
 	if (auto editor = findParentComponentOfClass<AudioProcessorEditor>())
 	{
-		if (auto proc = dynamic_cast<BassGeneratorAudioProcessor*>(editor->getAudioProcessor()))
+		if (auto proc = dynamic_cast<BigFootAudioProcessor*>(editor->getAudioProcessor()))
 			if (xml->getTagName() == proc->getProcessorStateIdentifier())
 				return true;
 	}
@@ -571,7 +571,7 @@ void PresetBar::restoreFactoryPresets()
 	{
 		auto f = userFolder.getChildFile(e->getStringAttribute("PresetName") + extension);
 
-		e->setTagName(BassGeneratorAudioProcessor::getProcessorStateIdentifier());
+		e->setTagName(BigFootAudioProcessor::getProcessorStateIdentifier());
 
 		// Update attributes
 		e->setAttribute("PluginName", JucePlugin_Name);

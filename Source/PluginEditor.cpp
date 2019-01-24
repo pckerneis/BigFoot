@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 #include "LookAndFeel.h"
 //==============================================================================
-BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGeneratorAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
+BigFootAudioProcessorEditor::BigFootAudioProcessorEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
     :	AudioProcessorEditor (&p), 
 		processor (p),
 		presetBar(p.getValueTreeState(), colors.highlightColour)
@@ -69,17 +69,17 @@ BassGeneratorAudioProcessorEditor::BassGeneratorAudioProcessorEditor (BassGenera
 	renderBackgroundImage(g);
 }
 
-BassGeneratorAudioProcessorEditor::~BassGeneratorAudioProcessorEditor()
+BigFootAudioProcessorEditor::~BigFootAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void BassGeneratorAudioProcessorEditor::paint(Graphics& g)
+void BigFootAudioProcessorEditor::paint(Graphics& g)
 {
 	g.drawImage(*backgroundImage, getLocalBounds().toFloat());
 }
 
-void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
+void BigFootAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 {
 	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 
@@ -87,7 +87,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 											 BinaryData::brushed_metal_texture_jpgSize);
 
 	g.setOpacity(0.08f);
-	//g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
+	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
 
 	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
 
@@ -125,7 +125,7 @@ void BassGeneratorAudioProcessorEditor::renderBackgroundImage(Graphics& g)
 	drawDriveTypeSymbols(g);
 }
 
-void BassGeneratorAudioProcessorEditor::resized()
+void BigFootAudioProcessorEditor::resized()
 {
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
@@ -186,7 +186,7 @@ void BassGeneratorAudioProcessorEditor::resized()
 	layoutSliders(bottomRow, r.removeFromTop(sliderHeight));
 }
 
-void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
+void BigFootAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
 {
 	// Create slider and attachment
 	auto slider = reversed ? new ReversedSlider(paramName + "Slider") : new Slider(paramName + "Slider");
@@ -216,7 +216,7 @@ void BassGeneratorAudioProcessorEditor::addLinearSlider(AudioProcessorValueTreeS
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
-void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
+void BigFootAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String paramName, Colour colour)
 {
 	// Create slider and attachment
 	auto slider = new Slider(paramName + "Slider");
@@ -248,7 +248,7 @@ void BassGeneratorAudioProcessorEditor::addRotarySlider(AudioProcessorValueTreeS
 	sliders.add(new AttachedSlider(paramName, slider, attachment, l));
 }
 
-Slider * BassGeneratorAudioProcessorEditor::getSlider(String param)
+Slider * BigFootAudioProcessorEditor::getSlider(String param)
 {
 	for (auto s : sliders)
 		if (s->paramId == param)
@@ -259,7 +259,7 @@ Slider * BassGeneratorAudioProcessorEditor::getSlider(String param)
 	return nullptr;
 }
 
-Label * BassGeneratorAudioProcessorEditor::getLabel(String param)
+Label * BigFootAudioProcessorEditor::getLabel(String param)
 {
 	for (auto s : sliders)
 		if (s->paramId == param)
@@ -270,7 +270,7 @@ Label * BassGeneratorAudioProcessorEditor::getLabel(String param)
 	return nullptr;
 }
 
-void BassGeneratorAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
+void BigFootAudioProcessorEditor::drawDriveTypeSymbols(Graphics &g)
 {
 	auto slider = getSlider("driveType");
 	const auto sliderArea = slider->getBounds().reduced(10, 6);
