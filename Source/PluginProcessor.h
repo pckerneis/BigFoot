@@ -16,6 +16,7 @@
 #include "Distortion.h"
 #include "Generator.h"
 #include "Parameters.h"
+#include "AudioDataCollector.h"
 
 //==============================================================================
 
@@ -113,6 +114,10 @@ public:
 	{
 		parameters.state.setProperty("presetChanged", true, nullptr);
 	}
+
+	AudioBufferQueue<float>& getAudioBufferQueue() noexcept { return bufferQueue; }
+
+	float& getSmoothedVelocity() { return smoothedVelocity; }
 	
 private:
 	//==============================================================================
@@ -132,8 +137,6 @@ private:
 		masterParam
 	};
     //==============================================================================
-
-	//==============================================================================
 	DefaultParameterValues defaultParameterValues;
 	AudioProcessorValueTreeState parameters;
 
@@ -146,9 +149,18 @@ private:
 	MidiKeyboardState keyboardState;
 	std::unique_ptr<SynthAudioSource> synthAudioSource;
 
+	//==============================================================================
+	AudioBufferQueue<float> bufferQueue;
+	AudioDataCollector<float> audioDataCollector { bufferQueue };
+
+	LinearSmoothedValue<float> midiVelocity;
+	float smoothedVelocity = 0.0f;
+
+	//==============================================================================
 	// This is a way to have a reference to the l&f that will persist even if the plugin editor is destroyed
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	SharedResourcePointer<LogoButtonLF> logoLF;
+
 	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootAudioProcessor)
 };

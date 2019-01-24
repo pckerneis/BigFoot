@@ -162,6 +162,8 @@ void BigFootAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
 	synthAudioSource->prepareToPlay(samplesPerBlock, sampleRate);
 	adsr->prepare(sampleRate);
+
+	midiVelocity.reset(sampleRate, 0.3);
 }
 
 void BigFootAudioProcessor::releaseResources()
@@ -203,10 +205,33 @@ void BigFootAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-	
+	// Get smoothed velocity
+	MidiBuffer::Iterator iterator(midiMessages);
+	MidiMessage message;
+
+	float targetValue = 0.0f;
+
+	int sampleNumber;
+	while (iterator.getNextEvent(message, sampleNumber))
+	{
+		if (message.isNoteOn())
+			if (targetValue < message.getFloatVelocity())
+				targetValue = message.getFloatVelocity();
+	}
+
+	if (targetValue == 0)
+		midiVelocity.setValue(0);
+	else
+		midiVelocity.setValue(targetValue, true);
+
+	smoothedVelocity = midiVelocity.skip(buffer.getNumSamples());
+
 	// MIDI note processing and sound generation
 	AudioSourceChannelInfo infos (buffer);
 	synthAudioSource->process(infos, midiMessages);
+
+	// Collect audio output data
+	audioDataCollector.process(buffer.getReadPointer(0), (size_t)buffer.getNumSamples());
 
 	midiMessages.clear();
 }

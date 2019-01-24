@@ -51,6 +51,14 @@
         <FILE id="prtKFi" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       </GROUP>
     </GROUP>
+    <FILE id="jw2yi8" name="AudioDataCollector.cpp" compile="1" resource="0"
+          file="Source/AudioDataCollector.cpp"/>
+    <FILE id="tgLIT8" name="AudioDataCollector.h" compile="0" resource="0"
+          file="Source/AudioDataCollector.h"/>
+    <FILE id="xfSzpK" name="MeterComponent.cpp" compile="1" resource="0"
+          file="Source/MeterComponent.cpp"/>
+    <FILE id="grQRQ5" name="MeterComponent.h" compile="0" resource="0"
+          file="Source/MeterComponent.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">

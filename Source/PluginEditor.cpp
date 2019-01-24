@@ -15,7 +15,9 @@
 BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeState& valueTreeState)
     :	AudioProcessorEditor (&p), 
 		processor (p),
-		presetBar(p.getValueTreeState(), colors.highlightColour)
+		presetBar(p.getValueTreeState(), colors.highlightColour),
+		audioMeter(p.getAudioBufferQueue()),
+		midiMeter(p.getSmoothedVelocity())
 {
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	setLookAndFeel(lf);
@@ -59,14 +61,26 @@ BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeS
 	addAndMakeVisible(presetBar);
 
     // Set editor size
-	const int width = 420;
+	const int width = 450;
 	const int height = 240;
 	setSize(width, height);
-
+	
 	backgroundImage.reset (new Image (Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
 
 	Graphics g (*backgroundImage);
 	renderBackgroundImage(g);
+
+	auto numPoints = 12;
+
+	addAndMakeVisible(audioMeter);
+	audioMeter.setOnColour(colors.highlightColour);
+	audioMeter.setOffColour(colors.lineColour);
+	audioMeter.setNumPoints(numPoints);
+
+	addAndMakeVisible(midiMeter);
+	midiMeter.setOnColour(colors.highlightColour);
+	midiMeter.setOffColour(colors.lineColour);
+	midiMeter.setNumPoints(numPoints);
 }
 
 BigFootEditor::~BigFootEditor()
@@ -91,7 +105,7 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 
 	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
 
-	auto r = getLocalBounds().reduced(5).toFloat();
+	auto r = sliderZone.toFloat();
 	const auto cellW = int((float)r.getWidth() / 6.0f);
 
 	const float cornerSize = 6.0f;
@@ -100,7 +114,6 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 
 	g.setColour(colors.lineColour);
 	
-	r.removeFromTop((float)headerHeight);
 	auto topRow = r.removeFromTop(cellHeight);
 
 	Array<int> topCells;
@@ -127,13 +140,15 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 
 void BigFootEditor::resized()
 {
+	// Adjust slider zone to new size
+	sliderZone = getLocalBounds().withTrimmedTop(headerHeight).reduced(20, 8);
+
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
-	if (sliders.isEmpty())
+	if (sliders.isEmpty() || sliderZone.isEmpty())
 		return;
 	
-	auto r = getLocalBounds().reduced(5);
-	r.removeFromTop(headerHeight);
+	auto r = sliderZone;
 
 	auto layoutLabels = [this](StringArray ids, Rectangle<int> bounds)
 	{
@@ -184,6 +199,14 @@ void BigFootEditor::resized()
 
 	layoutLabels(bottomRow, r.removeFromTop(labelHeight));
 	layoutSliders(bottomRow, r.removeFromTop(sliderHeight));
+
+	int meterHeight = 100;
+	int meterWidth = 10;
+
+	auto topless = getLocalBounds().withTrimmedTop(headerHeight);
+
+	audioMeter.setBounds(topless.removeFromRight(24).withSizeKeepingCentre(meterWidth, meterHeight));
+	midiMeter.setBounds(topless.removeFromLeft(24).withSizeKeepingCentre(meterWidth, meterHeight));
 }
 
 void BigFootEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)

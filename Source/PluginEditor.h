@@ -29,6 +29,9 @@ public:
 //==============================================================================
 /**
 */
+
+#include "MeterComponent.h"
+
 class BigFootEditor  : public AudioProcessorEditor
 {
 public:
@@ -77,9 +80,9 @@ private:
 
 	SharedResourcePointer<TooltipWindow> tooltipWindow;
 
-	const int labelHeight = 20;
+	const int labelHeight = 18;
 	const int marginHeight = 8;
-	const int sliderHeight = 74;
+	const int sliderHeight = 72;
 	const int headerHeight = 30;
 
 	struct UIColours
@@ -104,6 +107,10 @@ private:
 	UIColours colors;
 
 	PresetBar presetBar;	// Use 'colors' at instantiation
+	Rectangle<int> sliderZone;
+
+	AudioPeakMeterComponent<float> audioMeter;
+	FloatMeterComponent midiMeter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootEditor)
 };
