@@ -63,7 +63,12 @@ BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeS
 
     // Set editor size
 	const int width = 430;
-	const int height = 246;
+	int height = 255;
+
+#if BIGFOOT_DYNAMIC_ROUTING
+	height += footerHeight;
+#endif
+
 	setSize(width, height);
 
 	auto numPoints = 12;
@@ -82,6 +87,25 @@ BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeS
 
 	// Add resizable border
 	//addAndMakeVisible(resizableBorder);
+
+#if BIGFOOT_DYNAMIC_ROUTING
+	// Add audio chain comp
+	addAndMakeVisible(audioChainComp);
+	audioChainComp.addBlock(SineWaveVoice::oscIndex, "osc", false);
+	audioChainComp.addBlock(SineWaveVoice::envelopeIndex, "env", true);
+	audioChainComp.addBlock(SineWaveVoice::distortionIndex, "drive", true);
+	audioChainComp.addBlock(SineWaveVoice::filterIndex, "lpf", true);
+	audioChainComp.addBlock(SineWaveVoice::masterGainIndex, "out", false);
+
+	audioChainComp.setColour(AudioChainComponent::blockOutlineColourId, colors.lineColour.darker());
+	audioChainComp.setColour(AudioChainComponent::cableColourId, colors.lineColour);
+	audioChainComp.setColour(AudioChainComponent::blockTextColourId, colors.textColour);
+	audioChainComp.setColour(AudioChainComponent::hoverTextColourId, colors.backgroundColour);
+	audioChainComp.setColour(AudioChainComponent::blockBackgroundColourId, colors.backgroundColour.darker(0.05f));
+	audioChainComp.setColour(AudioChainComponent::hoverBackgroundColourId, colors.highlightColour);
+
+	audioChainComp.changed = [this] { audioChainChanged(); };
+#endif //BIGFOOT_DYNAMIC_ROUTING
 }
 
 BigFootEditor::~BigFootEditor()
@@ -96,6 +120,19 @@ void BigFootEditor::paint(Graphics& g)
 
 void BigFootEditor::renderBackgroundImage(Graphics& g)
 {
+	// Handy lambda for drawing a section
+	auto drawSection = [this](Rectangle<float> bounds, Graphics& g)
+	{
+		auto corner = 4.0f;
+		auto stroke = 0.3f;
+
+		g.setColour(colors.backgroundColour);
+		g.fillRoundedRectangle(bounds, corner);
+
+		g.setColour(Colours::black);
+		g.drawRoundedRectangle(bounds, corner, stroke);
+	};
+
 	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId).darker(0.8f));
 
 	auto texture = ImageCache::getFromMemory(BinaryData::brushed_metal_texture_jpg,
@@ -112,8 +149,6 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	g.setColour(colors.backgroundColour);
 	
 	auto margin = 2;
-	auto corner = 4.0f;
-	auto stroke = 0.3f;
 	auto topRow = r.removeFromTop(cellHeight);
 
 	Array<int> topCells;
@@ -123,12 +158,7 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	for (auto c : topCells)
 	{
 		auto b = topRow.removeFromLeft(c * cellW).reduced(margin, 0);
-
-		g.setColour(colors.backgroundColour);
-		g.fillRoundedRectangle(b, corner);
-
-		g.setColour(Colours::black);
-		g.drawRoundedRectangle(b, corner, stroke);
+		drawSection(b, g);
 	}
 
 	Array<int> bottomCells;
@@ -143,30 +173,39 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	for (auto c : bottomCells)
 	{
 		auto b = bottomRow.removeFromLeft(c * cellW).reduced(margin, 0);
-
-		g.setColour(colors.backgroundColour);
-		g.fillRoundedRectangle(b, corner);
-
-		g.setColour(Colours::black);
-		g.drawRoundedRectangle(b, corner, stroke);
+		drawSection(b, g);
 	}
 
 	drawDriveTypeSymbols(g);
+
+#if BIGFOOT_DYNAMIC_ROUTING
+	// footer
+	auto footer = getLocalBounds().removeFromBottom(footerHeight).withSizeKeepingCentre(sliderZone.getWidth(), 30).translated(0, -4).toFloat();
+	drawSection(footer.removeFromLeft(audioChainWidth).reduced(margin, 0), g);
+	//drawSection(footer.reduced(margin, 0), g);
+#endif
 }
 
 void BigFootEditor::resized()
 {
 	// Adjust slider zone to new size
-	sliderZone = getLocalBounds().withTrimmedTop(headerHeight).reduced(20, 8);
+	sliderZone = getLocalBounds().withTrimmedTop(headerHeight)
+#if BIGFOOT_DYNAMIC_ROUTING
+								 .withTrimmedBottom(footerHeight)
+#endif
+								 .reduced(20, 8);
 
+	// Deduce slider height
 	sliderHeight = sliderZone.getHeight() - ((2 * labelHeight) + marginHeight);
 	sliderHeight *= 0.5f;
 
+	// Position preset bar
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
 	if (sliders.isEmpty() || sliderZone.isEmpty())
 		return;
 	
+	// Layout sliders
 	auto r = sliderZone.translated(0, -4);
 
 	auto layoutLabels = [this](StringArray ids, Rectangle<int> bounds)
@@ -235,6 +274,13 @@ void BigFootEditor::resized()
 
 	// Adjust resizable border
 	resizableBorder.setBounds(getLocalBounds());
+
+
+#if BIGFOOT_DYNAMIC_ROUTING
+	// Position audio chain comp
+	auto footer = getLocalBounds().removeFromBottom(footerHeight).withSizeKeepingCentre(sliderZone.getWidth(), 30).translated(0, -4);
+	audioChainComp.setBounds(footer.removeFromLeft(audioChainWidth).reduced(4));
+#endif
 }
 
 void BigFootEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
@@ -367,3 +413,17 @@ void BigFootEditor::drawDriveTypeSymbols(Graphics &g)
 	Rectangle<float> sineArea(sliderArea.getRight() + symbolLeft, sliderArea.getBottom() - symbolH * 0.5f, symbolW, symbolH);
 	g.strokePath(sinePath, PathStrokeType(1.0f), sinePath.getTransformToScaleToFit(sineArea, false));
 }
+
+#if BIGFOOT_DYNAMIC_ROUTING
+void BigFootEditor::audioChainChanged()
+{
+	auto layout = audioChainComp.getLayout();
+
+	jassert(layout.size() == 5);
+
+	layout.remove(0);
+	layout.removeLast();
+
+	processor.setFXLayout(layout);
+}
+#endif

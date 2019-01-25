@@ -11,22 +11,30 @@
 #include "Generator.h"
 
 #include "Parameters.h"
-SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, ParameterValues& v) :
+SineWaveVoice::SineWaveVoice(ADSREnvelope& envelope, ParameterValues& v, Array<int>& layout) :
 	currentAngle(0.0f),
 	values(v),
 	adsr(envelope),
 	sampleRate(-1),
-	legato(false)
+	legato(false),
+	currentRouting(layout)
 {
+	currentRouting =
+	{
+		envelopeIndex,
+		distortionIndex,
+		filterIndex
+	};
 }
 
 void SineWaveVoice::prepare(double sr)
 {
-	fxChain.template get<filterIndex>().reset();
-	fxChain.template get<masterGainIndex>().setRampDurationSeconds(0.005);
+	jassert(sr >= 0);
 
-	dsp::ProcessSpec spec{ sampleRate, (uint32)sr, 2 };
+	dsp::ProcessSpec spec{ sr, (uint32)sr, 2 };
 	fxChain.prepare(spec);
+	fxChain.template get<filterIndex>().reset();
+	fxChain.template get<masterGainIndex>().setRampDurationSeconds(0.01);
 
 	sampleRate = sr;
 	level.reset(sr, 0.01f);
@@ -69,13 +77,6 @@ void SineWaveVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSou
 		bendRamp.setValue(*values.bendAmount, true);
 		bendRamp.setValue(0.0f);
 
-
-#if PAWG_ALLOW_LPF_MODULATION
-		// .. prepare filter ramp
-		filterRamp.reset(sampleRate, *values.lpModDuration);
-		filterRamp.setValue(*values.lpModAmount, true);
-		filterRamp.setValue(0.0f);
-#endif
 		// Stop the current note to avoid legato mode
 		adsr.noteOff();
 	}
@@ -115,19 +116,20 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 	{
 		// No sound generation
 	}
-	else if (!adsr.isCurrentlySounding())
+	else if (!adsr.isCurrentlySounding())	// Sound should end
 	{
 		clearCurrentNote();
 		angleDelta = 0.0;
 	}
 	else
 	{
+		// Generate sound
 		auto end = numSamples;
 		auto start = startSample;
 
 		while (--end >= 0)
 		{
-			auto currentSample = (float)(std::sin(currentAngle) * getNextEnvelopeValue());
+			auto currentSample = float(std::sin(currentAngle));
 
 			for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
 				outputBuffer.addSample(i, start, currentSample);
@@ -140,33 +142,85 @@ void SineWaveVoice::renderNextBlock(AudioSampleBuffer& outputBuffer, int startSa
 	}
 
 	// FX processing
-	const int freqUpdateRate = 50;
+	for (auto processorIndex : currentRouting)
+		processFX(processorIndex, outputBuffer, startSample, numSamples);
 
+	// Master gain
 	auto block = juce::dsp::AudioBlock<float>(outputBuffer).getSubBlock(startSample, numSamples);
+	auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
-	for (int pos = 0; pos < numSamples; ++pos)
+	// process
+	fxChain.template get<masterGainIndex>().process(context);
+}
+
+void SineWaveVoice::processFX(int index, AudioSampleBuffer & outputBuffer, int startSample, int numSamples)
+{
+	switch (index)
 	{
-		if (pos % freqUpdateRate == 0)
+		case envelopeIndex :
 		{
-			// adjust cutoff value
-			auto maxSize = jmin((numSamples - pos), freqUpdateRate);
-			
-			auto cutOff = float(std::pow(2, filterRamp.getNextValue())) * *values.lpFreq;
-			cutOff = jlimit(20.0f, 20000.0f, cutOff);
-			filterRamp.skip(maxSize - 1);
+			auto end = numSamples;
+			auto start = startSample;
 
-			cutOffRamp.setValue(cutOff);
+			while (--end >= 0)
+			{
+				for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
+					outputBuffer.setSample(i, start, outputBuffer.getSample(i, start) * getNextEnvelopeValue());
+
+				++start;
+			}
+
+			break;
 		}
 
-		auto& filter = fxChain.template get<filterIndex>();
-		filter.state->setCutOffFrequency(getSampleRate(), cutOffRamp.getNextValue(), *values.lpReso);
+		case distortionIndex:
+		{
+			// get context
+			auto block = juce::dsp::AudioBlock<float>(outputBuffer).getSubBlock(startSample, numSamples);
+			auto context = juce::dsp::ProcessContextReplacing<float>(block);
 
-		// get sub-block context
-        auto sub = block.getSubBlock(pos, 1);
-		auto context = juce::dsp::ProcessContextReplacing<float>(sub);
+			// process
+			fxChain.template get<distortionIndex>().process(context);
 
-		// process
-		fxChain.process(context);
+			break;
+		}
+
+		case filterIndex:
+		{
+			auto block = juce::dsp::AudioBlock<float>(outputBuffer).getSubBlock(startSample, numSamples);
+
+			// We won't adjust frequency each sample
+			const int freqUpdateRate = 10;
+
+			for (int pos = 0; pos < numSamples; ++pos)
+			{
+				if (pos % freqUpdateRate == 0)
+				{
+					// adjust cutoff value
+					auto maxSize = jmin((numSamples - pos), freqUpdateRate);
+
+					auto cutOff = float(std::pow(2, filterRamp.getNextValue())) * *values.lpFreq;
+					cutOff = jlimit(20.0f, 20000.0f, cutOff);
+					filterRamp.skip(maxSize - 1);
+
+					cutOffRamp.setValue(cutOff);
+				}
+
+				auto& filter = fxChain.template get<filterIndex>();
+				filter.state->setCutOffFrequency(getSampleRate(), cutOffRamp.getNextValue(), *values.lpReso);
+
+				// get sub-block context
+				auto sub = block.getSubBlock(pos, 1);
+				auto context = juce::dsp::ProcessContextReplacing<float>(sub);
+
+				// process
+				filter.process(context);
+			}
+			break;
+		}
+
+		default:
+			break;
 	}
 }
 
@@ -206,13 +260,13 @@ void SineWaveVoice::updateAngleDelta()
 }
 //==============================================================================
 
-SynthAudioSource::SynthAudioSource(ADSREnvelope& env, MidiKeyboardState& keyState, ParameterValues& values) : keyboardState(keyState), adsr(env)
+SynthAudioSource::SynthAudioSource(ADSREnvelope& env, MidiKeyboardState& keyState, ParameterValues& values, Array<int>& fxLayout) : keyboardState(keyState), adsr(env)
 {
 	int numVoices = 1;
 
 	for (auto i = 0; i < numVoices; ++i)
 	{
-		auto v = new SineWaveVoice(adsr, values);
+		auto v = new SineWaveVoice(adsr, values, fxLayout);
 		synth.addVoice(v);
 		voices.add(v);
 	}

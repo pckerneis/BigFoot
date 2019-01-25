@@ -115,9 +115,16 @@ public:
 		parameters.state.setProperty("presetChanged", true, nullptr);
 	}
 
+	//==============================================================================
 	AudioBufferQueue<float>& getAudioBufferQueue() noexcept { return bufferQueue; }
 
 	float& getSmoothedVelocity() { return smoothedVelocity; }
+
+	//==============================================================================
+	void setFXLayout (Array<int> newLayout)
+	{
+		fxLayout.swapWith(newLayout);
+	}
 	
 private:
 	//==============================================================================
@@ -150,6 +157,7 @@ private:
 	std::unique_ptr<SynthAudioSource> synthAudioSource;
 
 	//==============================================================================
+	// Data collectors for meters
 	AudioBufferQueue<float> bufferQueue;
 	AudioDataCollector<float> audioDataCollector { bufferQueue };
 
@@ -157,10 +165,12 @@ private:
 	float smoothedVelocity = 0.0f;
 
 	//==============================================================================
+	Array<int> fxLayout;
+
+	//==============================================================================
 	// This is a way to have a reference to the l&f that will persist even if the plugin editor is destroyed
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	SharedResourcePointer<LogoButtonLF> logoLF;
-
 	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootAudioProcessor)
 };

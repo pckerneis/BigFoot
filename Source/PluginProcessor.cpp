@@ -83,7 +83,7 @@ BigFootAudioProcessor::BigFootAudioProcessor()
 	values.lpReso				= parameters.getRawParameterValue(ParameterIDs::lpReso);
 
 	adsr.reset(new ADSREnvelope(values.attack, values.decay, values.sustain, values.release));
-	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values));
+	synthAudioSource.reset(new SynthAudioSource(*adsr, keyboardState, values, fxLayout));
 	
 	parameters.getParameter(ParameterIDs::drive)->addListener(this);
 	parameters.getParameter(ParameterIDs::driveType)->addListener(this);

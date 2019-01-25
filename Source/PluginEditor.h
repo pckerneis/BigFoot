@@ -32,6 +32,10 @@ public:
 
 #include "MeterComponent.h"
 
+#if BIGFOOT_DYNAMIC_ROUTING
+	#include "AudioChainComponent.h"
+#endif
+
 class BigFootEditor  : public AudioProcessorEditor
 {
 public:
@@ -84,6 +88,10 @@ private:
 	const int marginHeight = 8;
 	int sliderHeight = 68;
 	const int headerHeight = 30;
+#if BIGFOOT_DYNAMIC_ROUTING
+	const int footerHeight = 40;
+#endif
+	const int audioChainWidth = 192;
 
 	struct UIColours
 	{
@@ -113,6 +121,12 @@ private:
 	FloatMeterComponent midiMeter;
 
 	ResizableBorderComponent resizableBorder;
+
+#if BIGFOOT_DYNAMIC_ROUTING
+	AudioChainComponent audioChainComp;
+
+	void audioChainChanged();
+#endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootEditor)
 };

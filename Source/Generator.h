@@ -29,7 +29,7 @@ struct ParameterValues;
 
 struct SineWaveVoice : public SynthesiserVoice
 {
-	SineWaveVoice(ADSREnvelope& envelope, ParameterValues& paramValues);
+	SineWaveVoice(ADSREnvelope& envelope, ParameterValues& paramValues, Array<int>& fxLayout);
 
 	void prepare(double sr);
 
@@ -42,6 +42,7 @@ struct SineWaveVoice : public SynthesiserVoice
 	void controllerMoved(int, int) override {}
 
 	void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override;
+	void processFX(int index, AudioSampleBuffer& outputBuffer, int startSample, int numSamples);
 
 	//==============================================================================
 	void setDrive(float newValue);
@@ -49,6 +50,18 @@ struct SineWaveVoice : public SynthesiserVoice
 
 	//==============================================================================
 	void setOutputGain(float newValue);
+
+	//==============================================================================
+	enum
+	{
+		distortionIndex,
+		filterIndex,
+		masterGainIndex,
+
+		// These are NOT processors in fxChain (so don't do fxChain.get<envelopeIndex>)
+		envelopeIndex,
+		oscIndex
+	};
 
 private:
 	// Not using MidiMessage::getMidiNoteInHertz as it only takes integer midi note numbers
@@ -74,17 +87,12 @@ private:
 	double sampleRate;
 
 	bool legato;
-
-	enum
-	{
-		distortionIndex,
-		filterIndex,
-		masterGainIndex
-	};
-
+	
 	using Filter = dsp::StateVariableFilter::Filter<float>;
 	using FilterParams = dsp::StateVariableFilter::Parameters<float>;
 	juce::dsp::ProcessorChain<Distortion<float>, dsp::ProcessorDuplicator<Filter, FilterParams>, dsp::Gain<float>> fxChain;
+
+	Array<int>& currentRouting;
 };
 
 //==============================================================================
@@ -167,7 +175,7 @@ private:
 class SynthAudioSource : public AudioSource
 {
 public:
-	SynthAudioSource(ADSREnvelope& adsr, MidiKeyboardState& keyState, ParameterValues& values);
+	SynthAudioSource(ADSREnvelope& adsr, MidiKeyboardState& keyState, ParameterValues& values, Array<int>& fxLayout);
 
 	void setUsingSineWaveSound();
 
