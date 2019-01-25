@@ -82,7 +82,7 @@ private:
 
 	const int labelHeight = 22;
 	const int marginHeight = 8;
-	const int sliderHeight = 70;
+	int sliderHeight = 68;
 	const int headerHeight = 30;
 
 	struct UIColours
@@ -111,6 +111,8 @@ private:
 
 	AudioPeakMeterComponent<float> audioMeter;
 	FloatMeterComponent midiMeter;
+
+	ResizableBorderComponent resizableBorder;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BigFootEditor)
 };

@@ -17,7 +17,8 @@ BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeS
 		processor (p),
 		presetBar(p.getValueTreeState(), colors.highlightColour),
 		audioMeter(p.getAudioBufferQueue()),
-		midiMeter(p.getSmoothedVelocity())
+		midiMeter(p.getSmoothedVelocity()),
+		resizableBorder(this, nullptr)
 {
 	SharedResourcePointer<CustomLookAndFeel> lf;
 	setLookAndFeel(lf);
@@ -61,26 +62,26 @@ BigFootEditor::BigFootEditor (BigFootAudioProcessor& p, AudioProcessorValueTreeS
 	addAndMakeVisible(presetBar);
 
     // Set editor size
-	const int width = 450;
-	const int height = 240;
+	const int width = 430;
+	const int height = 246;
 	setSize(width, height);
-	
-	backgroundImage.reset (new Image (Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
-
-	Graphics g (*backgroundImage);
-	renderBackgroundImage(g);
 
 	auto numPoints = 12;
 
+	auto offColour = colors.backgroundColour.interpolatedWith(colors.lineColour, 0.4f);
+
 	addAndMakeVisible(audioMeter);
 	audioMeter.setOnColour(colors.highlightColour);
-	audioMeter.setOffColour(colors.lineColour);
+	audioMeter.setOffColour(offColour);
 	audioMeter.setNumPoints(numPoints);
 
 	addAndMakeVisible(midiMeter);
 	midiMeter.setOnColour(colors.highlightColour);
-	midiMeter.setOffColour(colors.lineColour);
+	midiMeter.setOffColour(offColour);
 	midiMeter.setNumPoints(numPoints);
+
+	// Add resizable border
+	//addAndMakeVisible(resizableBorder);
 }
 
 BigFootEditor::~BigFootEditor()
@@ -95,12 +96,12 @@ void BigFootEditor::paint(Graphics& g)
 
 void BigFootEditor::renderBackgroundImage(Graphics& g)
 {
-	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+	g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId).darker(0.8f));
 
 	auto texture = ImageCache::getFromMemory(BinaryData::brushed_metal_texture_jpg,
 											 BinaryData::brushed_metal_texture_jpgSize);
 
-	g.setOpacity(0.05f);
+	g.setOpacity(0.16f);
 	g.drawImageWithin(texture, 0, 0, getWidth(), getHeight(), RectanglePlacement::fillDestination);
 
 	const int cellHeight = sliderHeight + labelHeight + int(marginHeight * 0.5);
@@ -108,12 +109,11 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	auto r = sliderZone.toFloat();
 	const auto cellW = int((float)r.getWidth() / 6.0f);
 
-	const float cornerSize = 6.0f;
-	const float lineThickness = 0.6f;
-	const float margin = 2.0f;
-
-	g.setColour(colors.lineColour);
+	g.setColour(colors.backgroundColour);
 	
+	auto margin = 2;
+	auto corner = 4.0f;
+	auto stroke = 0.3f;
 	auto topRow = r.removeFromTop(cellHeight);
 
 	Array<int> topCells;
@@ -121,7 +121,15 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	topCells.add(4);
 
 	for (auto c : topCells)
-		g.drawRoundedRectangle(topRow.removeFromLeft(c * cellW).reduced(margin, 0), cornerSize, lineThickness);
+	{
+		auto b = topRow.removeFromLeft(c * cellW).reduced(margin, 0);
+
+		g.setColour(colors.backgroundColour);
+		g.fillRoundedRectangle(b, corner);
+
+		g.setColour(Colours::black);
+		g.drawRoundedRectangle(b, corner, stroke);
+	}
 
 	Array<int> bottomCells;
 	bottomCells.add(1);
@@ -133,7 +141,15 @@ void BigFootEditor::renderBackgroundImage(Graphics& g)
 	auto bottomRow = r.removeFromTop(cellHeight);
 
 	for (auto c : bottomCells)
-		g.drawRoundedRectangle(bottomRow.removeFromLeft(c * cellW).reduced(margin, 0), cornerSize, lineThickness);
+	{
+		auto b = bottomRow.removeFromLeft(c * cellW).reduced(margin, 0);
+
+		g.setColour(colors.backgroundColour);
+		g.fillRoundedRectangle(b, corner);
+
+		g.setColour(Colours::black);
+		g.drawRoundedRectangle(b, corner, stroke);
+	}
 
 	drawDriveTypeSymbols(g);
 }
@@ -143,12 +159,15 @@ void BigFootEditor::resized()
 	// Adjust slider zone to new size
 	sliderZone = getLocalBounds().withTrimmedTop(headerHeight).reduced(20, 8);
 
+	sliderHeight = sliderZone.getHeight() - ((2 * labelHeight) + marginHeight);
+	sliderHeight *= 0.5f;
+
 	presetBar.setBounds(getLocalBounds().removeFromTop(30));
 
 	if (sliders.isEmpty() || sliderZone.isEmpty())
 		return;
 	
-	auto r = sliderZone.translated(0, -2);
+	auto r = sliderZone.translated(0, -4);
 
 	auto layoutLabels = [this](StringArray ids, Rectangle<int> bounds)
 	{
@@ -207,6 +226,15 @@ void BigFootEditor::resized()
 
 	audioMeter.setBounds(topless.removeFromRight(24).withSizeKeepingCentre(meterWidth, meterHeight));
 	midiMeter.setBounds(topless.removeFromLeft(24).withSizeKeepingCentre(meterWidth, meterHeight));
+
+	// Reset and draw background image
+	backgroundImage.reset(new Image(Image::PixelFormat::ARGB, getWidth(), getHeight(), false));
+
+	Graphics g(*backgroundImage);
+	renderBackgroundImage(g);
+
+	// Adjust resizable border
+	resizableBorder.setBounds(getLocalBounds());
 }
 
 void BigFootEditor::addLinearSlider(AudioProcessorValueTreeState & vts, String paramName, bool reversed)
@@ -252,10 +280,11 @@ void BigFootEditor::addRotarySlider(AudioProcessorValueTreeState& vts, String pa
 	addAndMakeVisible(slider);
 	slider->setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
 	//slider->setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-	slider->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 15);
+	slider->setTextBoxStyle(Slider::TextBoxBelow, false, 54, 16);
 	slider->setColour(Slider::rotarySliderFillColourId, colour);
-	slider->setColour(Slider::textBoxOutlineColourId, Colours::black.withAlpha(0.4f));
-	slider->setColour(Slider::textBoxBackgroundColourId, Colours::black.withAlpha(0.2f));
+	slider->setColour(Slider::textBoxOutlineColourId, colors.lineColour.withAlpha(0.2f));
+	slider->setColour(Slider::textBoxBackgroundColourId, colors.backgroundColour.withAlpha(0.0f));
+	//slider->setColour(Slider::textBoxBackgroundColourId, Colours::black.withAlpha(0.2f));
 	slider->setColour(Slider::textBoxHighlightColourId, colors.highlightColour);
 	slider->setColour(Slider::rotarySliderOutlineColourId, outline);
 	slider->onValueChange = [slider] { slider->setTooltip(slider->getTextFromValue(slider->getValue())); };
